@@ -11,7 +11,15 @@
   "dependencies": {
     "next": "16.2.4",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "@types/js-cookie": "^3.0.6",
+    "antd": "^6.3.0",
+    "apexcharts": "^5.3.6",
+    "react-apexcharts": "^1.9.0",
+    "react-icons": "^5.5.0",
+    "axios": "^1.13.5",
+    "js-cookie": "^3.0.5",
+    "lucide-react": "^0.564.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
