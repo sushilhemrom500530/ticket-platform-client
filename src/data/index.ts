@@ -40,29 +40,28 @@ export const menuData: MenuData = {
     {
       menu: [
         {
-          label: "Dashboard",
-          href: "/dashboard",
+          label: "My Tickets",
+          href: "/dashboard/tickets",
+          icon: UserRound,
+        },
+        {
+          label: "Overview",
+          href: "/dashboard/overview",
           icon: MdOutlineDashboard,
         },
         {
-          label: "User Management",
-          href: "/dashboard/user-manage",
-          icon: FaUsers,
+          label: "Manage Events",
+          href: "/dashboard/events",
+          icon: MdDashboardCustomize,
         },
         {
-          label: "Resource Library",
-          href: "/dashboard/resource-library",
-          icon: MdOutlineLocalLibrary,
-        },
-        {
-          label: "Challenge Matrix",
-          href: "/dashboard/challenge-matrix",
+          label: "Manage Categories",
+          href: "/dashboard/categories",
           icon: TbMatrix,
         },
-
         {
-          label: "Content Moderation",
-          href: "/dashboard/content-moderation",
+          label: "Manage Tickets",
+          href: "/dashboard/manage-tickets",
           icon: TbBulb,
         },
         {
@@ -73,21 +72,6 @@ export const menuData: MenuData = {
               label: "Profile",
               href: "/dashboard/settings/profile",
               icon: UserRound,
-            },
-            {
-              label: "Terms & Service",
-              href: "/dashboard/settings/terms-service",
-              icon: Info,
-            },
-            {
-              label: "Privacy Policy",
-              href: "/dashboard/settings/privacy-policy",
-              icon: ShieldAlert,
-            },
-            {
-              label: "About Us",
-              href: "/dashboard/settings/about-us",
-              icon: CircleQuestionMark,
             },
           ],
         },

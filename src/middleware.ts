@@ -14,15 +14,16 @@ export function middleware(req: NextRequest) {
   }
 
   if (pathname === "/") {
-    if (!token) {
-      const loginUrl = req.nextUrl.clone();
-      loginUrl.pathname = "/auth/login";
-      return NextResponse.redirect(loginUrl);
-    } else {
-      const dashboardUrl = req.nextUrl.clone();
-      dashboardUrl.pathname = "/dashboard";
-      return NextResponse.redirect(dashboardUrl);
-    }
+    return NextResponse.next();
+    // if (!token) {
+    //   const loginUrl = req.nextUrl.clone();
+    //   loginUrl.pathname = "/auth/login";
+    //   return NextResponse.redirect(loginUrl);
+    // } else {
+    //   const dashboardUrl = req.nextUrl.clone();
+    //   dashboardUrl.pathname = "/dashboard";
+    //   return NextResponse.redirect(dashboardUrl);
+    // }
   }
 
   if (pathname.startsWith("/dashboard") && !token) {
