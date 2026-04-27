@@ -2,7 +2,6 @@
 import { useEffect, useState, useRef } from "react";
 import api from "@/src/services/api";
 import EventCard from "@/src/components/EventCard";
-import { Button, Input } from "antd";
 import Link from "next/link";
 import {
   ArrowRight,
