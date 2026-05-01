@@ -1,15 +1,15 @@
 'use client'
-import login_image from "../../../assets/auth/login.png";
+// import login_image from "../../../assets/auth/login.png";
 import Image from 'next/image';
 import { useState } from 'react';
 import { Input, Checkbox, Button, message, Form } from 'antd';
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import { MdEmail } from "react-icons/md";
 import { IoKeyOutline } from "react-icons/io5";
-import { useAuthService } from './../../../hooks/auth/index';
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useAuthService } from '@/src/hooks/auth';
 
 
 
@@ -46,13 +46,13 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-white w-full">
       <div className="flex items-center justify-center gap-10 md:gap-5 lg:gap-12 container mx-auto">
         <div className="lg:w-[725px] h-[520px] hidden md:block">
-          <Image
+          {/* <Image
             src={login_image}
             alt="logo"
             width={0}
             height={0}
             className="w-full h-full"
-          />
+          /> */}
         </div>
         <div className="w-full lg:w-[720px]">
           <div className="p-8">

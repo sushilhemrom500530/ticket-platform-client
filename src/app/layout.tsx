@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/src/components/Navbar";
-import Footer from "@/src/components/Footer";
 
 export const metadata: Metadata = {
   title: "Rehenrose App",
@@ -18,11 +16,9 @@ export default function RootLayout({
       <body
         className={`antialiased min-h-screen flex flex-col`}
       >
-        <Navbar />
         <main className="flex-grow">
           {children}
         </main>
-        <Footer />
       </body>
     </html>
   );
