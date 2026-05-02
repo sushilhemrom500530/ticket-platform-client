@@ -35,11 +35,29 @@ export function useAuthService() {
   const login = useCallback(async (payload: LoginPayload) => {
     setLoading(true);
     try {
-      const { data } = await useApi.post("/auth/login", payload);
+      const response = await useApi.post("/auth/login", payload);
+      const { data, status } = response;
+
+      if (status >= 400) {
+        const errorMsg = data?.message || "Login failed";
+        const errorMessages = data?.errorMessages;
+
+        if (errorMessages && Array.isArray(errorMessages) && errorMessages.length > 0) {
+          const uniqueMessages = Array.from(new Set(errorMessages.map((err: any) => err.message)));
+          uniqueMessages.forEach((msg: any) => {
+            message.error(msg);
+          });
+        } else {
+          message.error(errorMsg);
+        }
+        return data; // Return failure data
+      }
+
       message.success("Login successful");
       return data;
     } catch (error: any) {
-      message.error(error?.response?.data?.message || "Login failed");
+      // This will only be triggered for 5xx or Network errors now
+      console.error("Login unexpected error:", error);
       throw error;
     } finally {
       setLoading(false);
@@ -50,11 +68,16 @@ export function useAuthService() {
   const forgotPassword = useCallback(async (payload: ForgotPasswordPayload) => {
     setLoading(true);
     try {
-      const { data } = await useApi.post("/auth/forgot-password", payload);
+      const response = await useApi.post("/auth/forgot-password", payload);
+      const { data, status } = response;
+      if (status >= 400) {
+        message.error(data?.message || "Failed to send OTP");
+        return data;
+      }
       message.success("OTP sent to your email");
       return data;
     } catch (error: any) {
-      message.error(error?.response?.data?.message || "Failed to send OTP");
+      console.error("Forgot password unexpected error:", error);
       throw error;
     } finally {
       setLoading(false);
@@ -65,11 +88,16 @@ export function useAuthService() {
   const verifyOtp = useCallback(async (payload: VerifyOtpPayload) => {
     setLoading(true);
     try {
-      const { data } = await useApi.post("/auth/verify-otp", payload);
+      const response = await useApi.post("/auth/verify-otp", payload);
+      const { data, status } = response;
+      if (status >= 400) {
+        message.error(data?.message || "Invalid OTP");
+        return data;
+      }
       message.success("OTP verified successfully");
       return data;
     } catch (error: any) {
-      message.error(error?.response?.data?.message || "Invalid OTP");
+      console.error("Verify OTP unexpected error:", error);
       throw error;
     } finally {
       setLoading(false);
@@ -78,11 +106,16 @@ export function useAuthService() {
   const resendOtp = useCallback(async (payload: ForgotPasswordPayload) => {
     setLoading(true);
     try {
-      const { data } = await useApi.post("/auth/resend-otp", payload);
+      const response = await useApi.post("/auth/resend-otp", payload);
+      const { data, status } = response;
+      if (status >= 400) {
+        message.error(data?.message || "Invalid Request");
+        return data;
+      }
       message.success("OTP Send successfully. Please check your email");
       return data;
     } catch (error: any) {
-      message.error(error?.response?.data?.message || "Invalid Request");
+      console.error("Resend OTP unexpected error:", error);
       throw error;
     } finally {
       setLoading(false);
@@ -93,14 +126,34 @@ export function useAuthService() {
   const resetPassword = useCallback(async (payload: ResetPasswordPayload) => {
     setLoading(true);
     try {
-      const { data } = await useApi.post("/auth/reset-password", payload);
+      const response = await useApi.post("/auth/reset-password", payload);
+      const { data, status } = response;
+      if (status >= 400) {
+        message.error(data?.message || "Reset failed");
+        return data;
+      }
       message.success("Password reset successful");
       return data;
     } catch (error: any) {
-      message.error(error?.response?.data?.message || "Reset failed");
+      console.error("Reset password unexpected error:", error);
       throw error;
     } finally {
       setLoading(false);
+    }
+  }, []);
+
+  /** 🔹 Get My Profile */
+  const getMe = useCallback(async () => {
+    try {
+      const response = await useApi.get("/user/get-my-profile");
+      const { data, status } = response;
+      if (status >= 400) {
+        return null;
+      }
+      return data?.data;
+    } catch (error) {
+      console.error("Get profile unexpected error:", error);
+      return null;
     }
   }, []);
 
@@ -112,5 +165,5 @@ export function useAuthService() {
     router.push("/auth/login");
   }
 
-  return { login, forgotPassword, verifyOtp, resetPassword, loading, logoutUser, resendOtp };
+  return { login, forgotPassword, verifyOtp, resetPassword, loading, logoutUser, resendOtp, getMe };
 }

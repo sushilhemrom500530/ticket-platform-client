@@ -26,7 +26,7 @@ export default function OverviewPage() {
           api.get("/tickets/all?limit=10000"), // Temporary logic to calculate revenue, ideally handled by backend stats endpoint
           api.get("/categories"),
         ]);
-        
+
         const events = eventsRes.data.data.meta.totalResult || 0;
         const allTickets = ticketsRes.data.data.results || [];
         const ticketsSold = allTickets.reduce((sum: number, t: any) => sum + t.quantity, 0);
@@ -49,40 +49,42 @@ export default function OverviewPage() {
     fetchStats();
   }, [user]);
 
+  console.log('user', user);
+
   if (user?.role !== "admin") return <div className="p-20 text-center text-red-500 font-bold text-xl">Access Denied. Admins only.</div>;
 
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-8 text-gray-800">Admin Dashboard Overview</h1>
-      
+
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} md={6}>
           <Card bordered={false} className="shadow-sm border border-gray-100 rounded-xl hover:shadow-md transition">
-            <Statistic 
-              title="Total Events" 
-              value={stats.events} 
-              prefix={<CalendarDays className="mr-2 text-blue-500" />} 
+            <Statistic
+              title="Total Events"
+              value={stats.events}
+              prefix={<CalendarDays className="mr-2 text-blue-500" />}
               loading={loading}
             />
           </Card>
         </Col>
         <Col xs={24} sm={12} md={6}>
           <Card bordered={false} className="shadow-sm border border-gray-100 rounded-xl hover:shadow-md transition">
-            <Statistic 
-              title="Tickets Sold" 
-              value={stats.tickets} 
-              prefix={<Ticket className="mr-2 text-green-500" />} 
+            <Statistic
+              title="Tickets Sold"
+              value={stats.tickets}
+              prefix={<Ticket className="mr-2 text-green-500" />}
               loading={loading}
             />
           </Card>
         </Col>
         <Col xs={24} sm={12} md={6}>
           <Card bordered={false} className="shadow-sm border border-gray-100 rounded-xl hover:shadow-md transition">
-            <Statistic 
-              title="Total Revenue" 
-              value={stats.revenue} 
-              precision={2} 
-              prefix="$" 
+            <Statistic
+              title="Total Revenue"
+              value={stats.revenue}
+              precision={2}
+              prefix="$"
               valueStyle={{ color: '#3f8600' }}
               loading={loading}
             />
@@ -90,10 +92,10 @@ export default function OverviewPage() {
         </Col>
         <Col xs={24} sm={12} md={6}>
           <Card bordered={false} className="shadow-sm border border-gray-100 rounded-xl hover:shadow-md transition">
-            <Statistic 
-              title="Categories" 
-              value={stats.categories} 
-              prefix={<List className="mr-2 text-purple-500" />} 
+            <Statistic
+              title="Categories"
+              value={stats.categories}
+              prefix={<List className="mr-2 text-purple-500" />}
               loading={loading}
             />
           </Card>

@@ -10,12 +10,12 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuthService } from '@/src/hooks/auth';
-
-
+import { useAuthStore } from '@/src/store/authStore';
 
 export default function LoginPage() {
   const [remember, setRemember] = useState(false);
   const { login, loading } = useAuthService();
+  const { setUser } = useAuthStore();
   const router = useRouter();
   const [form] = Form.useForm();
 
@@ -23,22 +23,29 @@ export default function LoginPage() {
     try {
       const res = await login({ ...values, remember });
 
-      if (res?.code === 200) {
-        const token = res?.data?.tokens?.accessToken;
+      console.log('ressss', res);
+
+      if (res?.success || res?.statusCode === 200) {
+        const token = res?.data?.tokens?.accessToken || res?.data?.token;
+        const user = res?.data?.user;
 
         if (token) {
           Cookies.set("token", token, {
             expires: remember ? 7 : undefined,
-            secure: true,
-            sameSite: "strict",
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
           });
         }
+
+        if (user) {
+          setUser(user);
+        }
+
         router.push("/dashboard");
-      } else {
-        message.error(res?.message || "Login failed");
       }
-    } catch (e: any) {
-      message.error("Something went wrong");
+    } catch (error) {
+      // Handle truly unexpected errors (e.g. Network/500)
+      console.error("Unexpected login error:", error);
     }
   };
 

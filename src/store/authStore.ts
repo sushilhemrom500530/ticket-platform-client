@@ -3,9 +3,10 @@ import Cookies from "js-cookie";
 
 interface User {
   id: string;
-  name: string;
+  fullName: string;
   email: string;
   role: string;
+  profilePhoto: string;
 }
 
 interface AuthState {
@@ -17,11 +18,12 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
-  isAuthenticated: !!Cookies.get("accessToken"),
+  isAuthenticated: !!Cookies.get("token"),
   setUser: (user) => set({ user, isAuthenticated: !!user }),
   logout: () => {
-    Cookies.remove("accessToken");
+    Cookies.remove("token");
     Cookies.remove("refreshToken");
     set({ user: null, isAuthenticated: false });
+    window.location.href = "/auth/login";
   },
 }));

@@ -26,7 +26,7 @@ export function useCategories() {
   const fetchCategories = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await useApi.get<{ data: Category[] }>("/category/all");
+      const { data } = await useApi.get<{ data: Category[] }>("/categories");
       setCategories(data?.data || []);
     } catch (error) {
       // console.error("Error fetching categories:", error);
@@ -49,7 +49,7 @@ export function useCreateCategory() {
   const createCategory = useCallback(async (payload: FormData) => {
     try {
       const { data } = await useApi.post<{ data: Category }>(
-        "/category/create",
+        "/categories",
         payload
       );
       return data.data;
@@ -70,7 +70,7 @@ export function useCreateSubCategory() {
     async (categoryId: string, payload: FormData) => {
       try {
         const { data } = await useApi.post<{ data: SubCategory }>(
-          `/category/add-sub-category/${categoryId}`,
+          `/categories/add-sub-category/${categoryId}`,
           payload
         ); 
         return data.data;

@@ -7,19 +7,17 @@ import axios, {
   InternalAxiosRequestConfig,
   AxiosResponse,
 } from "axios";
-// import Cookies from "js-cookie";
+import Cookies from "js-cookie";
 
 const useApi: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_URI,
   withCredentials: true,
+  validateStatus: (status) => status < 500, // Treat 4xx as resolved to avoid triggering dev error overlays
 });
 useApi.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    const token =
-      document?.cookie
-        ?.split("; ")
-        ?.find((row) => row.startsWith("token="))
-        ?.split("=")[1] || null;
+    const token = Cookies.get("token");
+    // console.log("Request Interceptor - Token Found:", token);
 
     if (token) {
       config.headers = config.headers ?? {};
@@ -34,18 +32,22 @@ useApi.interceptors.request.use(
 // Response Interceptor
 useApi.interceptors.response.use(
   (response: AxiosResponse): AxiosResponse => {
+    const status = response.status;
+    const data = response.data;
+
+    if (status >= 400) {
+      // For 4xx errors, we treat them as "successful" requests that returned a failure result
+      // This prevents Next.js from showing the error overlay
+    }
     return response;
   },
   (error: AxiosError<any>) => {
     const status = error.response?.status;
-    const messageText = error.response?.data?.message;
-
-    if (status === 401 || status === 403) {
-      // Cookies.remove("authToken");
-      // window.location.href = "/";
-      message.error(messageText || "Unauthorized access.");
+    if (status && status >= 500) {
+      message.error("Internal Server Error. Please try again later.");
+    } else if (!status) {
+      message.error("Network Error. Please check your connection.");
     }
-
     return Promise.reject(error);
   }
 );
