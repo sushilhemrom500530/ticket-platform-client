@@ -1,6 +1,6 @@
 'use client'
 
-import reset_image from "../../../assets/auth/reset-password.png";
+// import reset_image from "../../../assets/auth/reset-password.png";
 import Image from 'next/image';
 import { useState, Suspense } from 'react';
 import { Input, Button, message, Form } from 'antd';
@@ -37,13 +37,13 @@ function ResetPasswordContent() {
     <div className="flex items-center justify-center min-h-screen bg-white w-full">
       <div className="flex items-center justify-center gap-10 md:gap-5 lg:gap-12 container mx-auto">
         <div className=" hidden md:block">
-          <Image
+          {/* <Image
             src={reset_image}
             alt="logo"
             width={0}
             height={0}
             className="w-full h-full"
-          />
+          /> */}
         </div>
         <div className="w-full lg:w-[720px]">
           <div className="p-8">
