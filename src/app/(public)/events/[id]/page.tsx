@@ -22,17 +22,22 @@ export default function EventDetailsPage() {
     }
   }, [id]);
 
-  if (loading) return <div className="flex justify-center p-20"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>;
+  if (loading) return <div className="flex justify-center p-20">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600">
+    </div>
+  </div>;
+
   if (!event) return <div className="text-center p-20">Event not found</div>;
+
 
   const isSoldOut = event.isPremium && event.soldTickets >= event.totalTickets;
 
   const handleAction = () => {
-    if (!isAuthenticated) {
-      message.info("Please login to proceed");
-      router.push("/auth/login");
-      return;
-    }
+    // if (!isAuthenticated) {
+    //   message.info("Please login to proceed");
+    //   router.push("/auth/login");
+    //   return;
+    // }
     router.push(`/checkout?eventId=${event._id}`);
   };
 
@@ -61,7 +66,7 @@ export default function EventDetailsPage() {
         {/* Sidebar / Ticket Box */}
         <div className="lg:w-1/3">
           <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 sticky top-24">
-            
+
             <div className="flex items-center text-gray-700 mb-6 bg-gray-50 p-4 rounded-xl">
               <Calendar className="w-6 h-6 mr-4 text-blue-500" />
               <div>
@@ -83,19 +88,19 @@ export default function EventDetailsPage() {
                 <span className="text-gray-500">Price</span>
                 <span className="text-3xl font-bold text-gray-900">{event.isPremium ? `$${event.price}` : "Free"}</span>
               </div>
-              
+
               {event.isPremium && (
                 <div className="flex justify-between items-center text-sm text-gray-500 mt-4">
-                  <span><Ticket className="w-4 h-4 inline mr-1"/> Tickets available</span>
+                  <span><Ticket className="w-4 h-4 inline mr-1" /> Tickets available</span>
                   <span className="font-semibold">{event.totalTickets - event.soldTickets} / {event.totalTickets}</span>
                 </div>
               )}
             </div>
 
             {event.isPremium ? (
-              <Button 
-                type="primary" 
-                size="large" 
+              <Button
+                type="primary"
+                size="large"
                 disabled={isSoldOut}
                 onClick={handleAction}
                 className={`w-full h-14 text-lg font-bold rounded-xl shadow-lg ${isSoldOut ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-500 shadow-blue-500/30 border-none'}`}
@@ -103,9 +108,9 @@ export default function EventDetailsPage() {
                 {isSoldOut ? "Sold Out" : "Buy Ticket"}
               </Button>
             ) : (
-              <Button 
-                type="primary" 
-                size="large" 
+              <Button
+                type="primary"
+                size="large"
                 className="w-full h-14 text-lg font-bold rounded-xl bg-green-600 hover:bg-green-500 shadow-lg shadow-green-500/30 border-none"
               >
                 This is a Free Event (No ticket required)

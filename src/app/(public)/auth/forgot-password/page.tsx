@@ -1,5 +1,5 @@
 'use client'
-import forgot_image from "../../../assets/auth/forget.png";
+// import forgot_image from "../../../assets/auth/forget.png";
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { Input, Button, message, Form } from 'antd';
@@ -33,13 +33,13 @@ export default function ForgotPassword() {
     <div className="flex items-center justify-center min-h-screen bg-white w-full">
       <div className="flex items-center justify-center gap-10 md:gap-5 lg:gap-12 container mx-auto">
         <div className=" hidden md:block">
-          <Image
+          {/* <Image
             src={forgot_image}
             alt="logo"
             width={0}
             height={0}
             className="w-full h-full"
-          />
+          /> */}
         </div>
         <div className="w-full lg:w-[720px]">
           <div className="p-8">
