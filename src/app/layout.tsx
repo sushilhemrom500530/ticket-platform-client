@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import AuthProvider from "../providers/AuthProvider";
 
 export const metadata: Metadata = {
   title: "Rehenrose App",
@@ -16,9 +17,11 @@ export default function RootLayout({
       <body
         className={`antialiased min-h-screen flex flex-col`}
       >
-        <main className="flex-grow">
-          {children}
-        </main>
+        <AuthProvider>
+          <main className="flex-grow">
+            {children}
+          </main>
+        </AuthProvider>
       </body>
     </html>
   );

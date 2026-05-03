@@ -7,16 +7,16 @@ import { Bell } from "lucide-react";
 
 export default function Header({ navOpened, setNavOpened }: any) {
   return (
-    <div className="sticky inset-y-0 left-0 z-30 w-full rounded-[]  bg-primary [transition:0.5s]">
-      <header className="flex items-center justify-between p-4 h-[103px]">
+    <div className="sticky inset-y-0 left-0 z-30 w-full rounded-[]  bg-blue-50 [transition:0.5s]">
+      <header className="flex items-center justify-between p-4">
         {/* left side  */}
         <div className="flex items-center justify-between w-full">
           <div onClick={() => setNavOpened(!navOpened)} className="md:hidden flex items-center justify-center cursor-pointer">
             <IoMdMenu className=" w-10 h-10 rounded-full bg-yellow-50 [transition:0.3s] hover:bg-yellow-100 text-center p-1" />
           </div>
-          <div className="hidden md:block text-white">
+          <div className="hidden md:block text-black">
             <h1 className="text-base md:text-xl lg:text-3xl font-semibold ">
-              Welcome,Monique
+              Welcome,TP
             </h1>
             <p className="text-sm font-normal">
               Have a nice day
@@ -38,11 +38,11 @@ export default function Header({ navOpened, setNavOpened }: any) {
               <Image
                 src={user_icon}
                 alt="logo"
-                width={56}
-                height={55}
-                className="w-12 h-12 rounded-full "
+                width={44}
+                height={44}
+                className="w-11 h-11 rounded-full "
               />
-              <h1 className="text-lg text-white font-medium hidden xl:block">Monique</h1>
+              <h1 className="text-lg text-black font-medium hidden xl:block">TP</h1>
             </div>
           </div>
         </div>

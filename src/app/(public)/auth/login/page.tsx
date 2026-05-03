@@ -26,8 +26,9 @@ export default function LoginPage() {
       console.log('ressss', res);
 
       if (res?.success || res?.statusCode === 200) {
-        const token = res?.data?.tokens?.accessToken || res?.data?.token;
-        const user = res?.data?.user;
+        // Handle different response structures
+        const token = res?.data?.token || res?.data?.tokens?.accessToken;
+        const user = res?.data?.results || res?.data?.user;
 
         if (token) {
           Cookies.set("token", token, {

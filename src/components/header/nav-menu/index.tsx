@@ -61,7 +61,7 @@ export default function NavItem({
     <div className="relative w-full">
       <div
         onClick={submenu ? () => handleSubmenuToggle(label) : handleClick}
-        className={`w-full flex items-center px-5 py-3 cursor-pointer transition-all ${isParentActive ? activeClass : inactiveClass
+        className={`w-full flex items-center px-5 py-2 cursor-pointer transition-all ${isParentActive ? activeClass : inactiveClass
           }`}
       >
         {!submenu ? (

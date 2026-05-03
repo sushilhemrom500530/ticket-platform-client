@@ -35,7 +35,7 @@ export default function Sidebar({ navOpened, setNavOpened }: any) {
       {/* Sidebar */}
       <div
         className={`
-          fixed top-0 left-0 z-30 h-screen w-[260px] bg-gradient-to-b from-[#8A2CE2] to-[#4C187C] overflow-y-auto transition-transform duration-300 
+          fixed top-0 left-0 z-30 h-screen w-[260px] bg-black overflow-y-auto transition-transform duration-300 
           ${navOpened ? "translate-x-0 pt-24" : "-translate-x-full"}
           lg:translate-x-0  
         `}
@@ -54,7 +54,7 @@ export default function Sidebar({ navOpened, setNavOpened }: any) {
         <div className="flex flex-col gap-5">
 
           <div className=" px-2 flex items-center justify-center py-4">
-            <Image src={logo_image} alt="logo" width={195} height={295} />
+            <h1 className="text-3xl font-bold text-white">TP</h1>
           </div>
           <div className="border-b border-b-[#8CC6A7]" />
           <div>

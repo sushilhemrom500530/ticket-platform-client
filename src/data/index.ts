@@ -45,11 +45,6 @@ export const menuData: MenuData = {
           icon: UserRound,
         },
         {
-          label: "Overview",
-          href: "/dashboard/overview",
-          icon: MdOutlineDashboard,
-        },
-        {
           label: "Manage Events",
           href: "/dashboard/events",
           icon: MdDashboardCustomize,
