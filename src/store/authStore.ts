@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 import Cookies from "js-cookie";
 
 interface User {
@@ -6,7 +7,11 @@ interface User {
   fullName: string;
   email: string;
   role: string;
-  profilePhoto: string;
+  profilePhoto?: string;
+  profileUrl?: string;
+  status?: string;
+  phoneNumber?: string;
+  address?: string;
 }
 
 interface AuthState {
@@ -16,14 +21,22 @@ interface AuthState {
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  isAuthenticated: !!Cookies.get("token"),
-  setUser: (user) => set({ user, isAuthenticated: !!user }),
-  logout: () => {
-    Cookies.remove("token");
-    Cookies.remove("refreshToken");
-    set({ user: null, isAuthenticated: false });
-    window.location.href = "/auth/login";
-  },
-}));
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      isAuthenticated: !!Cookies.get("token"),
+      setUser: (user) => set({ user, isAuthenticated: !!user }),
+      logout: () => {
+        Cookies.remove("token");
+        Cookies.remove("refreshToken");
+        set({ user: null, isAuthenticated: false });
+        window.location.href = "/auth/login";
+      },
+    }),
+    {
+      name: "auth-storage",
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);

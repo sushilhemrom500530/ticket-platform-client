@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import api from "@/src/services/api";
-import { Table, Button, Modal, Form, Input, Select, InputNumber, Switch, message, Popconfirm } from "antd";
+import { Table, Button, Modal, Form, Input, Select, InputNumber, Switch, message, Popconfirm, Upload } from "antd";
 import { Plus, Edit, Trash } from "lucide-react";
 
 export default function ManageEventsPage() {
@@ -38,7 +38,13 @@ export default function ManageEventsPage() {
     form.setFieldsValue({
       ...record,
       categoryId: record.categoryId?._id,
-      date: new Date(record.date).toISOString().slice(0, 16), // datetime-local format
+      date: record.date ? new Date(record.date).toISOString().slice(0, 16) : "",
+      image: record.image ? [{
+        uid: "-1",
+        name: "existing_image",
+        status: "done",
+        url: record.image,
+      }] : [],
     });
     setIsModalVisible(true);
   };
@@ -56,8 +62,13 @@ export default function ManageEventsPage() {
   const onFinish = async (values: any) => {
     try {
       const formData = new FormData();
-      formData.append("data", JSON.stringify(values));
-      // In a real app, handle file upload here by appending file to formData
+      
+      const { image, ...rest } = values;
+      formData.append("data", JSON.stringify(rest));
+      
+      if (image && image[0]?.originFileObj) {
+        formData.append("image", image[0].originFileObj);
+      }
 
       if (editingId) {
         await api.put(`/events/${editingId}`, formData);
@@ -74,6 +85,12 @@ export default function ManageEventsPage() {
   };
 
   const columns = [
+    { 
+      title: "Image", 
+      dataIndex: "image", 
+      key: "image", 
+      render: (img: string) => <img src={img} alt="event" className="w-12 h-12 object-cover rounded-lg" /> 
+    },
     { title: "Title", dataIndex: "title", key: "title", render: (t: string) => <span className="font-semibold">{t}</span> },
     { title: "Date", dataIndex: "date", key: "date", render: (d: string) => new Date(d).toLocaleDateString() },
     { title: "Premium", dataIndex: "isPremium", key: "isPremium", render: (p: boolean) => p ? "Yes" : "No" },
@@ -92,6 +109,13 @@ export default function ManageEventsPage() {
       ),
     },
   ];
+
+  const normFile = (e: any) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
+  };
 
   return (
     <div className="p-6">
@@ -120,6 +144,21 @@ export default function ManageEventsPage() {
           <Form.Item name="description" label="Description" rules={[{ required: true }]}>
             <Input.TextArea rows={3} />
           </Form.Item>
+          
+          <Form.Item
+            name="image"
+            label="Event Image"
+            valuePropName="fileList"
+            getValueFromEvent={normFile}
+          >
+            <Upload listType="picture-card" maxCount={1} beforeUpload={() => false}>
+              <div>
+                <Plus className="w-4 h-4 mx-auto" />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </div>
+            </Upload>
+          </Form.Item>
+
           <div className="flex gap-4">
             <Form.Item name="categoryId" label="Category" rules={[{ required: true }]} className="flex-1">
               <Select options={categories.map(c => ({ label: c.name, value: c._id }))} />
@@ -146,8 +185,8 @@ export default function ManageEventsPage() {
               </Form.Item>
             )}
           </div>
-          <Button type="primary" htmlType="submit" className="w-full bg-blue-600">
-            {editingId ? "Update" : "Create"}
+          <Button type="primary" htmlType="submit" className="w-full bg-blue-600 h-12 text-lg">
+            {editingId ? "Update Event" : "Create Event"}
           </Button>
         </Form>
       </Modal>
