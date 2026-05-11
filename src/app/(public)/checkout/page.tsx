@@ -2,26 +2,28 @@
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/src/services/api";
-import { Button, message, InputNumber, Divider } from "antd";
-import { Ticket, CreditCard } from "lucide-react";
+import { Button, message, InputNumber, Divider, Radio, Space } from "antd";
+import { CreditCard } from "lucide-react";
 import { useAuthStore } from "@/src/store/authStore";
 
 function CheckoutContent() {
   const searchParams = useSearchParams();
   const eventId = searchParams.get("eventId");
   const router = useRouter();
-  const { isAuthenticated } = useAuthStore();
+  const { user, isAuthenticated } = useAuthStore();
 
   const [event, setEvent] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [purchasing, setPurchasing] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<"bkash" | "nagad">("bkash");
 
   useEffect(() => {
-    // if (!isAuthenticated) {
-    //   router.push("/auth/login");
-    //   return;
-    // }
+    if (!isAuthenticated) {
+      message.warning("Please login to purchase tickets");
+      router.push("/auth/login");
+      return;
+    }
 
     if (!eventId) {
       router.push("/events");
@@ -46,14 +48,34 @@ function CheckoutContent() {
   }, [eventId, isAuthenticated, router]);
 
   const handlePurchase = async () => {
+    if (!user) {
+      message.error("User session not found");
+      return;
+    }
+    
     setPurchasing(true);
     try {
-      await api.post("/tickets/purchase", { eventId, quantity });
-      message.success("Ticket purchased successfully!");
-      router.push("/dashboard/tickets");
+      const callbackURL = `${window.location.origin}/checkout/success`;
+      
+      const response = await api.post("/payments/create", { 
+        eventId, 
+        quantity, 
+        method: paymentMethod,
+        callbackURL 
+      });
+
+      const { redirectURL } = response.data.data;
+      
+      message.loading("Redirecting to payment gateway...", 2);
+      
+      // In a real scenario, we redirect. 
+      // For our mock, we can simulate the redirect after a short delay.
+      setTimeout(() => {
+        window.location.href = redirectURL;
+      }, 1000);
+
     } catch (error: any) {
-      message.error(error.response?.data?.message || "Purchase failed");
-    } finally {
+      message.error(error.response?.data?.message || "Payment initiation failed");
       setPurchasing(false);
     }
   };
@@ -94,9 +116,34 @@ function CheckoutContent() {
               value={quantity}
               onChange={(value) => setQuantity(value || 1)}
               size="large"
+              className="w-32"
             />
           </div>
           <p className="text-xs text-gray-500 text-right mb-6">{maxAvailable} tickets left</p>
+
+          <Divider />
+
+          <h2 className="text-lg font-bold mb-4">Select Payment Method</h2>
+          <Radio.Group onChange={(e) => setPaymentMethod(e.target.value)} value={paymentMethod}>
+            <Space orientation="vertical" className="w-full">
+              <div className={`border p-4 rounded-xl cursor-pointer transition ${paymentMethod === 'bkash' ? 'border-pink-500 bg-pink-50' : 'border-gray-200'}`} onClick={() => setPaymentMethod('bkash')}>
+                <Radio value="bkash">
+                  <div className="flex items-center gap-3">
+                    <span className="font-bold text-pink-600">bKash</span>
+                    <span className="text-xs text-gray-500">Pay securely using bKash account</span>
+                  </div>
+                </Radio>
+              </div>
+              <div className={`border p-4 rounded-xl cursor-pointer transition ${paymentMethod === 'nagad' ? 'border-orange-500 bg-orange-50' : 'border-gray-200'}`} onClick={() => setPaymentMethod('nagad')}>
+                <Radio value="nagad">
+                  <div className="flex items-center gap-3">
+                    <span className="font-bold text-orange-600">Nagad</span>
+                    <span className="text-xs text-gray-500">Pay securely using Nagad account</span>
+                  </div>
+                </Radio>
+              </div>
+            </Space>
+          </Radio.Group>
         </div>
 
         <div className="md:w-1/3 bg-gray-50 p-6 rounded-2xl border border-gray-200">

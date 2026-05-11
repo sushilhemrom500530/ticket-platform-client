@@ -101,7 +101,7 @@ export default function DashboardPage() {
               value={stats.revenue}
               precision={2}
               prefix="$"
-              valueStyle={{ color: '#3f8600' }}
+              styles={{ content: { color: '#3f8600' } }}
               loading={loading}
             />
           </Card>
