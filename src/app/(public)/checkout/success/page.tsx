@@ -16,6 +16,7 @@ function SuccessContent() {
   useEffect(() => {
     const paymentID = searchParams.get("paymentID") || searchParams.get("payment_ref_id");
     const status = searchParams.get("status");
+    const methodFromUrl = searchParams.get("method") as "bkash" | "nagad" | "sslcommerz";
 
     if (!paymentID || (status !== "success" && status !== "Success")) {
       setVerifying(false);
@@ -25,7 +26,11 @@ function SuccessContent() {
 
     const verifyPayment = async () => {
       try {
-        const method = searchParams.get("paymentID") ? "bkash" : "nagad";
+        let method = methodFromUrl;
+        if (!method) {
+          method = searchParams.get("paymentID") ? "bkash" : "nagad";
+        }
+        
         const response = await api.post("/payments/verify", {
           paymentIntent: paymentID,
           method: method
@@ -45,6 +50,7 @@ function SuccessContent() {
 
     verifyPayment();
   }, [searchParams]);
+
 
   if (verifying) {
     return (

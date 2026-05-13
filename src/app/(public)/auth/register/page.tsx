@@ -64,10 +64,10 @@ export default function RegisterPage() {
                 </div>
                 <div className="w-full lg:w-[720px]">
                     <div className="p-8">
-                        <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-center text-[#0A0A0A] mb-6">
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-center text-[#0A0A0A] mb-3">
                             Login to Account!
                         </h1>
-                        <p className="text-xl lg:text-2xl text-center text-[#6E6E6E] mb-6">
+                        <p className=" text-center text-[#6E6E6E] mb-6">
                             Please enter your email and password to continue.
                         </p>
                         {/* form field */}
@@ -78,8 +78,22 @@ export default function RegisterPage() {
                             autoComplete="off"
                         >
                             <Form.Item
+                                name="fullname"
+                                label={<span className="text-[#24160E] text-lg">Full name</span>}
+                                rules={[
+                                    { required: true, message: "Full name is required." },
+                                    { min: 3, message: "Full name must be at least 3 characters." },
+                                ]}
+                            >
+                                <Input
+                                    prefix={<MdEmail className="text-[#0A0A0A] text-xl" />}
+                                    placeholder="Enter Your Email"
+                                    className="custom-textarea !text-[#3F3E3E] px-3! py-2!"
+                                />
+                            </Form.Item>
+                            <Form.Item
                                 name="email"
-                                label={<span className="text-[#24160E] text-xl lg:text-2xl">Email</span>}
+                                label={<span className="text-[#24160E] text-lg">Email</span>}
                                 rules={[
                                     { required: true, message: "Email is required." },
                                     { type: "email", message: "Enter a valid email address." },
@@ -88,13 +102,13 @@ export default function RegisterPage() {
                                 <Input
                                     prefix={<MdEmail className="text-[#0A0A0A] text-xl" />}
                                     placeholder="Enter Your Email"
-                                    className="custom-textarea custom-input-profile !text-[#3F3E3E] !mt-3"
+                                    className="custom-textarea !text-[#3F3E3E] px-3! py-2!"
                                 />
                             </Form.Item>
 
                             <Form.Item
                                 name="password"
-                                label={<span className="text-[#24160E] text-xl lg:text-2xl">Password</span>}
+                                label={<span className="text-[#24160E] text-lg">Password</span>}
                                 rules={[
                                     { required: true, message: "Password is required." },
                                     { min: 6, message: "Password must be at least 6 characters." },
@@ -103,30 +117,12 @@ export default function RegisterPage() {
                                 <Input.Password
                                     prefix={<IoKeyOutline className="text-[#0A0A0A] text-xl" />}
                                     placeholder="Enter Password"
-                                    size="large"
-                                    className="custom-textarea custom-input-profile !text-[#3F3E3E] !mt-3"
+                                    className="custom-textarea !text-[#3F3E3E] px-3! py-2!"
                                     iconRender={(visible) =>
                                         visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
                                     }
                                 />
                             </Form.Item>
-
-                            <div className="flex items-center justify-between mb-6">
-                                <Checkbox
-                                    className="text-gray-600"
-                                    checked={remember}
-                                    onChange={(e) => setRemember(e.target.checked)}
-                                >
-                                    <span className="text-sm">Remember me</span>
-                                </Checkbox>
-
-                                <Link
-                                    href="/auth/forgot-password"
-                                    className="text-sm text-primary font-bold hover:!text-[#8A2CE2]/80"
-                                >
-                                    Forgot password?
-                                </Link>
-                            </div>
 
                             <Button
                                 htmlType="submit"
@@ -135,7 +131,7 @@ export default function RegisterPage() {
                                 loading={loading}
                                 className="w-full !rounded-full !py-6 bg-primary hover:!bg-[#8A2CE2]/90 text-xl !font-semibold"
                             >
-                                Sign In
+                                Sign Up
                             </Button>
                         </Form>
                     </div>

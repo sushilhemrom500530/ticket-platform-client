@@ -28,22 +28,12 @@
    background: #8A2CE2 !important;
  }
 
-
-
  .custom-textarea:hover,
  .custom-textarea:focus,
  .custom-textarea:focus-within {
    border-color: #8A2CE2 !important;
    box-shadow: 0 0 0 2px rgba(212, 175, 56, 0.2);
  }
-
- .custom-input-profile {
-   background: #fff !important;
-   border-radius: 16px !important;
-   font-size: 20px !important;
-   padding: 10px 16px !important
- }
-
 
  .ant-tag {
    @apply !flex !items-center !gap-2 !w-max

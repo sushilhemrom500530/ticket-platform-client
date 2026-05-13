@@ -16,7 +16,7 @@ function CheckoutContent() {
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [purchasing, setPurchasing] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<"bkash" | "nagad">("bkash");
+  const [paymentMethod, setPaymentMethod] = useState<"bkash" | "nagad" | "sslcommerz">("sslcommerz");
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -68,17 +68,17 @@ function CheckoutContent() {
       
       message.loading("Redirecting to payment gateway...", 2);
       
-      // In a real scenario, we redirect. 
-      // For our mock, we can simulate the redirect after a short delay.
+      // Redirect to the payment gateway
       setTimeout(() => {
         window.location.href = redirectURL;
-      }, 1000);
+      }, 500);
 
     } catch (error: any) {
       message.error(error.response?.data?.message || "Payment initiation failed");
       setPurchasing(false);
     }
   };
+
 
   if (loading) return <div className="flex justify-center p-20">
     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -124,26 +124,45 @@ function CheckoutContent() {
           <Divider />
 
           <h2 className="text-lg font-bold mb-4">Select Payment Method</h2>
-          <Radio.Group onChange={(e) => setPaymentMethod(e.target.value)} value={paymentMethod}>
-            <Space orientation="vertical" className="w-full">
-              <div className={`border p-4 rounded-xl cursor-pointer transition ${paymentMethod === 'bkash' ? 'border-pink-500 bg-pink-50' : 'border-gray-200'}`} onClick={() => setPaymentMethod('bkash')}>
-                <Radio value="bkash">
+          <Radio.Group onChange={(e) => setPaymentMethod(e.target.value)} value={paymentMethod} className="w-full">
+            <Space direction="vertical" className="w-full">
+              <div 
+                className={`border p-4 rounded-xl cursor-pointer transition ${paymentMethod === 'sslcommerz' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`} 
+                onClick={() => setPaymentMethod('sslcommerz')}
+              >
+                <Radio value="sslcommerz">
                   <div className="flex items-center gap-3">
-                    <span className="font-bold text-pink-600">bKash</span>
-                    <span className="text-xs text-gray-500">Pay securely using bKash account</span>
+                    <span className="font-bold text-blue-600">SSLCommerz</span>
+                    <span className="text-xs px-2 py-0.5 bg-blue-100 text-blue-600 rounded-full">Recommended</span>
+                    <span className="text-xs text-gray-500">Pay with Card, Mobile Banking or Net Banking</span>
                   </div>
                 </Radio>
               </div>
-              <div className={`border p-4 rounded-xl cursor-pointer transition ${paymentMethod === 'nagad' ? 'border-orange-500 bg-orange-50' : 'border-gray-200'}`} onClick={() => setPaymentMethod('nagad')}>
+              <div 
+                className={`border p-4 rounded-xl cursor-pointer transition ${paymentMethod === 'bkash' ? 'border-pink-500 bg-pink-50' : 'border-gray-200'}`} 
+                onClick={() => setPaymentMethod('bkash')}
+              >
+                <Radio value="bkash">
+                  <div className="flex items-center gap-3">
+                    <span className="font-bold text-pink-600">bKash</span>
+                    <span className="text-xs text-gray-500">Directly pay using bKash account</span>
+                  </div>
+                </Radio>
+              </div>
+              <div 
+                className={`border p-4 rounded-xl cursor-pointer transition ${paymentMethod === 'nagad' ? 'border-orange-500 bg-orange-50' : 'border-gray-200'}`} 
+                onClick={() => setPaymentMethod('nagad')}
+              >
                 <Radio value="nagad">
                   <div className="flex items-center gap-3">
                     <span className="font-bold text-orange-600">Nagad</span>
-                    <span className="text-xs text-gray-500">Pay securely using Nagad account</span>
+                    <span className="text-xs text-gray-500">Directly pay using Nagad account</span>
                   </div>
                 </Radio>
               </div>
             </Space>
           </Radio.Group>
+
         </div>
 
         <div className="md:w-1/3 bg-gray-50 p-6 rounded-2xl border border-gray-200">
