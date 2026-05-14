@@ -1,19 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { menuData } from "../../../data";
+import { adminMenuData, userMenuData } from "../../../data";
 import NavItem from "../nav-menu";
 import logo_image from "../../../assets/dashboard_logo.svg";
 import logout_image from "../../../assets/menu/logout.svg";
 import Image from "next/image";
 import { useAuthService } from "@/src/hooks/auth";
 import sidebar_bg from "../../../assets/side_layout_bg.svg"
+import { useAuthStore } from "@/src/store/authStore";
 
 export default function Sidebar({ navOpened, setNavOpened }: any) {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const { logoutUser } = useAuthService();
+  const { user } = useAuthStore();
 
-  const menuLinks = menuData?.linkData ?? [];
+  const menuLinks = user?.role === "admin" 
+    ? adminMenuData?.linkData 
+    : userMenuData?.linkData;
 
   const closeAllSubmenus = (): void => {
     setOpenSubmenu(null);

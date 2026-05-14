@@ -1,18 +1,30 @@
 import {
-  CircleQuestionMark,
-  ShieldAlert,
+  LayoutDashboard,
+  Ticket,
+  CalendarDays,
+  Heart,
+  CreditCard,
+  Bell,
+  User,
+  Settings,
   UserRound,
+  ShieldAlert,
   Info,
+  CircleQuestionMark,
+  Users,
+  ShieldCheck,
+  BarChart3,
+  ClipboardList,
+  MessageSquareWarning,
 } from "lucide-react";
-import { TbMatrix } from "react-icons/tb";
-import { Settings } from "lucide-react";
+import { TbMatrix, TbBulb } from "react-icons/tb";
+import { MdDashboardCustomize } from "react-icons/md";
 import {
-  MdDashboardCustomize,
-  MdOutlineLocalLibrary,
-  MdOutlineDashboard,
-} from "react-icons/md";
-import { FaUsers } from "react-icons/fa6";
-import { TbBulb } from "react-icons/tb";
+  TbCategory,
+  TbReportAnalytics,
+  TbDiscount
+} from "react-icons/tb";
+
 
 export interface SubmenuItem {
   label: string;
@@ -35,14 +47,14 @@ export interface MenuData {
   linkData: MenuGroup[];
 }
 
-export const menuData: MenuData = {
+export const adminMenuData: MenuData = {
   linkData: [
     {
       menu: [
         {
-          label: "My Tickets",
-          href: "/dashboard/tickets",
-          icon: UserRound,
+          label: "Dashboard",
+          href: "/dashboard",
+          icon: LayoutDashboard,
         },
         {
           label: "Manage Events",
@@ -50,27 +62,120 @@ export const menuData: MenuData = {
           icon: MdDashboardCustomize,
         },
         {
-          label: "Manage Categories",
+          label: "Event Categories",
           href: "/dashboard/categories",
-          icon: TbMatrix,
+          icon: TbCategory,
         },
         {
           label: "Manage Tickets",
           href: "/dashboard/manage-tickets",
-          icon: TbBulb,
+          icon: Ticket,
+        },
+
+        {
+          label: "Users",
+          href: "/dashboard/users",
+          icon: Users,
         },
         {
-          label: "Setting",
+          label: "Organizers",
+          href: "/dashboard/organizers",
+          icon: ShieldCheck,
+        },
+        {
+          label: "Payments",
+          href: "/dashboard/payments",
+          icon: CreditCard,
+        },
+        {
+          label: "Transactions",
+          href: "/dashboard/transactions",
+          icon: ClipboardList,
+        },
+        {
+          label: "Coupons",
+          href: "/dashboard/coupons",
+          icon: TbDiscount,
+        },
+        {
+          label: "Analytics",
+          href: "/dashboard/analytics",
+          icon: BarChart3,
+        },
+        {
+          label: "Reports",
+          href: "/dashboard/reports",
+          icon: TbReportAnalytics,
+        },
+
+        {
+          label: "Notifications",
+          href: "/dashboard/notifications",
+          icon: Bell,
+        },
+        {
+          label: "Support & Issues",
+          href: "/dashboard/support",
+          icon: MessageSquareWarning,
+        },
+        {
+          label: "Profile",
+          href: "/dashboard/profile",
+          icon: UserRound,
+        },
+        {
+          label: "System Settings",
+          href: "/dashboard/settings/system",
           icon: Settings,
-          submenu: [
-            {
-              label: "Profile",
-              href: "/dashboard/settings/profile",
-              icon: UserRound,
-            },
-          ],
         },
       ],
     },
   ],
 };
+
+export const userMenuData: MenuData = {
+  linkData: [
+    {
+      menu: [
+        {
+          label: "Dashboard",
+          href: "/dashboard",
+          icon: LayoutDashboard,
+        },
+        {
+          label: "My Tickets",
+          href: "/dashboard/my-tickets",
+          icon: Ticket,
+        },
+        {
+          label: "My Events",
+          href: "/dashboard/my-events",
+          icon: CalendarDays,
+        },
+        {
+          label: "Favorites",
+          href: "/dashboard/favorites",
+          icon: Heart,
+        },
+        {
+          label: "Payment History",
+          href: "/dashboard/payment-history",
+          icon: CreditCard,
+        },
+        {
+          label: "Notifications",
+          href: "/dashboard/notifications",
+          icon: Bell,
+        },
+        {
+          label: "Profile",
+          href: "/dashboard/profile",
+          icon: User,
+        },
+      ],
+    },
+  ],
+};
+
+// For backward compatibility if needed, but we should update the component
+export const menuData = adminMenuData;

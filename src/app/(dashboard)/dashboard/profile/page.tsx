@@ -1,13 +1,13 @@
 "use client"
 import Link from "next/link";
 import { FaEdit } from "react-icons/fa";
-import user_image from "../../../../../assets/user.svg";
+import user_image from "@/src/assets/user.svg";
 import Image from "next/image";
 import { Spin, Tag, Descriptions } from "antd";
-import { useMyProfile } from "../../../../../hooks/dashboard/users/index";
-import { statusColors, UserStatus } from "../../../../../types";
 import dayjs from "dayjs";
 import Title from "@/src/components/reuseable/title";
+import { useMyProfile } from "@/src/hooks/dashboard/users";
+import { statusColors, UserStatus } from "@/src/types";
 
 type ProfileExtras = {
   address?: string;
