@@ -72,23 +72,40 @@ export default function DashboardPage() {
       chart: {
         id: "sales-progress",
         toolbar: { show: false },
-        zoom: { enabled: false },
+        fontFamily: 'Inter, sans-serif',
+      },
+      grid: {
+        show: true,
+        borderColor: '#f1f5f9',
+        strokeDashArray: 4,
       },
       xaxis: {
         categories: stats.salesProgress.map((s: any) => s.date),
+        axisBorder: { show: false },
+        axisTicks: { show: false },
       },
-      colors: ["#3b82f6"],
+      yaxis: {
+        labels: {
+          style: { colors: '#64748b' }
+        }
+      },
+      colors: ["#2563eb"],
       stroke: { curve: "smooth", width: 3 },
       fill: {
         type: "gradient",
         gradient: {
           shadeIntensity: 1,
-          opacityFrom: 0.45,
+          opacityFrom: 0.25,
           opacityTo: 0.05,
-          stops: [50, 100, 100],
+          stops: [0, 90, 100],
         },
       },
       dataLabels: { enabled: false },
+      tooltip: {
+        theme: 'light',
+        x: { show: true },
+        y: { title: { formatter: () => 'Tickets: ' } }
+      }
     };
 
     const chartSeries = [
@@ -189,53 +206,73 @@ export default function DashboardPage() {
           </Col>
         </Row>
 
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Col span={24} lg={16}>
-            <Card title="Ticket Sale Progress" variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl h-full">
-              <Chart options={chartOptions} series={chartSeries} type="area" height={300} />
+        <Row gutter={[24, 24]} className="mt-8">
+          <Col xs={24} lg={16}>
+            <Card 
+              title={<span className="text-lg font-semibold">Ticket Sale Progress</span>} 
+              variant="borderless" 
+              className="shadow-sm border border-gray-100 rounded-2xl"
+            >
+              <div className="pt-4">
+                <Chart options={chartOptions} series={chartSeries} type="area" height={320} />
+              </div>
             </Card>
           </Col>
-          <Col span={24} lg={8}>
-            <Card title="Quick Summary" variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl h-full">
-              <div className="space-y-6">
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-                  <div className="flex items-center gap-3">
-                    <User className="text-gray-400" size={20} />
-                    <span className="text-gray-600 font-medium">Total Users</span>
+          <Col xs={24} lg={8}>
+            <Card 
+              title={<span className="text-lg font-semibold">Quick Summary</span>} 
+              variant="borderless" 
+              className="shadow-sm border border-gray-100 rounded-2xl h-full"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                  <div className="flex items-center gap-4">
+                    <div className="p-2 bg-white rounded-lg shadow-sm">
+                      <User className="text-slate-500" size={20} />
+                    </div>
+                    <span className="text-slate-600 font-medium">Total Users</span>
                   </div>
-                  <span className="text-xl font-bold">{stats.totalUsers}</span>
+                  <span className="text-2xl font-bold text-slate-800">{stats.totalUsers}</span>
                 </div>
-                <div className="p-4 bg-blue-50 text-blue-700 rounded-xl">
-                  <div className="text-sm opacity-80">Platform Status</div>
-                  <div className="text-lg font-bold">Operational</div>
+                
+                <div className="p-5 bg-blue-50/50 rounded-2xl border border-blue-100">
+                  <div className="text-blue-600/70 text-sm font-semibold uppercase tracking-wider mb-1">Platform Status</div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                    <div className="text-xl font-bold text-blue-700">Operational</div>
+                  </div>
                 </div>
-                <div className="p-4 bg-emerald-50 text-emerald-700 rounded-xl">
-                  <div className="text-sm opacity-80">Sync Status</div>
-                  <div className="text-lg font-bold">All caught up</div>
+
+                <div className="p-5 bg-emerald-50/50 rounded-2xl border border-emerald-100">
+                  <div className="text-emerald-600/70 text-sm font-semibold uppercase tracking-wider mb-1">Sync Status</div>
+                  <div className="text-xl font-bold text-emerald-700">All caught up</div>
                 </div>
               </div>
             </Card>
           </Col>
-        </div>
+        </Row>
 
-        <div className="mt-6">
-          <Card 
-            title={<div className="flex items-center justify-between">
-              <span>Recent Ticket Purchases</span>
-              <Button type="link" className="text-blue-600">View All</Button>
-            </div>} 
-            variant="borderless" 
-            className="shadow-sm border border-gray-100 rounded-2xl"
-          >
-            <Table 
-              dataSource={stats.recentTickets} 
-              columns={columns} 
-              pagination={false} 
-              loading={loading}
-              rowKey="_id"
-            />
-          </Card>
-        </div>
+        <Row className="mt-8">
+          <Col span={24}>
+            <Card 
+              title={<div className="flex items-center justify-between py-1">
+                <span className="text-lg font-semibold">Recent Ticket Purchases</span>
+                <Button type="link" className="text-blue-600 font-medium">View All Transactions</Button>
+              </div>} 
+              variant="borderless" 
+              className="shadow-sm border border-gray-100 rounded-2xl overflow-hidden"
+            >
+              <Table 
+                dataSource={stats.recentTickets} 
+                columns={columns} 
+                pagination={false} 
+                loading={loading}
+                rowKey="_id"
+                className="custom-table"
+              />
+            </Card>
+          </Col>
+        </Row>
       </div>
     );
   }
