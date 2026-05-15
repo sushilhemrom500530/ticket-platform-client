@@ -52,22 +52,22 @@ function CheckoutContent() {
       message.error("User session not found");
       return;
     }
-    
+
     setPurchasing(true);
     try {
       const callbackURL = `${window.location.origin}/checkout/success`;
-      
-      const response = await api.post("/payments/create", { 
-        eventId, 
-        quantity, 
+
+      const response = await api.post("/payments/create", {
+        eventId,
+        quantity,
         method: paymentMethod,
-        callbackURL 
+        callbackURL
       });
 
       const { redirectURL } = response.data.data;
-      
+
       message.loading("Redirecting to payment gateway...", 2);
-      
+
       // Redirect to the payment gateway
       setTimeout(() => {
         window.location.href = redirectURL;
@@ -125,9 +125,9 @@ function CheckoutContent() {
 
           <h2 className="text-lg font-bold mb-4">Select Payment Method</h2>
           <Radio.Group onChange={(e) => setPaymentMethod(e.target.value)} value={paymentMethod} className="w-full">
-            <Space direction="vertical" className="w-full">
-              <div 
-                className={`border p-4 rounded-xl cursor-pointer transition ${paymentMethod === 'sslcommerz' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`} 
+            <Space orientation="vertical" className="w-full">
+              <div
+                className={`border p-4 rounded-xl cursor-pointer transition ${paymentMethod === 'sslcommerz' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
                 onClick={() => setPaymentMethod('sslcommerz')}
               >
                 <Radio value="sslcommerz">
@@ -138,8 +138,8 @@ function CheckoutContent() {
                   </div>
                 </Radio>
               </div>
-              <div 
-                className={`border p-4 rounded-xl cursor-pointer transition ${paymentMethod === 'bkash' ? 'border-pink-500 bg-pink-50' : 'border-gray-200'}`} 
+              <div
+                className={`border p-4 rounded-xl cursor-pointer transition ${paymentMethod === 'bkash' ? 'border-pink-500 bg-pink-50' : 'border-gray-200'}`}
                 onClick={() => setPaymentMethod('bkash')}
               >
                 <Radio value="bkash">
@@ -149,8 +149,8 @@ function CheckoutContent() {
                   </div>
                 </Radio>
               </div>
-              <div 
-                className={`border p-4 rounded-xl cursor-pointer transition ${paymentMethod === 'nagad' ? 'border-orange-500 bg-orange-50' : 'border-gray-200'}`} 
+              <div
+                className={`border p-4 rounded-xl cursor-pointer transition ${paymentMethod === 'nagad' ? 'border-orange-500 bg-orange-50' : 'border-gray-200'}`}
                 onClick={() => setPaymentMethod('nagad')}
               >
                 <Radio value="nagad">

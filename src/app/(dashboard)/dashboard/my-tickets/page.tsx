@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import api from "@/src/services/api";
 import { Table, Tag, Space, Card, message } from "antd";
 import { Ticket as TicketIcon, Calendar, MapPin } from "lucide-react";
+import Link from "next/link";
 import moment from "moment";
 
 export default function MyTicketsPage() {
@@ -12,7 +13,7 @@ export default function MyTicketsPage() {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await api.get("/tickets/my");
+        const response = await api.get("/event-tickets/my-tickets");
         setTickets(response.data.data);
       } catch (error) {
         message.error("Failed to load tickets");
@@ -72,9 +73,19 @@ export default function MyTicketsPage() {
       key: "action",
       render: (_: any, record: any) => (
         <Space size="middle">
-          <button className="text-blue-600 hover:underline text-sm font-medium">View Ticket</button>
+          <Link
+            href={`/ticket/${record._id}`}
+            className="text-blue-600 hover:underline text-sm font-medium"
+          >
+            View Ticket
+          </Link>
           {record.status === "paid" && (
-            <button className="text-green-600 hover:underline text-sm font-medium">Download PDF</button>
+            <button
+              onClick={() => window.open(`/ticket/${record._id}`, "_blank")}
+              className="text-green-600 hover:underline text-sm font-medium"
+            >
+              Download PDF
+            </button>
           )}
         </Space>
       ),
@@ -89,9 +100,9 @@ export default function MyTicketsPage() {
       </div>
 
       <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl overflow-hidden">
-        <Table 
-          columns={columns} 
-          dataSource={tickets} 
+        <Table
+          columns={columns}
+          dataSource={tickets}
           loading={loading}
           rowKey="_id"
           pagination={{ pageSize: 10 }}

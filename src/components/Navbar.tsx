@@ -29,7 +29,7 @@ export default function Navbar() {
       key: 'dashboard',
       icon: <DashboardOutlined />,
       label: (
-        <Link href={user?.role === "admin" ? "/dashboard/overview" : "/dashboard/tickets"}>
+        <Link href={user?.role === "admin" ? "/dashboard" : "/dashboard/tickets"}>
           View Dashboard
         </Link>
       ),

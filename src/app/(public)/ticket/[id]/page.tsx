@@ -29,7 +29,7 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Spin size="large" tip="Loading your ticket..." />
+        <Spin size="large" description="Loading your ticket..." />
       </div>
     );
   }
@@ -71,7 +71,7 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
   return (
     <div className="min-h-screen bg-gray-100 py-10 flex justify-center items-start p-4">
       <div className="bg-white max-w-4xl w-full border-2 border-green-600 p-6 md:p-10 text-sm font-sans shadow-xl">
-        
+
         {/* Header Section */}
         <div className="flex justify-between items-start mb-6 border-b pb-4">
           <div className="flex items-center gap-4">
@@ -79,7 +79,7 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
               <span className="text-white font-black text-xl">TP</span>
             </div>
           </div>
-          
+
           <div className="text-center flex-grow">
             <h1 className="text-2xl font-bold text-blue-600 tracking-wide uppercase">Ticket Platform</h1>
             <h2 className="text-xl font-bold text-blue-500">টিকেট প্ল্যাটফর্ম</h2>
@@ -88,8 +88,7 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
           <div className="flex flex-col items-end gap-2 text-right">
             <div className="text-xs">
               <span className="block text-gray-400">Powered by</span>
-              <span className="text-green-600 font-bold block leading-tight">Rehenrose</span>
-              <span className="text-green-600 font-bold block leading-tight">Tech Solutions</span>
+              <span className="text-green-600 font-bold block leading-tight">Ticket Platform</span>
             </div>
             <QRCodeSVG value={ticketData.qrCodeData} size={80} />
           </div>
@@ -163,7 +162,7 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
               </tr>
               <tr>
                 <td colSpan={2} className="py-2 px-3 text-[10px] text-gray-500 italic">
-                  ** Total Payable includes service charges and applicable taxes. 
+                  ** Total Payable includes service charges and applicable taxes.
                 </td>
               </tr>
             </tbody>

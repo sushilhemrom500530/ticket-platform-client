@@ -135,7 +135,11 @@ export default function Home() {
         ]);
         setEvents(eventsRes.data.data.results || []);
         setCategories(categoriesRes.data.data || []);
-      } catch (error) {
+      } catch (error: any) {
+        if (error.message === "Network Error") {
+          // Suppress Network Error to avoid console spam when server is down
+          return;
+        }
         console.error("Failed to load home data", error);
       }
     };
@@ -163,7 +167,7 @@ export default function Home() {
   const filtered = events.filter((e) => {
     const matchesSearch = searchQuery
       ? e.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        e.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      e.description?.toLowerCase().includes(searchQuery.toLowerCase())
       : true;
     const matchesCat = activeCategory
       ? e.category === activeCategory || e.category?._id === activeCategory
@@ -286,11 +290,10 @@ export default function Home() {
         <div className="flex flex-wrap gap-3">
           <button
             onClick={() => setActiveCategory(null)}
-            className={`px-5 py-2 rounded-full font-medium text-sm transition border ${
-              activeCategory === null
-                ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200"
-                : "bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"
-            }`}
+            className={`px-5 py-2 rounded-full font-medium text-sm transition border ${activeCategory === null
+              ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200"
+              : "bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"
+              }`}
           >
             All Events
           </button>
@@ -300,11 +303,10 @@ export default function Home() {
               onClick={() =>
                 setActiveCategory(activeCategory === cat._id ? null : cat._id)
               }
-              className={`px-5 py-2 rounded-full font-medium text-sm transition border ${
-                activeCategory === cat._id
-                  ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200"
-                  : "bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"
-              }`}
+              className={`px-5 py-2 rounded-full font-medium text-sm transition border ${activeCategory === cat._id
+                ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200"
+                : "bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"
+                }`}
             >
               {cat.name}
             </button>

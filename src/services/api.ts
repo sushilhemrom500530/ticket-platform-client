@@ -14,4 +14,14 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.message === "Network Error") {
+      console.warn("Backend server is unreachable. Please check if the server is running.");
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;
