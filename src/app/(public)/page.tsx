@@ -2,7 +2,11 @@
 import { useEffect, useState, useRef } from "react";
 import api from "@/src/services/api";
 import EventCard from "@/src/components/EventCard";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   ArrowRight,
   Ticket,
@@ -19,6 +23,7 @@ import {
   Calendar,
   MapPin,
 } from "lucide-react";
+import HeroSection from "@/src/components/home/hero";
 
 // ─── Countdown Timer ──────────────────────────────────────────────────────────
 function useCountdown(targetDate: string) {
@@ -125,6 +130,11 @@ export default function Home() {
   const [testimonialIdx, setTestimonialIdx] = useState(0);
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const fetchHomeData = async () => {
@@ -163,21 +173,91 @@ export default function Home() {
     upcomingEvent?.date || new Date(Date.now() + 86400000 * 7).toISOString(),
   );
 
+  const searchParams = useSearchParams();
+  const catQuery = searchParams.get("category") || "";
+
+  const activeCategoryObj = categories.find(
+    c => c.name.toLowerCase() === catQuery.toLowerCase() ||
+      (catQuery.toLowerCase() === "shows" && c.name.toLowerCase() === "comedy")
+  );
+  const resolvedCategoryId = activeCategoryObj ? activeCategoryObj._id : null;
+  const activeCategoryName = activeCategoryObj ? activeCategoryObj.name : (catQuery || null);
+
+  const heroSettings = {
+    Sports: {
+      bg: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=2070",
+      title: "Sports Tickets",
+      subtitle: "Discover the best tickets to Sports events."
+    },
+    Music: {
+      bg: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?q=80&w=2074",
+      title: "Concert Tickets",
+      subtitle: "Discover the best tickets to live music events."
+    },
+    Comedy: {
+      bg: "https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=2069",
+      title: "Comedy & Theatre",
+      subtitle: "Discover the best tickets to comedy and stage plays."
+    },
+    default: {
+      bg: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=2070",
+      title: "Live Event Tickets",
+      subtitle: "Discover the best tickets to sports, concerts, and live shows."
+    }
+  };
+
+  const currentHero = (activeCategoryName && heroSettings[activeCategoryName as keyof typeof heroSettings])
+    ? heroSettings[activeCategoryName as keyof typeof heroSettings]
+    : heroSettings.default;
+
   // Filtered events based on search + category
   const filtered = events.filter((e) => {
     const matchesSearch = searchQuery
       ? e.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       e.description?.toLowerCase().includes(searchQuery.toLowerCase())
       : true;
-    const matchesCat = activeCategory
-      ? e.category === activeCategory || e.category?._id === activeCategory
+    const matchesCat = resolvedCategoryId
+      ? e.category === resolvedCategoryId || e.category?._id === resolvedCategoryId
       : true;
     return matchesSearch && matchesCat;
   });
 
   const featuredEvents = (
-    searchQuery || activeCategory ? filtered : events
+    searchQuery || resolvedCategoryId ? filtered : events
   ).slice(0, 3);
+
+  const carouselEvents = [
+    {
+      _id: "default-1",
+      title: "Discover Amazing Concerts & Festivals",
+      description: "Book tickets to the best concerts, live music events, and workshops in your city with premium experiences.",
+      category: "Concerts",
+      coverImage: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070"
+    },
+    {
+      _id: "default-2",
+      title: "Exclusive Sports & Gaming Tournaments",
+      description: "Catch the action live at elite stadiums and venues around the country. Secure your spots early.",
+      category: "Sports",
+      coverImage: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=2070"
+    },
+    {
+      _id: "default-3",
+      title: "Interactive Theatre & Comedy Shows Interactive Theatre & Comedy Shows",
+      description: "Experience absolute laughter and dramatic arts from world-class creators and performers in high-end venues.Experience absolute laughter and dramatic arts from world-class creators and performers in high-end venues.",
+      category: "Comedy",
+      coverImage: "https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=2069"
+    }
+  ];
+
+  const filteredCarousel = resolvedCategoryId
+    ? events.filter(e => e.category === resolvedCategoryId || e.category?._id === resolvedCategoryId)
+    : events;
+
+  const activeCarouselEvents = carouselEvents.length > 0
+    ? carouselEvents.slice(0, 4)
+    : carouselEvents;
+
   const premiumEvents = events.filter((e) => e.isPremium).slice(0, 3);
   const freeEvents = events.filter((e) => !e.isPremium).slice(0, 3);
   const trendingEvents = [...events]
@@ -192,54 +272,7 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-0 pb-16 bg-gray-50">
       {/* ─── Hero ─────────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-150 flex items-center justify-center text-center bg-gray-900 overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-b from-blue-950/60 via-gray-900/70 to-gray-900 z-10" />
-        <img
-          src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070"
-          className="absolute inset-0 w-full h-full object-cover opacity-35"
-          alt="Concert"
-        />
-        <div className="relative z-20 max-w-3xl px-6 py-20">
-          <span className="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-400/30 text-blue-300 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
-            <Zap className="w-3.5 h-3.5" /> New events added daily
-          </span>
-          <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-4 drop-shadow-lg leading-tight">
-            Discover <span className="text-blue-400">Amazing</span> Events
-          </h1>
-          <p className="text-lg text-gray-300 mb-8">
-            Book tickets to the best concerts, workshops, and exclusive premium
-            events in your city.
-          </p>
-
-          {/* Search bar */}
-          <div className="flex gap-2 max-w-xl mx-auto mb-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search events, artists, venues…"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:bg-white/15 transition backdrop-blur-sm"
-              />
-            </div>
-            <Link href={searchQuery ? `/events?q=${searchQuery}` : "/events"}>
-              <button className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold transition shadow-lg shadow-blue-600/30 flex items-center gap-2">
-                Search <ArrowRight className="w-4 h-4" />
-              </button>
-            </Link>
-          </div>
-
-          {/* Quick filters */}
-          {searchQuery && (
-            <p className="text-gray-400 text-sm">
-              {filtered.length} events found for{" "}
-              <span className="text-white font-medium">"{searchQuery}"</span>
-            </p>
-          )}
-        </div>
-      </section>
-
+      <HeroSection />
       {/* ─── Stats Bar ────────────────────────────────────────────────────────── */}
       <section className="bg-blue-600 text-white py-8">
         <div className="container mx-auto px-6">
@@ -317,12 +350,12 @@ export default function Home() {
       {/* ─── Countdown Banner ─────────────────────────────────────────────────── */}
       {upcomingEvent && (
         <section className="container mx-auto px-6 pt-10">
-          <div className="bg-linear-to-r from-gray-900 to-blue-950 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-              <p className="text-blue-400 text-sm font-semibold uppercase tracking-widest mb-1 flex items-center gap-2">
-                <Clock className="w-4 h-4" /> Next Event Starting In
+              <p className="text-blue-600 text-sm font-semibold uppercase tracking-widest mb-1 flex items-center gap-2">
+                <Clock className="w-4 h-4 text-blue-500" /> Next Event Starting In
               </p>
-              <h3 className="text-white text-xl md:text-2xl font-bold">
+              <h3 className="text-slate-800 text-xl md:text-2xl font-bold">
                 {upcomingEvent.title}
               </h3>
             </div>
@@ -335,17 +368,17 @@ export default function Home() {
               ].map(({ val, label }) => (
                 <div
                   key={label}
-                  className="bg-white/10 rounded-xl px-4 py-3 min-w-16"
+                  className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 min-w-16 shadow-xs"
                 >
-                  <div className="text-3xl font-extrabold text-white tabular-nums">
+                  <div className="text-3xl font-extrabold text-slate-800 tabular-nums">
                     {String(val).padStart(2, "0")}
                   </div>
-                  <div className="text-blue-300 text-xs mt-1">{label}</div>
+                  <div className="text-slate-500 text-xs mt-1">{label}</div>
                 </div>
               ))}
             </div>
             <Link href={`/events/${upcomingEvent._id}`}>
-              <button className="bg-blue-500 hover:bg-blue-400 text-white font-semibold px-6 py-3 rounded-xl transition whitespace-nowrap">
+              <button className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-xl transition whitespace-nowrap shadow-md shadow-blue-200">
                 Get Tickets
               </button>
             </Link>
@@ -441,15 +474,19 @@ export default function Home() {
 
       {/* ─── Premium Events ───────────────────────────────────────────────────── */}
       {premiumEvents.length > 0 && (
-        <section className="bg-linear-to-br from-gray-900 to-blue-950 py-16">
-          <div className="container mx-auto px-6">
+        <section className="relative overflow-hidden bg-linear-to-br from-slate-50 to-indigo-50/40 py-16 border-t border-b border-slate-200/60">
+          {/* Radial blobs */}
+          <div className="absolute top-[-50px] left-[5%] w-[450px] h-[450px] rounded-full bg-[radial-gradient(circle,rgba(99,102,241,0.12)_0%,rgba(99,102,241,0)_70%)] blur-2xl pointer-events-none z-0 animate-float-1" />
+          <div className="absolute bottom-[-100px] right-[5%] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.1)_0%,rgba(59,130,246,0)_70%)] blur-2xl pointer-events-none z-0 animate-float-2" />
+
+          <div className="container mx-auto px-6 relative z-10">
             <div className="flex justify-between items-end mb-8">
-              <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+              <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
                 💎 Premium Experiences
               </h2>
               <Link
                 href="/events?type=premium"
-                className="text-blue-300 hover:text-blue-200 font-medium text-sm flex items-center gap-1"
+                className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1"
               >
                 View All <ArrowRight className="w-4 h-4" />
               </Link>
@@ -537,42 +574,175 @@ export default function Home() {
 
       {/* ─── Newsletter ───────────────────────────────────────────────────────── */}
       <section className="container mx-auto px-6 pt-14 max-w-2xl text-center">
-        <div className="bg-linear-to-r from-blue-600 to-blue-500 rounded-2xl p-10 shadow-xl shadow-blue-200">
-          <Mail className="w-8 h-8 text-white/80 mx-auto mb-3" />
-          <h2 className="text-2xl font-bold text-white mb-2">
-            Never Miss an Event
-          </h2>
-          <p className="text-blue-100 text-sm mb-6">
-            Get personalized event recommendations and early access to ticket
-            sales.
-          </p>
-          {subscribed ? (
-            <div className="bg-white/20 text-white font-semibold py-3 px-6 rounded-xl inline-block">
-              ✅ You&apos;re subscribed! Check your inbox.
-            </div>
-          ) : (
-            <form
-              onSubmit={handleSubscribe}
-              className="flex gap-2 max-w-md mx-auto"
-            >
-              <input
-                type="email"
-                required
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 px-4 py-3 rounded-xl bg-white/15 border border-white/30 text-white placeholder-blue-200 focus:outline-none focus:border-white transition"
-              />
-              <button
-                type="submit"
-                className="bg-white text-blue-600 font-semibold px-5 py-3 rounded-xl hover:bg-blue-50 transition whitespace-nowrap"
+        <div className="bg-linear-to-r from-blue-600 to-blue-500 rounded-2xl p-10 shadow-xl shadow-blue-200 relative overflow-hidden">
+          {/* Subtle background waves */}
+          <div className="absolute top-[-50px] right-[-50px] w-64 h-64 rounded-full bg-white/10 blur-xl pointer-events-none z-0 animate-float-1" />
+          <div className="absolute bottom-[-70px] left-[-70px] w-72 h-72 rounded-full bg-blue-400/20 blur-xl pointer-events-none z-0 animate-float-2" />
+
+          <div className="relative z-10">
+            <Mail className="w-8 h-8 text-white/80 mx-auto mb-3" />
+            <h2 className="text-2xl font-bold text-white mb-2">
+              Never Miss an Event
+            </h2>
+            <p className="text-blue-100 text-sm mb-6">
+              Get personalized event recommendations and early access to ticket
+              sales.
+            </p>
+            {subscribed ? (
+              <div className="bg-white/20 text-white font-semibold py-3 px-6 rounded-xl inline-block">
+                ✅ You&apos;re subscribed! Check your inbox.
+              </div>
+            ) : (
+              <form
+                onSubmit={handleSubscribe}
+                className="flex gap-2 max-w-md mx-auto"
               >
-                Subscribe
-              </button>
-            </form>
-          )}
+                <input
+                  type="email"
+                  required
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-1 px-4 py-3 rounded-xl bg-white/15 border border-white/30 text-white placeholder-blue-200 focus:outline-none focus:border-white transition"
+                />
+                <button
+                  type="submit"
+                  className="bg-white text-blue-600 font-semibold px-5 py-3 rounded-xl hover:bg-blue-50 transition whitespace-nowrap"
+                >
+                  Subscribe
+                </button>
+              </form>
+            )}
+          </div>
         </div>
       </section>
     </div>
   );
 }
+
+
+
+{/* <section className="relative min-h-[640px] flex flex-col items-center justify-center text-center bg-slate-50 overflow-hidden border-b border-slate-100 pt-20 pb-20">
+        <div className="absolute inset-0 bg-linear-to-b from-blue-50/70 via-white/85 to-slate-50" />
+
+        <div className="absolute top-[-100px] right-[-100px] w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.22)_0%,rgba(59,130,246,0)_70%)] blur-3xl pointer-events-none animate-float-1" />
+        <div className="absolute bottom-[-150px] left-[-150px] w-[650px] h-[650px] rounded-full bg-[radial-gradient(circle,rgba(99,102,241,0.18)_0%,rgba(99,102,241,0)_70%)] blur-3xl pointer-events-none animate-float-2" />
+        <div className="absolute top-1/2 left-1/2 w-[750px] h-[750px] rounded-full bg-[radial-gradient(circle,rgba(14,165,233,0.16)_0%,rgba(14,165,233,0)_70%)] blur-3xl pointer-events-none animate-radial-pulse" />
+
+        <div className="absolute top-[20%] left-[8%] hidden lg:flex items-center gap-3 bg-white/75 backdrop-blur-md border border-slate-200/80 p-3.5 rounded-2xl shadow-xl shadow-slate-100/50 animate-float-1 pointer-events-none z-10">
+          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+            <Ticket className="w-5 h-5" />
+          </div>
+          <div className="text-left">
+            <div className="text-xs font-bold text-slate-800">VIP Ticket</div>
+            <div className="text-[10px] text-slate-400 font-semibold">Standard Entry</div>
+          </div>
+        </div>
+
+        <div className="absolute bottom-[28%] right-[8%] hidden lg:flex items-center gap-3 bg-white/75 backdrop-blur-md border border-slate-200/80 p-3.5 rounded-2xl shadow-xl shadow-slate-100/50 animate-float-2 pointer-events-none z-10">
+          <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+            <Calendar className="w-5 h-5" />
+          </div>
+          <div className="text-left">
+            <div className="text-xs font-bold text-slate-800">Live Event</div>
+            <div className="text-[10px] text-slate-400 font-semibold">Tomorrow 8 PM</div>
+          </div>
+        </div>
+
+        <div className="absolute top-[18%] right-[20%] hidden md:flex items-center gap-2 bg-white/80 backdrop-blur-md border border-slate-200/60 py-2 px-3 rounded-full shadow-lg shadow-slate-100/40 animate-radial-pulse pointer-events-none z-10">
+          <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+          <span className="text-xs font-bold text-slate-700">4.9/5 Rating</span>
+        </div>
+
+        <div className="absolute bottom-[25%] left-[18%] hidden md:flex items-center gap-2 bg-white/80 backdrop-blur-md border border-slate-200/60 py-2 px-3 rounded-full shadow-lg shadow-slate-100/40 animate-float-1 pointer-events-none z-10" style={{ animationDelay: '1.5s' }}>
+          <Users className="w-4 h-4 text-blue-600" />
+          <span className="text-xs font-bold text-slate-700">10k+ Attendees</span>
+        </div>
+
+        <div className="relative z-20 w-full max-w-6xl px-6">
+          <Slider
+            dots={true}
+            infinite={true}
+            speed={800}
+            slidesToShow={1}
+            slidesToScroll={1}
+            autoplay={true}
+            autoplaySpeed={5000}
+            arrows={false}
+          >
+            {carouselEvents.map((event) => (
+              <div key={event._id} className="outline-none relative py-8">
+                {(event.image || event.coverImage) && (
+                  <div
+                    className="absolute inset-x-0 top-[-20px] bottom-[-20px] opacity-[0.08] pointer-events-none transition-all duration-700 blur-3xl rounded-3xl"
+                    style={{
+                      backgroundImage: `url(${event.image || event.coverImage})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                  />
+                )}
+                <div className="relative z-10">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left">
+
+                    <div className="lg:col-span-7 flex flex-col items-start">
+                      <span className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-600 text-sm font-semibold px-4 py-1.5 rounded-full mb-4 shadow-xs">
+                        <Zap className="w-3.5 h-3.5 text-blue-500" /> {event.category || event.categoryId?.name || "Featured Event"}
+                      </span>
+                      <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight tracking-tight">
+                        {event.title}
+                      </h1>
+                      <p className="text-base text-slate-600 mb-6 line-clamp-3">
+                        {event.description || "Join us for an unforgettable premium event experience filled with excitement, discovery, and entertainment."}
+                      </p>
+                      <Link href={event._id.startsWith("default-") ? "/events" : `/events/${event._id}`}>
+                        <button className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-8 py-3.5 rounded-xl shadow-lg shadow-blue-200 transition">
+                          Explore More
+                        </button>
+                      </Link>
+                    </div>
+
+                    <div className="lg:col-span-5 w-full">
+                      <div className="relative group overflow-hidden rounded-2xl shadow-xl border border-slate-200/60 aspect-video lg:aspect-4/3 w-full bg-slate-100">
+                        <img
+                          src={event.image || event.coverImage || "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070"}
+                          alt={event.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </Slider>
+        </div>
+
+        <div className="relative z-30 w-full max-w-xl px-6 mt-12">
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search events, artists, venues…"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition shadow-sm"
+              />
+            </div>
+            <Link href={searchQuery ? `/events?q=${searchQuery}` : "/events"}>
+              <button className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold transition shadow-lg shadow-blue-600/20 flex items-center gap-2">
+                Search <ArrowRight className="w-4 h-4" />
+              </button>
+            </Link>
+          </div>
+
+          {searchQuery && (
+            <p className="text-slate-500 text-sm mt-4">
+              {filtered.length} events found for{" "}
+              <span className="text-slate-900 font-semibold">"{searchQuery}"</span>
+            </p>
+          )}
+        </div>
+      </section> */}

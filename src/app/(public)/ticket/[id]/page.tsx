@@ -5,6 +5,8 @@ import { QRCodeSVG } from "qrcode.react";
 import api from "@/src/services/api";
 import { message, Spin } from "antd";
 import dayjs from "dayjs";
+import { useSearchParams } from "next/navigation";
+import { Printer } from "lucide-react";
 
 export default function TicketPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -25,6 +27,17 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
 
     fetchTicket();
   }, [id]);
+
+  const searchParams = useSearchParams();
+  const shouldPrint = searchParams.get("print") === "true";
+
+  useEffect(() => {
+    if (ticket && shouldPrint) {
+      setTimeout(() => {
+        window.print();
+      }, 1000);
+    }
+  }, [ticket, shouldPrint]);
 
   if (loading) {
     return (
@@ -69,8 +82,16 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 flex justify-center items-start p-4">
-      <div className="bg-white max-w-4xl w-full border-2 border-green-600 p-6 md:p-10 text-sm font-sans shadow-xl">
+    <div className="min-h-screen bg-gray-100 py-10 flex flex-col justify-center items-center p-4">
+      <style jsx global>{`
+        @media print {
+          .no-print { display: none !important; }
+          body { background: white !important; padding: 0 !important; margin: 0 !important; }
+          .min-h-screen { background: white !important; padding: 0 !important; min-height: auto !important; }
+          .shadow-xl { shadow: none !important; border: 2px solid #16a34a !important; }
+        }
+      `}</style>
+      <div className="bg-white max-w-4xl w-full border-2 border-green-600 p-6 md:p-10 text-sm font-sans shadow-xl relative">
 
         {/* Header Section */}
         <div className="flex justify-between items-start mb-6 border-b pb-4">

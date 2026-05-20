@@ -1,18 +1,56 @@
 "use client";
 import Link from "next/link";
 import { useAuthStore } from "../store/authStore";
-import { Button, Dropdown, Avatar, MenuProps, Space } from "antd";
+import { Button, Dropdown, Avatar } from "antd";
+import type { MenuProps } from "antd";
 import { UserOutlined, LogoutOutlined, DashboardOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Search } from "lucide-react";
 
-export default function Navbar() {
+function NavbarContent() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { isAuthenticated, user, logout } = useAuthStore();
+
   const [mounted, setMounted] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const isHome = pathname === "/";
+  const currentCategory = searchParams.get("category") || "";
 
   // Fix hydration mismatch by only rendering auth-dependent UI on the client
   useEffect(() => {
     setMounted(true);
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/events?q=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      router.push("/events");
+    }
+  };
+
+  const handleCategoryClick = (name: string) => {
+    if (name === "Cities") {
+      router.push("/events");
+      return;
+    }
+    let catVal = name;
+    if (name === "Shows") catVal = "Comedy";
+    router.push(`/?category=${catVal}`);
+  };
 
   const items: MenuProps['items'] = [
     {
@@ -46,50 +84,113 @@ export default function Navbar() {
     },
   ];
 
+  // Dynamic Tailwind styling classes
+  const navContainerClass = `flex justify-between items-center py-4 px-8 fixed top-0 w-full z-50 transition-all duration-300 ${isHome
+    ? (isScrolled ? 'bg-slate-950 text-white shadow-lg px-6 pt-5' : 'bg-transparent text-slate-900 px-6 py-7')
+    : (isScrolled ? 'bg-slate-950 text-white shadow-lg px-6 pt-5' : 'bg-white text-slate-800 border-b border-slate-100 px-6 py-7')
+    }`;
+
+  const logoClass = `text-2xl font-black tracking-tighter transition-colors select-none ${isScrolled ? 'text-white' : 'text-slate-900'}`;
+
+  const linkClass = (isActive: boolean) => `transition-colors font-semibold text-sm cursor-pointer ${isScrolled
+    ? (isActive ? 'text-white border-b-2 border-[#FF4E00] pb-0.5' : 'text-white/60 hover:text-white')
+    : (isActive ? 'text-blue-600 border-b-2 border-blue-600 pb-0.5' : 'text-slate-600 hover:text-slate-900')
+    }`;
+
+  const searchInputClass = `w-full pl-10 pr-4 py-2 rounded-full border text-sm transition-all focus:outline-none ${isScrolled
+    ? 'bg-white/10 border-white/10 text-white placeholder-white/40 focus:bg-white/20 focus:ring-1 focus:ring-white/20'
+    : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+    }`;
+
   return (
-    <nav className="flex justify-between items-center py-4 px-8 bg-gray-900 text-white shadow-md sticky top-0 z-50">
-      <Link href="/" className="text-2xl font-bold tracking-wider hover:text-blue-400 transition-colors">
-        TICKET<span className="text-blue-500">PRO</span>
-      </Link>
-      <div className="flex gap-8 items-center">
-        <Link href="/" className="hover:text-blue-400 transition-colors font-medium">Home</Link>
-        <Link href="/events" className="hover:text-blue-400 transition-colors font-medium">Events</Link>
+    <nav className={navContainerClass}>
+      <div className="container mx-auto flex items-center justify-between">
+        <div className="flex items-center gap-6 flex-1">
+          <Link href="/" className={logoClass}>
+            TICKET<span className="text-primary">PRO</span>
+          </Link>
 
-        {/* Auth section */}
-        {mounted && (
-          isAuthenticated ? (
-            <Dropdown menu={{ items }} placement="bottomRight" arrow={{ pointAtCenter: true }} trigger={['hover']}>
-              <div className="flex items-center gap-3 cursor-pointer group">
-                <Avatar
-                  size="large"
-                  icon={<UserOutlined />}
-                  src={user?.profilePhoto}
-                  className="border-2 border-blue-500 group-hover:border-blue-400 transition-all"
-                />
-                <span className="hidden md:inline font-medium group-hover:text-blue-400 transition-colors">
-                  {user?.fullName?.split(' ')[0] || "Profile"}
-                </span>
+          {/* Pill Search Input */}
+          <form onSubmit={handleSearchSubmit} className="relative flex-1 max-w-[280px] hidden md:block">
+            <Search className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 ${isScrolled ? 'text-white/40' : 'text-slate-400'}`} />
+            <input
+              type="text"
+              placeholder="What do you want to see live?"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={searchInputClass}
+            />
+          </form>
+
+          {/* Category Links */}
+          <div className="flex items-center gap-5 select-none">
+            {["Sports", "Music", "Shows"].map((item) => {
+              let catName = item;
+              if (item === "Shows") catName = "Comedy";
+              const isActive = currentCategory.toLowerCase() === catName.toLowerCase();
+              return (
+                <button
+                  key={item}
+                  onClick={() => handleCategoryClick(item)}
+                  className={linkClass(isActive)}
+                >
+                  {item}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-6 text-sm font-semibold">
+          {mounted && (
+            isAuthenticated ? (
+              <Dropdown menu={{ items }} placement="bottomRight" arrow={{ pointAtCenter: true }} trigger={['hover']}>
+                <div className="flex items-center gap-2 cursor-pointer group">
+                  <Avatar
+                    size="small"
+                    icon={<UserOutlined />}
+                    src={user?.profilePhoto}
+                    className="border border-blue-500 group-hover:border-blue-400 transition-all animate-fade-in"
+                  />
+                  <span className={`hidden md:inline font-medium transition-colors ${isScrolled ? 'text-white/90 group-hover:text-white' : 'text-slate-700 group-hover:text-blue-600'}`}>
+                    {user?.fullName?.split(' ')[0] || "Profile"}
+                  </span>
+                </div>
+              </Dropdown>
+            ) : (
+              <div className="flex items-center gap-4">
+                <Link href="/auth/login">
+                  <button className={`font-semibold text-xs px-4 py-2 rounded-lg border transition shadow-xs cursor-pointer ${isScrolled
+                    ? 'bg-white/10 hover:bg-white/15 text-white border-white/10'
+                    : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'
+                    }`}>
+                    Sign in
+                  </button>
+                </Link>
+                <Link href="/auth/register">
+                  <button className={`font-semibold text-xs px-4 py-2 rounded-lg border transition shadow-xs cursor-pointer ${isScrolled
+                    ? 'bg-white/10 hover:bg-white/15 text-white border-white/10'
+                    : 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600'
+                    }`}>
+                    Sign up
+                  </button>
+                </Link>
               </div>
-            </Dropdown>
-          ) : (
-            <div className="flex gap-4">
-              <Link href="/auth/login">
-                <Button type="default" className="bg-transparent text-white border-white hover:border-blue-400 hover:text-blue-400 h-10 px-6 rounded-full font-medium">
-                  Login
-                </Button>
-              </Link>
-              <Link href="/auth/register">
-                <Button type="primary" className="bg-blue-600 hover:bg-blue-500 border-none h-10 px-6 rounded-full font-medium">
-                  Register
-                </Button>
-              </Link>
-            </div>
-          )
-        )}
+            )
+          )}
 
-        {/* Placeholder during server-side render / hydration */}
-        {!mounted && <div className="w-[120px] h-10" />}
+          {/* Placeholder during server-side render / hydration */}
+          {!mounted && <div className="w-[60px] h-8" />}
+        </div>
       </div>
     </nav>
+  );
+}
+
+export default function Navbar() {
+  return (
+    <Suspense fallback={<div className="h-[72px] w-full bg-slate-950/10 fixed top-0 z-50" />}>
+      <NavbarContent />
+    </Suspense>
   );
 }

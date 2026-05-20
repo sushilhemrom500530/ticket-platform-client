@@ -81,7 +81,7 @@ export default function MyTicketsPage() {
           </Link>
           {record.status === "paid" && (
             <button
-              onClick={() => window.open(`/ticket/${record._id}`, "_blank")}
+              onClick={() => window.open(`/ticket/${record._id}?print=true`, "_blank")}
               className="text-green-600 hover:underline text-sm font-medium"
             >
               Download PDF
