@@ -38,3 +38,84 @@
  .ant-tag {
    @apply !flex !items-center !gap-2 !w-max
  }
+
+ /* Custom Radial Wave Animations */
+ @keyframes float-slow-1 {
+
+   0%,
+   100% {
+     transform: translate(0px, 0px) scale(1);
+   }
+
+   50% {
+     transform: translate(45px, -55px) scale(1.15);
+   }
+ }
+
+ @keyframes float-slow-2 {
+
+   0%,
+   100% {
+     transform: translate(0px, 0px) scale(1.15);
+   }
+
+   50% {
+     transform: translate(-45px, 45px) scale(0.95);
+   }
+ }
+
+ @keyframes radial-pulse {
+
+   0%,
+   100% {
+     opacity: 0.35;
+     transform: translate(-50%, -50%) scale(1);
+   }
+
+   50% {
+     opacity: 0.55;
+     transform: translate(-50%, -50%) scale(1.2);
+   }
+ }
+
+ .animate-float-1 {
+   animation: float-slow-1 16s ease-in-out infinite;
+ }
+
+ .animate-float-2 {
+   animation: float-slow-2 20s ease-in-out infinite;
+ }
+
+ .animate-radial-pulse {
+   animation: radial-pulse 10s ease-in-out infinite;
+ }
+
+ /* Slick Dots Customization */
+ .slick-dots {
+   bottom: -15px !important;
+ }
+
+ .slick-dots li {
+   margin: 0 4px !important;
+   width: 10px !important;
+   height: 10px !important;
+ }
+
+ .slick-dots li button {
+   width: 10px !important;
+   height: 10px !important;
+   padding: 0 !important;
+ }
+
+ .slick-dots li button:before {
+   font-size: 8px !important;
+   color: #cbd5e1 !important;
+   /* light gray */
+   opacity: 1 !important;
+ }
+
+ .slick-dots li.slick-active button:before {
+   color: #2563eb !important;
+   /* blue-600 */
+   opacity: 1 !important;
+ }

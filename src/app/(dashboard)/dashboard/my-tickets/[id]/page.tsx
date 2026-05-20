@@ -99,7 +99,7 @@ export default function TicketDetailsPage() {
                     <div className="mt-6 pt-6 border-t border-gray-100">
                         <button
                             className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
-                            onClick={() => window.open(`/ticket/${ticket._id}`, "_blank")}
+                            onClick={() => window.open(`/ticket/${ticket._id}?print=true`, "_blank")}
                         >
                             Download Ticket
                         </button>
