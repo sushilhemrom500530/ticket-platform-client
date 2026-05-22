@@ -14,6 +14,7 @@ function NavbarContent() {
   const searchParams = useSearchParams();
   const { isAuthenticated, user, logout } = useAuthStore();
 
+
   const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -176,8 +177,10 @@ function NavbarContent() {
           {/* Placeholder during server-side render / hydration */}
           {!mounted && <div className="w-[60px] h-8" />}
         </div>
+        {/* Placeholder during server-side render / hydration */}
+        {!mounted && <div className="w-[60px] h-8" />}
       </div>
-    </nav>
+    </nav >
   );
 }
 
