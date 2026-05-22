@@ -167,7 +167,7 @@ export default function HeroSection() {
                                                 </button>
                                             </Link>
                                             <Link href="/events">
-                                                <button className="bg-white hover:bg-slate-50 text-slate-900 font-semibold px-8 py-4 rounded-xl transition-all shadow-sm border border-slate-200 active:scale-95 cursor-pointer">
+                                                <button className="bg-white hover:bg-slate-50 text-slate-900 font-semibold px-8 py-4 rounded-xl transition-all border border-slate-200 active:scale-95 cursor-pointer">
                                                     Explore More
                                                 </button>
                                             </Link>

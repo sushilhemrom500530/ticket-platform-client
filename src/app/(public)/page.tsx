@@ -237,6 +237,7 @@ export default function Home() {
     <div className="flex flex-col gap-0 pb-16 bg-gray-50">
       {/* ─── Hero ─────────────────────────────────────────────────────────────── */}
       <HeroSection />
+
       <StatsBar />
 
       {/* ─── Categories ───────────────────────────────────────────────────────── */}

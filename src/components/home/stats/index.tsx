@@ -1,49 +1,47 @@
 "use client";
 
-import api from "@/src/services/api";
 import { Calendar, Users, MapPin, Shield } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+// AnimatedCounter component moved outside StatsBar to maintain stable identity across renders
+function AnimatedCounter({
+    end,
+    suffix = "",
+}: {
+    end: number;
+    suffix?: string;
+}) {
+    const [count, setCount] = useState(0);
+    const ref = useRef<HTMLSpanElement>(null);
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (!entry.isIntersecting) return;
+                observer.disconnect();
+                let start = 0;
+                const step = Math.ceil(end / 60);
+                const id = setInterval(() => {
+                    start += step;
+                    if (start >= end) {
+                        setCount(end);
+                        clearInterval(id);
+                    } else setCount(start);
+                }, 20);
+            },
+            { threshold: 0.3 },
+        );
+        if (ref.current) observer.observe(ref.current);
+        return () => observer.disconnect();
+    }, [end]);
+    return (
+        <span ref={ref}>
+            {count.toLocaleString()}
+            {suffix}
+        </span>
+    );
+}
 
 export function StatsBar() {
-
-    function AnimatedCounter({
-        end,
-        suffix = "",
-    }: {
-        end: number;
-        suffix?: string;
-    }) {
-        const [count, setCount] = useState(0);
-        const ref = useRef<HTMLSpanElement>(null);
-        useEffect(() => {
-            const observer = new IntersectionObserver(
-                ([entry]) => {
-                    if (!entry.isIntersecting) return;
-                    observer.disconnect();
-                    let start = 0;
-                    const step = Math.ceil(end / 60);
-                    const id = setInterval(() => {
-                        start += step;
-                        if (start >= end) {
-                            setCount(end);
-                            clearInterval(id);
-                        } else setCount(start);
-                    }, 20);
-                },
-                { threshold: 0.3 },
-            );
-            if (ref.current) observer.observe(ref.current);
-            return () => observer.disconnect();
-        }, [end]);
-        return (
-            <span ref={ref}>
-                {count.toLocaleString()}
-                {suffix}
-            </span>
-        );
-    }
-
     return (
         <section className="bg-blue-600 text-white py-8">
             <div className="container mx-auto px-6">
@@ -86,4 +84,4 @@ export function StatsBar() {
             </div>
         </section >
     );
-}
+} 
