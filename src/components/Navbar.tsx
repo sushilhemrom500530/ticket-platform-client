@@ -86,20 +86,20 @@ function NavbarContent() {
 
   // Dynamic Tailwind styling classes
   const navContainerClass = `flex justify-between items-center py-4 px-8 fixed top-0 w-full z-50 transition-all duration-300 ${isHome
-    ? (isScrolled ? 'bg-slate-950 text-white shadow-lg px-6 pt-5' : 'bg-transparent text-slate-900 px-6 py-7')
-    : (isScrolled ? 'bg-slate-950 text-white shadow-lg px-6 pt-5' : 'bg-white text-slate-800 border-b border-slate-100 px-6 py-7')
+    ? (isScrolled ? 'bg-gray-100 text-black shadow-lg px-6 pt-5' : 'bg-transparent text-slate-900 px-6 py-7')
+    : (isScrolled ? 'bg-gray-100 text-black shadow-lg px-6 pt-5' : 'bg-white text-slate-800 border-b border-slate-100 px-6 py-7')
     }`;
 
-  const logoClass = `text-2xl font-black tracking-tighter transition-colors select-none ${isScrolled ? 'text-white' : 'text-slate-900'}`;
+  const logoClass = `text-2xl font-black tracking-tighter transition-colors select-none ${isScrolled ? 'text-black' : 'text-slate-900'}`;
 
   const linkClass = (isActive: boolean) => `transition-colors font-semibold text-sm cursor-pointer ${isScrolled
-    ? (isActive ? 'text-white border-b-2 border-[#FF4E00] pb-0.5' : 'text-white/60 hover:text-white')
+    ? (isActive ? 'text-black border-b-2 border-blue-500 pb-0.5' : 'text-black/60 hover:text-black')
     : (isActive ? 'text-blue-600 border-b-2 border-blue-600 pb-0.5' : 'text-slate-600 hover:text-slate-900')
     }`;
 
   const searchInputClass = `w-full pl-10 pr-4 py-2 rounded-full border text-sm transition-all focus:outline-none ${isScrolled
-    ? 'bg-white/10 border-white/10 text-white placeholder-white/40 focus:bg-white/20 focus:ring-1 focus:ring-white/20'
-    : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+    ? 'bg-white/10 border-black/10 text-black placeholder-black/40 focus:bg-white/20 focus:ring-1 focus:ring-blue-500'
+    : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
     }`;
 
   return (
@@ -160,18 +160,12 @@ function NavbarContent() {
             ) : (
               <div className="flex items-center gap-4">
                 <Link href="/auth/login">
-                  <button className={`font-semibold text-xs px-4 py-2 rounded-lg border transition shadow-xs cursor-pointer ${isScrolled
-                    ? 'bg-white/10 hover:bg-white/15 text-white border-white/10'
-                    : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'
-                    }`}>
+                  <button className={`font-semibold text-xs px-4 py-2 rounded-lg border transition shadow-xs cursor-pointer bg-white hover:bg-slate-50 text-slate-700 border-slate-200`}>
                     Sign in
                   </button>
                 </Link>
                 <Link href="/auth/register">
-                  <button className={`font-semibold text-xs px-4 py-2 rounded-lg border transition shadow-xs cursor-pointer ${isScrolled
-                    ? 'bg-white/10 hover:bg-white/15 text-white border-white/10'
-                    : 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600'
-                    }`}>
+                  <button className={`font-semibold text-xs px-4 py-2 rounded-lg border transition shadow-xs cursor-pointer bg-blue-600 hover:bg-blue-700 text-white border-blue-600`}>
                     Sign up
                   </button>
                 </Link>

@@ -92,7 +92,8 @@
 
  /* Slick Dots Customization */
  .slick-dots {
-   bottom: -15px !important;
+   display: none !important;
+   margin: 0 !important;
  }
 
  .slick-dots li {
