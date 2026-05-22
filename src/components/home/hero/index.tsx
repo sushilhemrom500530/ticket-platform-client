@@ -37,7 +37,7 @@ export default function HeroSection() {
     ];
 
     return (
-        <section className="relative w-full min-h-[calc(100vh-305px)] bg-white overflow-hidden flex items-center justify-center pt-10 pb-8">
+        <section className="relative w-full min-h-screen bg-white overflow-hidden flex items-center justify-center pt-10 pb-8">
             <style>{`
                 @keyframes blob-bounce {
                     0%, 100% { transform: translate(0, 0) scale(1); }
@@ -148,12 +148,12 @@ export default function HeroSection() {
                     >
                         {carouselEvents.map((event) => (
                             <div key={event._id} className="outline-none">
-                                <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 py-8">
+                                <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 py-8 h-screen!">
                                     {/* Left Side: Details */}
-                                    <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left pt-8 lg:pt-0">
-                                        <span className="inline-flex items-center gap-1.5 bg-orange-100 text-orange-600 text-sm font-bold px-5 py-2 rounded-full mb-6 uppercase tracking-widest shadow-sm">
+                                    <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left pt-12 lg:pt-0 relative">
+                                        <div className="inline-flex items-center gap-1.5 bg-orange-100 text-orange-600 text-xs font-bold px-3 py-1 rounded-full mb-6 uppercase tracking-widest shadow-sm absolute -top-6 left-0">
                                             {event.category || "Featured"}
-                                        </span>
+                                        </div>
                                         <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-slate-900 mb-6 leading-[1.15] tracking-tight">
                                             {event.title}
                                         </h1>
@@ -162,12 +162,12 @@ export default function HeroSection() {
                                         </p>
                                         <div className="flex flex-wrap justify-center lg:justify-start items-center gap-4">
                                             <Link href={`/events/${event._id}`}>
-                                                <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-lg shadow-blue-600/30 active:scale-95">
+                                                <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-lg shadow-blue-600/30 active:scale-95 cursor-pointer">
                                                     Get Tickets
                                                 </button>
                                             </Link>
                                             <Link href="/events">
-                                                <button className="bg-white hover:bg-slate-50 text-slate-900 font-semibold px-8 py-4 rounded-xl transition-all shadow-sm border border-slate-200 active:scale-95">
+                                                <button className="bg-white hover:bg-slate-50 text-slate-900 font-semibold px-8 py-4 rounded-xl transition-all shadow-sm border border-slate-200 active:scale-95 cursor-pointer">
                                                     Explore More
                                                 </button>
                                             </Link>
