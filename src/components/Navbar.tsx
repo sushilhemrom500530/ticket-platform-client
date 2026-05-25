@@ -87,8 +87,8 @@ function NavbarContent() {
 
   // Dynamic Tailwind styling classes
   const navContainerClass = `flex justify-between items-center py-4 px-8 fixed top-0 w-full z-50 transition-all duration-300 ${isHome
-    ? (isScrolled ? 'bg-gray-100 text-black shadow-lg px-6 pt-5' : 'bg-transparent text-slate-900 px-6 py-7')
-    : (isScrolled ? 'bg-gray-100 text-black shadow-lg px-6 pt-5' : 'bg-white text-slate-800 border-b border-slate-100 px-6 py-7')
+    ? (isScrolled ? 'bg-white/80 backdrop-blur-md text-black shadow-lg px-6 pt-5' : 'bg-transparent text-slate-900 px-6 py-7')
+    : (isScrolled ? 'bg-white/80 backdrop-blur-md text-black shadow-lg px-6 pt-5' : 'bg-white text-slate-800 border-b border-slate-100 px-6 py-7')
     }`;
 
   const logoClass = `text-2xl font-black tracking-tighter transition-colors select-none ${isScrolled ? 'text-black' : 'text-slate-900'}`;
@@ -145,7 +145,12 @@ function NavbarContent() {
         <div className="flex items-center gap-6 text-sm font-semibold">
           {mounted && (
             isAuthenticated ? (
-              <Dropdown menu={{ items }} placement="bottomRight" arrow={{ pointAtCenter: true }} trigger={['hover']}>
+              <Dropdown
+                menu={{ items }}
+                placement="bottomRight"
+                arrow={{ pointAtCenter: true }}
+                trigger={['hover']}
+              >
                 <div className="flex items-center gap-2 cursor-pointer group">
                   <Avatar
                     size="small"
@@ -153,7 +158,7 @@ function NavbarContent() {
                     src={user?.profilePhoto}
                     className="border border-blue-500 group-hover:border-blue-400 transition-all animate-fade-in"
                   />
-                  <span className={`hidden md:inline font-medium transition-colors ${isScrolled ? 'text-white/90 group-hover:text-white' : 'text-slate-700 group-hover:text-blue-600'}`}>
+                  <span className={`hidden md:inline font-medium transition-colors ${isScrolled ? '!text-black/90 group-hover:text-black/60' : '!text-black/90 group-hover:text-blue-600'}`}>
                     {user?.fullName?.split(' ')[0] || "Profile"}
                   </span>
                 </div>

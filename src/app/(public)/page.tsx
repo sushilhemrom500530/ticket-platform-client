@@ -24,6 +24,8 @@ import {
   MapPin,
 } from "lucide-react";
 import HeroSection from "@/src/components/home/hero";
+import { StatsBar } from "@/src/components/home/stats";
+import CategorySection from "@/src/components/home/category";
 
 // ─── Countdown Timer ──────────────────────────────────────────────────────────
 function useCountdown(targetDate: string) {
@@ -45,43 +47,6 @@ function useCountdown(targetDate: string) {
   return time;
 }
 
-// ─── Animated Counter ─────────────────────────────────────────────────────────
-function AnimatedCounter({
-  end,
-  suffix = "",
-}: {
-  end: number;
-  suffix?: string;
-}) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        observer.disconnect();
-        let start = 0;
-        const step = Math.ceil(end / 60);
-        const id = setInterval(() => {
-          start += step;
-          if (start >= end) {
-            setCount(end);
-            clearInterval(id);
-          } else setCount(start);
-        }, 20);
-      },
-      { threshold: 0.3 },
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [end]);
-  return (
-    <span ref={ref}>
-      {count.toLocaleString()}
-      {suffix}
-    </span>
-  );
-}
 
 const TESTIMONIALS = [
   {
@@ -273,79 +238,11 @@ export default function Home() {
     <div className="flex flex-col gap-0 pb-16 bg-gray-50">
       {/* ─── Hero ─────────────────────────────────────────────────────────────── */}
       <HeroSection />
-      {/* ─── Stats Bar ────────────────────────────────────────────────────────── */}
-      <section className="bg-blue-600 text-white py-8">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {[
-              {
-                icon: <Calendar className="w-5 h-5" />,
-                value: 1200,
-                suffix: "+",
-                label: "Events Listed",
-              },
-              {
-                icon: <Users className="w-5 h-5" />,
-                value: 85000,
-                suffix: "+",
-                label: "Happy Attendees",
-              },
-              {
-                icon: <MapPin className="w-5 h-5" />,
-                value: 50,
-                suffix: "+",
-                label: "Cities Covered",
-              },
-              {
-                icon: <Shield className="w-5 h-5" />,
-                value: 100,
-                suffix: "%",
-                label: "Secure Payments",
-              },
-            ].map((stat, i) => (
-              <div key={i} className="flex flex-col items-center gap-1">
-                <div className="opacity-80 mb-1">{stat.icon}</div>
-                <div className="text-3xl font-extrabold">
-                  <AnimatedCounter end={stat.value} suffix={stat.suffix} />
-                </div>
-                <div className="text-blue-100 text-sm">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
+      <StatsBar />
 
       {/* ─── Categories ───────────────────────────────────────────────────────── */}
-      <section className="container mx-auto px-6 pt-14">
-        <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-          <Ticket className="w-6 h-6 text-blue-500" /> Browse by Category
-        </h2>
-        <div className="flex flex-wrap gap-3">
-          <button
-            onClick={() => setActiveCategory(null)}
-            className={`px-5 py-2 rounded-full font-medium text-sm transition border ${activeCategory === null
-              ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200"
-              : "bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"
-              }`}
-          >
-            All Events
-          </button>
-          {categories.map((cat) => (
-            <button
-              key={cat._id}
-              onClick={() =>
-                setActiveCategory(activeCategory === cat._id ? null : cat._id)
-              }
-              className={`px-5 py-2 rounded-full font-medium text-sm transition border ${activeCategory === cat._id
-                ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200"
-                : "bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"
-                }`}
-            >
-              {cat.name}
-            </button>
-          ))}
-        </div>
-      </section>
+      <CategorySection />
 
       {/* ─── Countdown Banner ─────────────────────────────────────────────────── */}
       {upcomingEvent && (
@@ -387,7 +284,7 @@ export default function Home() {
       )}
 
       {/* ─── Featured Events ──────────────────────────────────────────────────── */}
-      {featuredEvents.length > 0 && (
+      {/* {featuredEvents.length > 0 && (
         <section className="container mx-auto px-6 pt-14">
           <div className="flex justify-between items-end mb-8">
             <h2 className="text-2xl font-bold flex items-center gap-3 text-gray-900">
@@ -409,7 +306,7 @@ export default function Home() {
             ))}
           </div>
         </section>
-      )}
+      )} */}
 
       {/* ─── How It Works ─────────────────────────────────────────────────────── */}
       <section className="container mx-auto px-6 pt-16">

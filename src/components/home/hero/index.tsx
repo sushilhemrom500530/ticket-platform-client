@@ -37,7 +37,7 @@ export default function HeroSection() {
     ];
 
     return (
-        <section className="relative w-full min-h-[calc(100vh-305px)] bg-white overflow-hidden flex items-center justify-center pt-10 pb-8">
+        <section className="relative w-full lg:h-svh h-auto min-h-[100svh] bg-white overflow-hidden flex items-center justify-center pt-[80px] pb-8 lg:pb-0">
             <style>{`
                 @keyframes blob-bounce {
                     0%, 100% { transform: translate(0, 0) scale(1); }
@@ -133,7 +133,7 @@ export default function HeroSection() {
                 </div>
             </div>
 
-            <div className="w-full container mx-auto px-6 md:px-8 z-10 relative">
+            <div className="w-full container mx-auto z-10 relative flex flex-col items-center h-[calc(100svh-80px)] justify-center">
                 {mounted ? (
                     <Slider
                         dots={true}
@@ -148,12 +148,12 @@ export default function HeroSection() {
                     >
                         {carouselEvents.map((event) => (
                             <div key={event._id} className="outline-none">
-                                <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 py-8">
+                                <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 pt-14 relative w-full">
                                     {/* Left Side: Details */}
-                                    <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left pt-8 lg:pt-0">
-                                        <span className="inline-flex items-center gap-1.5 bg-orange-100 text-orange-600 text-sm font-bold px-5 py-2 rounded-full mb-6 uppercase tracking-widest shadow-sm">
+                                    <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left relative">
+                                        <div className="inline-flex items-center gap-1.5 bg-orange-100 text-orange-600 text-xs font-bold px-3 py-1 rounded-full mb-6 uppercase tracking-widest shadow-sm">
                                             {event.category || "Featured"}
-                                        </span>
+                                        </div>
                                         <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-slate-900 mb-6 leading-[1.15] tracking-tight">
                                             {event.title}
                                         </h1>
@@ -162,12 +162,12 @@ export default function HeroSection() {
                                         </p>
                                         <div className="flex flex-wrap justify-center lg:justify-start items-center gap-4">
                                             <Link href={`/events/${event._id}`}>
-                                                <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-lg shadow-blue-600/30 active:scale-95">
+                                                <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-lg shadow-blue-600/30 active:scale-95 cursor-pointer">
                                                     Get Tickets
                                                 </button>
                                             </Link>
                                             <Link href="/events">
-                                                <button className="bg-white hover:bg-slate-50 text-slate-900 font-semibold px-8 py-4 rounded-xl transition-all shadow-sm border border-slate-200 active:scale-95">
+                                                <button className="bg-white hover:bg-slate-50 text-slate-900 font-semibold px-8 py-4 rounded-xl transition-all border border-slate-200 active:scale-95 cursor-pointer">
                                                     Explore More
                                                 </button>
                                             </Link>
@@ -180,7 +180,7 @@ export default function HeroSection() {
                                         <div className="absolute w-[85%] h-[85%] bg-gradient-to-tr from-blue-500/30 to-indigo-600/30 rounded-[3rem] blur-3xl opacity-60 group-hover:opacity-85 group-hover:scale-105 transition-all duration-700 pointer-events-none z-10"></div>
 
                                         {/* Outer Border/Glow Wrapper */}
-                                        <div className="w-full aspect-[4/3] rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(37,99,235,0.12)] relative border-4 border-white/90 backdrop-blur-xs z-20 transition-all duration-700 ease-out group-hover:-translate-y-2 group-hover:shadow-[0_30px_60px_rgba(37,99,235,0.22)]">
+                                        <div className="w-full aspect-[4/3] rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(37,99,235,0.12)] relative border-4 border-white/90 backdrop-blur-xs z-20 transition-all duration-700 ease-out group-hover:scale-[95px] group-hover:shadow-[0_30px_60px_rgba(37,99,235,0.22)]">
                                             <img
                                                 src={event.coverImage}
                                                 alt={event.title}
@@ -190,8 +190,8 @@ export default function HeroSection() {
                                         </div>
 
                                         {/* Floating Glass Badge: Booking */}
-                                        <div className="absolute -top-3 -right-3 md:-top-4 md:right-1 bg-white/90 backdrop-blur-md border border-slate-200/60 py-2.5 px-4 rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.05)] animate-bounce-slow z-30 pointer-events-none flex items-center gap-2.5">
-                                            <div className="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                                        <div className="absolute -top-3 -right-3 md:-top-4 md:right-1 bg-white backdrop-blur-md border border-slate-200/60 py-2.5 px-4 rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.05)] animate-bounce-slow z-30 pointer-events-none flex items-center gap-2.5">
+                                            <div className="w-8 h-8 rounded-xl flex items-center justify-center text-blue-600">
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                                 </svg>
