@@ -43,7 +43,7 @@ function AnimatedCounter({
 
 export function StatsBar() {
     return (
-        <section className="bg-blue-600 text-white py-8">
+        <section className="bg-blue-500 backdrop-blur-md text-white py-12 shadow-sm border-t border-blue-500/20">
             <div className="container mx-auto px-6">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
                     {[
