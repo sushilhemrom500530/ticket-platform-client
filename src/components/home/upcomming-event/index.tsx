@@ -26,32 +26,14 @@ function useCountdown(targetDate: string) {
 
 export default function UpcomingEvent() {
     const [events, setEvents] = useState<any[]>([]);
-    const [categories, setCategories] = useState<any[]>([]);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [activeCategory, setActiveCategory] = useState<string | null>(null);
-    const [testimonialIdx, setTestimonialIdx] = useState(0);
-    const [email, setEmail] = useState("");
-    const [subscribed, setSubscribed] = useState(false);
-    const [mounted, setMounted] = useState(false);
 
-    useEffect(() => {
-        setMounted(true);
-    }, []);
 
     useEffect(() => {
         const fetchHomeData = async () => {
             try {
-                const [eventsRes, categoriesRes] = await Promise.all([
-                    api.get("/events?limit=10"),
-                    api.get("/categories"),
-                ]);
+                const eventsRes = await api.get("/events?limit=10");
                 setEvents(eventsRes.data.data.results || []);
-                setCategories(categoriesRes.data.data || []);
             } catch (error: any) {
-                if (error.message === "Network Error") {
-                    // Suppress Network Error to avoid console spam when server is down
-                    return;
-                }
                 console.error("Failed to load home data", error);
             }
         };
@@ -59,7 +41,6 @@ export default function UpcomingEvent() {
     }, []);
 
 
-    // Nearest upcoming event for countdown
     const upcomingEvent = events.find(
         (e: any) => e.date && new Date(e.date) > new Date(),
     );
