@@ -34,7 +34,7 @@ export function PremiumEvents() {
     return (
         <section>
             {isEventsLoading ? (
-                <div>
+                <div className="container mx-auto px-4">
                     <div className="flex justify-between items-end mb-8 animate-pulse">
                         <div className="h-8 bg-slate-200 rounded w-48" />
                         <div className="h-5 bg-slate-200 rounded w-20" />
@@ -65,7 +65,6 @@ export function PremiumEvents() {
             ) : (
                 premiumEvents.length > 0 && (
                     <section className="relative overflow-hidden bg-linear-to-br from-slate-50 to-indigo-50/40 py-16 border-t border-b border-slate-200/60">
-                        {/* Radial blobs */}
                         <div className="absolute top-[-50px] left-[5%] w-[450px] h-[450px] rounded-full bg-[radial-gradient(circle,rgba(99,102,241,0.12)_0%,rgba(99,102,241,0)_70%)] blur-2xl pointer-events-none z-0 animate-float-1" />
                         <div className="absolute bottom-[-100px] right-[5%] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.1)_0%,rgba(59,130,246,0)_70%)] blur-2xl pointer-events-none z-0 animate-float-2" />
 

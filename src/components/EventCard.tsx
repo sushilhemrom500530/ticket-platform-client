@@ -8,11 +8,11 @@ interface EventCardProps {
 
 export default function EventCard({ event }: EventCardProps) {
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 flex flex-col h-full">
-      <div className="relative h-48 w-full overflow-hidden group">
-        <img 
-          src={event.image || "https://placehold.co/600x400"} 
-          alt={event.title} 
+    <div className="bg-white rounded-lg overflow-hidden border border-gray-200/70 flex flex-col h-full">
+      <div className="relative h-48 w-full overflow-hidden group cursor-pointer">
+        <img
+          src={event.image || "https://placehold.co/600x400"}
+          alt={event.title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
         <div className="absolute top-4 left-4">
@@ -28,15 +28,15 @@ export default function EventCard({ event }: EventCardProps) {
           </div>
         )}
       </div>
-      
+
       <div className="p-6 flex flex-col flex-grow">
         <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-1">{event.title}</h3>
-        
+
         <div className="flex items-center text-gray-500 text-sm mb-2">
           <Calendar className="w-4 h-4 mr-2 text-blue-500" />
           {new Date(event.date).toLocaleDateString("en-US", { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
         </div>
-        
+
         <div className="flex items-center text-gray-500 text-sm mb-4">
           <MapPin className="w-4 h-4 mr-2 text-red-500" />
           <span className="truncate">{event.location}</span>
