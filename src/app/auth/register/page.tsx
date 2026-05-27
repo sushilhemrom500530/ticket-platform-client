@@ -1,11 +1,8 @@
 'use client'
-// import login_image from "../../../assets/auth/login.png";
-import Image from 'next/image';
 import { useState } from 'react';
-import { Input, Checkbox, Button, message, Form } from 'antd';
+import { Input, Button, Form } from 'antd';
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
-import { MdEmail } from "react-icons/md";
-import { IoKeyOutline } from "react-icons/io5";
+import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -23,10 +20,7 @@ export default function RegisterPage() {
         try {
             const res = await login({ ...values, remember });
 
-            console.log('ressss', res);
-
             if (res?.success || res?.statusCode === 200) {
-                // Handle different response structures
                 const token = res?.data?.token || res?.data?.tokens?.accessToken;
                 const user = res?.data?.results || res?.data?.user;
 
@@ -45,96 +39,165 @@ export default function RegisterPage() {
                 router.push("/dashboard");
             }
         } catch (error) {
-            // Handle truly unexpected errors (e.g. Network/500)
             console.error("Unexpected login error:", error);
         }
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-white w-full">
-            <div className="flex items-center justify-center gap-10 md:gap-5 lg:gap-12 container mx-auto">
-                <div className="lg:w-[725px] h-[520px] hidden md:block">
-                    {/* <Image
-            src={login_image}
-            alt="logo"
-            width={0}
-            height={0}
-            className="w-full h-full"
-          /> */}
+        <div className="flex min-h-screen bg-white w-full overflow-hidden">
+            <style>{`
+        @keyframes blob-bounce-auth {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(40px, -60px) scale(1.15); }
+            66% { transform: translate(-30px, 40px) scale(0.9); }
+        }
+        @keyframes blob-bounce-auth-2 {
+            0%, 100% { transform: translate(0, 0) scale(1.1); }
+            50% { transform: translate(-50px, 50px) scale(0.85); }
+        }
+        @keyframes blob-bounce-auth-3 {
+            0%, 100% { transform: translate(0, 0) scale(0.9); }
+            50% { transform: translate(60px, -30px) scale(1.2); }
+        }
+        @keyframes blob-bounce-auth-4 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-40px, -40px) scale(0.95); }
+        }
+        .animate-blob-auth-1 {
+            animation: blob-bounce-auth 20s ease-in-out infinite;
+        }
+        .animate-blob-auth-2 {
+            animation: blob-bounce-auth-2 25s ease-in-out infinite;
+        }
+        .animate-blob-auth-3 {
+            animation: blob-bounce-auth-3 18s ease-in-out infinite;
+        }
+        .animate-blob-auth-4 {
+            animation: blob-bounce-auth-4 28s ease-in-out infinite;
+        }
+      `}</style>
+            {/* Left Side: Animated Blobs */}
+            <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-[#0052cc] to-[#003d99] relative items-center justify-center p-12 text-white">
+                <div className="absolute -top-20 -left-20 w-[600px] h-[600px] bg-gradient-to-br from-[#0066ff] to-[#0047b3] rounded-full animate-blob-auth-1 blur-2xl opacity-50 mix-blend-screen"></div>
+                <div className="absolute -bottom-20 right-10 w-[500px] h-[500px] bg-gradient-to-tr from-[#00bfff] to-[#0047b3] rounded-full animate-blob-auth-2 animation-delay-2000 blur-2xl opacity-50 mix-blend-screen"></div>
+                <div className="absolute top-1/2 -translate-y-1/2 left-1/4 w-[400px] h-[400px] bg-gradient-to-tl from-[#0066ff] to-[#003d99] rounded-full animate-blob-auth-3 animation-delay-4000 blur-2xl opacity-50 mix-blend-screen"></div>
+
+                <div className="absolute -left-32 bottom-0 w-[500px] h-[500px] bg-[#0066ff] rounded-full animate-blob-auth-1"></div>
+                <div className="absolute -right-32 top-10 w-[300px] h-[300px] bg-[#0066ff] rounded-full animate-blob-auth-4 animation-delay-4000"></div>
+
+                <div className="relative z-10 text-left max-w-lg -ml-20">
+                    <h1 className="text-6xl font-bold mb-4 tracking-wider uppercase drop-shadow-lg">JOIN US</h1>
+                    <h2 className="text-2xl font-bold mb-8 tracking-widest uppercase drop-shadow-md">CREATE AN ACCOUNT</h2>
+                    <p className="text-sm text-blue-100 leading-relaxed font-light drop-shadow-sm">
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
+                        nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam
+                        erat volutpat. Ut wisi enim ad minim quis nostrud exerci tation
+                    </p>
                 </div>
-                <div className="w-full lg:w-[720px]">
-                    <div className="p-8">
-                        <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-center text-[#0A0A0A] mb-3">
-                            Login to Account!
-                        </h1>
-                        <p className=" text-center text-[#6E6E6E] mb-6">
-                            Please enter your email and password to continue.
-                        </p>
-                        {/* form field */}
-                        <Form
-                            form={form}
-                            layout="vertical"
-                            onFinish={handleSubmit}
-                            autoComplete="off"
+            </div>
+
+            {/* Right Side: Register Form */}
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white relative">
+                <div className="absolute bottom-[-100px] right-[-100px] w-[300px] h-[300px] bg-[#0066ff] rounded-full animate-blob-auth-1 opacity-90 hidden lg:block"></div>
+
+                <div className="w-full max-w-md relative z-10">
+                    <h1 className="text-4xl md:text-5xl font-bold text-[#1A1A1A] mb-3">
+                        Sign up
+                    </h1>
+                    <p className="text-[#6E6E6E] mb-8 text-sm">
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit
+                    </p>
+
+                    <Form
+                        form={form}
+                        layout="vertical"
+                        onFinish={handleSubmit}
+                        autoComplete="off"
+                        className="w-full"
+                    >
+                        <Form.Item
+                            name="fullname"
+                            rules={[
+                                { required: true, message: "Full name is required." },
+                                { min: 3, message: "Full name must be at least 3 characters." },
+                            ]}
+                            className="mb-4"
                         >
-                            <Form.Item
-                                name="fullname"
-                                label={<span className="text-[#24160E] text-lg">Full name</span>}
-                                rules={[
-                                    { required: true, message: "Full name is required." },
-                                    { min: 3, message: "Full name must be at least 3 characters." },
-                                ]}
-                            >
-                                <Input
-                                    prefix={<MdEmail className="text-[#0A0A0A] text-xl" />}
-                                    placeholder="Enter Your Email"
-                                    className="custom-textarea !text-[#3F3E3E] px-3! py-2!"
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                name="email"
-                                label={<span className="text-[#24160E] text-lg">Email</span>}
-                                rules={[
-                                    { required: true, message: "Email is required." },
-                                    { type: "email", message: "Enter a valid email address." },
-                                ]}
-                            >
-                                <Input
-                                    prefix={<MdEmail className="text-[#0A0A0A] text-xl" />}
-                                    placeholder="Enter Your Email"
-                                    className="custom-textarea !text-[#3F3E3E] px-3! py-2!"
-                                />
-                            </Form.Item>
-
-                            <Form.Item
-                                name="password"
-                                label={<span className="text-[#24160E] text-lg">Password</span>}
-                                rules={[
-                                    { required: true, message: "Password is required." },
-                                    { min: 6, message: "Password must be at least 6 characters." },
-                                ]}
-                            >
-                                <Input.Password
-                                    prefix={<IoKeyOutline className="text-[#0A0A0A] text-xl" />}
-                                    placeholder="Enter Password"
-                                    className="custom-textarea !text-[#3F3E3E] px-3! py-2!"
-                                    iconRender={(visible) =>
-                                        visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
-                                    }
-                                />
-                            </Form.Item>
-
-                            <Button
-                                htmlType="submit"
-                                type="primary"
+                            <Input
                                 size="large"
-                                loading={loading}
-                                className="w-full !rounded-full !py-6 bg-primary hover:!bg-[#8A2CE2]/90 text-xl !font-semibold"
-                            >
-                                Sign Up
-                            </Button>
-                        </Form>
-                    </div>
+                                prefix={<FaUser className="text-gray-500 mr-2 text-lg" />}
+                                placeholder="Full Name"
+                                className="bg-[#F5F5F5] border-none hover:bg-[#EBEBEB] focus:bg-[#EBEBEB] rounded-xl h-14 !text-gray-700"
+                            />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="email"
+                            rules={[
+                                { required: true, message: "Email is required." },
+                                { type: "email", message: "Enter a valid email address." },
+                            ]}
+                            className="mb-4"
+                        >
+                            <Input
+                                size="large"
+                                prefix={<FaEnvelope className="text-gray-500 mr-2 text-lg" />}
+                                placeholder="Email Address"
+                                className="bg-[#F5F5F5] border-none hover:bg-[#EBEBEB] focus:bg-[#EBEBEB] rounded-xl h-14 !text-gray-700"
+                            />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="password"
+                            rules={[
+                                { required: true, message: "Password is required." },
+                                { min: 6, message: "Password must be at least 6 characters." },
+                            ]}
+                            className="mb-8"
+                        >
+                            <Input.Password
+                                size="large"
+                                prefix={<FaLock className="text-gray-500 mr-2 text-lg" />}
+                                placeholder="Password"
+                                className="bg-[#F5F5F5] border-none hover:bg-[#EBEBEB] focus:bg-[#EBEBEB] rounded-xl h-14 !text-gray-700"
+                                iconRender={(visible) => (
+                                    <span className="text-[#0052cc] text-xs font-bold uppercase cursor-pointer hover:text-[#003d99] tracking-wider mr-2">
+                                        {visible ? "Hide" : "Show"}
+                                    </span>
+                                )}
+                            />
+                        </Form.Item>
+
+                        <Button
+                            htmlType="submit"
+                            type="primary"
+                            size="large"
+                            loading={loading}
+                            className="w-full !h-14 !rounded-xl bg-[#004b93] hover:!bg-[#003d7a] text-lg font-semibold shadow-md mb-6"
+                        >
+                            Sign up
+                        </Button>
+
+                        <div className="relative flex items-center py-2 mb-6">
+                            <div className="flex-grow border-t border-gray-300"></div>
+                            <span className="flex-shrink-0 mx-4 text-gray-400 text-sm">Or</span>
+                            <div className="flex-grow border-t border-gray-300"></div>
+                        </div>
+
+                        <Button
+                            size="large"
+                            className="w-full !h-14 !rounded-xl !border-gray-800 text-gray-800 text-lg font-semibold hover:!border-black hover:!text-black bg-transparent"
+                        >
+                            Sign up with other
+                        </Button>
+
+                        <div className="mt-8 text-center text-sm text-gray-500 font-medium">
+                            Already have an account?{' '}
+                            <Link href="/auth/login" className="text-[#0052cc] font-bold hover:text-[#003d99]">
+                                Sign in
+                            </Link>
+                        </div>
+                    </Form>
                 </div>
             </div>
         </div>
