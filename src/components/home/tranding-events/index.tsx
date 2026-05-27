@@ -2,9 +2,9 @@
 
 import { ArrowRight, TrendingUp } from "lucide-react";
 import Link from "next/link";
-import EventCard from "../../EventCard";
 import { useEffect, useState } from "react";
 import api from "@/src/services/api";
+import EventCard from "../../reuseable/event-card";
 
 
 

@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import EventCard from "@/src/components/EventCard";
+import EventCard from "../../reuseable/event-card";
 
 // Utility to get beautiful category-specific icons dynamically
 const getCategoryIcon = (name: string) => {

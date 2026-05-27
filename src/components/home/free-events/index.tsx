@@ -4,7 +4,7 @@ import api from "@/src/services/api";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import EventCard from "../../EventCard";
+import EventCard from "../../reuseable/event-card";
 
 export function FreeEvents() {
     const [events, setEvents] = useState<any[]>([]);
