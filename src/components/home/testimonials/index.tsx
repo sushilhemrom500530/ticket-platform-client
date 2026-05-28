@@ -76,27 +76,127 @@ export function Testimonials() {
             </div>
         ),
         customPaging: () => (
-            <div className="w-2.5 h-2.5 rounded-full bg-white/30 transition-all duration-300" />
+            <div className="w-2.5 h-2.5 rounded-full bg-black/20 transition-all duration-300" />
         ),
     };
-
     return (
-        <section className="bg-gradient-to-br from-blue-600 via-indigo-600 to-indigo-800 py-24 mt-14 overflow-hidden">
-            <div className="container mx-auto px-6">
+        <section className="relative py-24 mt-14 overflow-hidden bg-white">
+
+            {/* Decorative Elements */}
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-72 h-72 rounded-full bg-blue-600/20 blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-72 h-72 rounded-full bg-indigo-600/20 blur-3xl pointer-events-none" />
+
+
+            <style>{`
+                @keyframes blob-bounce {
+                    0%, 100% { transform: translate(0, 0) scale(1); }
+                    33% { transform: translate(40px, -60px) scale(1.15); }
+                    66% { transform: translate(-30px, 40px) scale(0.9); }
+                }
+                @keyframes blob-bounce-2 {
+                    0%, 100% { transform: translate(0, 0) scale(1.1); }
+                    50% { transform: translate(-50px, 50px) scale(0.85); }
+                }
+                @keyframes blob-bounce-3 {
+                    0%, 100% { transform: translate(0, 0) scale(0.9); }
+                    50% { transform: translate(60px, -30px) scale(1.2); }
+                }
+                @keyframes blob-bounce-4 {
+                    0%, 100% { transform: translate(0, 0) scale(1); }
+                    50% { transform: translate(-40px, -40px) scale(0.95); }
+                }
+                .animate-blob-1 {
+                    animation: blob-bounce 20s ease-in-out infinite;
+                }
+                .animate-blob-2 {
+                    animation: blob-bounce-2 25s ease-in-out infinite;
+                }
+                .animate-blob-3 {
+                    animation: blob-bounce-3 18s ease-in-out infinite;
+                }
+                .animate-blob-4 {
+                    animation: blob-bounce-4 28s ease-in-out infinite;
+                }
+                
+                .bg-fluid-blue-1 {
+                    background: radial-gradient(circle at 30% 30%, #dbeafe 0%, #60a5fa 35%, #2563eb 70%, #1e40af 100%);
+                }
+                .bg-fluid-blue-2 {
+                    background: radial-gradient(circle at 35% 35%, #bfdbfe 0%, #3b82f6 40%, #1d4ed8 75%, #172554 100%);
+                }
+                .bg-fluid-blue-3 {
+                    background: radial-gradient(circle at 25% 25%, #e0f2fe 0%, #38bdf8 35%, #0284c7 70%, #0369a1 100%);
+                }
+                .bg-fluid-blue-4 {
+                    background: radial-gradient(circle at 30% 30%, #c7d2fe 0%, #818cf8 40%, #4f46e5 75%, #312e81 100%);
+                }
+                
+                .gooey-container {
+                    filter: url(#hero-goo);
+                    -webkit-filter: url(#hero-goo);
+                    transform: translate3d(0, 0, 0);
+                }
+                .gooey-shadow {
+                    filter: drop-shadow(0 20px 30px rgba(37, 99, 235, 0.18)) drop-shadow(0 8px 16px rgba(99, 102, 241, 0.12));
+                }
+                @keyframes bounce-slow {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-8px); }
+                }
+                .animate-bounce-slow {
+                    animation: bounce-slow 5s ease-in-out infinite;
+                }
+                .animate-bounce-slow-delay {
+                    animation: bounce-slow 5s ease-in-out infinite;
+                    animation-delay: 2.5s;
+                }
+            `}</style>
+
+            {/* SVG Gooey Filter */}
+            <svg className="absolute w-0 h-0 pointer-events-none opacity-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <filter id="hero-goo">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="18" result="blur" />
+                        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 25 -9" />
+                    </filter>
+                </defs>
+            </svg>
+
+            {/* Top-Left Animated Fluid Shapes */}
+            <div className="absolute top-[-100px] left-[-100px] md:top-[-180px] md:left-[-180px] w-[320px] h-[320px] md:w-[600px] md:h-[600px] z-0 pointer-events-none select-none opacity-85 gooey-shadow">
+                <div className="relative w-full h-full gooey-container">
+                    <div className="absolute top-[20%] left-[20%] w-[45%] h-[45%] rounded-full bg-fluid-blue-1 animate-blob-1"></div>
+                    <div className="absolute top-[25%] left-[38%] w-[35%] h-[35%] rounded-full bg-fluid-blue-2 animate-blob-2"></div>
+                    <div className="absolute top-[38%] left-[20%] w-[30%] h-[30%] rounded-full bg-fluid-blue-3 animate-blob-3"></div>
+                    <div className="absolute top-[32%] left-[32%] w-[25%] h-[25%] rounded-full bg-fluid-blue-4 animate-blob-4"></div>
+                </div>
+            </div>
+
+            {/* Bottom-Right Animated Fluid Shapes */}
+            <div className="absolute bottom-[-100px] right-[-100px] md:bottom-[-200px] md:right-[-200px] w-[350px] h-[350px] md:w-[650px] md:h-[650px] z-0 pointer-events-none select-none opacity-80 gooey-shadow">
+                <div className="relative w-full h-full gooey-container">
+                    <div className="absolute bottom-[20%] right-[20%] w-[45%] h-[45%] rounded-full bg-fluid-blue-2 animate-blob-3"></div>
+                    <div className="absolute bottom-[25%] right-[38%] w-[35%] h-[35%] rounded-full bg-fluid-blue-1 animate-blob-1"></div>
+                    <div className="absolute bottom-[38%] right-[20%] w-[30%] h-[30%] rounded-full bg-fluid-blue-4 animate-blob-4"></div>
+                    <div className="absolute bottom-[32%] right-[32%] w-[25%] h-[25%] rounded-full bg-fluid-blue-3 animate-blob-2"></div>
+                </div>
+            </div>
+
+            <div className="container mx-auto px-6 relative z-10">
                 <div className="flex flex-col lg:flex-row items-center gap-12">
 
                     {/* Left Content */}
                     <div className="lg:w-1/3 text-left w-full z-10">
-                        <h2 className="text-5xl lg:text-6xl font-extrabold text-white mb-2 leading-tight tracking-tight drop-shadow-sm">
+                        <h2 className="text-5xl lg:text-6xl font-extrabold text-slate-900 mb-2 leading-tight tracking-tight drop-shadow-sm">
                             What<br />
-                            <span className="text-blue-300">Attendees</span><br />
+                            <span className="text-blue-600">Attendees</span><br />
                             Say
                         </h2>
                         <div className="flex gap-4 mt-8">
-                            <div className="w-14 h-14 bg-white/10 backdrop-blur-md text-white rounded-xl flex items-center justify-center font-bold text-xl shadow-xl border border-white/20">
-                                5<Star className="w-5 h-5 ml-1 text-yellow-400 fill-yellow-400" />
+                            <div className="w-14 h-14 bg-black/5 backdrop-blur-md text-slate-900 rounded-xl flex items-center justify-center font-bold text-xl shadow-sm border border-black/10">
+                                5<Star className="w-5 h-5 ml-1 text-yellow-500 fill-yellow-500" />
                             </div>
-                            <div className="w-14 h-14 bg-white/10 backdrop-blur-md text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-xl border border-white/20">
+                            <div className="w-14 h-14 bg-black/5 backdrop-blur-md text-slate-900 rounded-xl flex items-center justify-center font-bold text-lg shadow-sm border border-black/10">
                                 10k+
                             </div>
                         </div>
@@ -132,13 +232,13 @@ export function Testimonials() {
                         <div className="flex justify-center gap-4 mt-2">
                             <button
                                 onClick={() => sliderRef.current?.slickPrev()}
-                                className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 flex items-center justify-center transition shadow-lg border border-white/30 cursor-pointer z-10"
+                                className="w-10 h-10 rounded-full bg-black/5 backdrop-blur-sm text-slate-900 hover:bg-black/10 flex items-center justify-center transition shadow-sm border border-black/10 cursor-pointer z-10"
                             >
                                 <ChevronLeft className="w-5 h-5" />
                             </button>
                             <button
                                 onClick={() => sliderRef.current?.slickNext()}
-                                className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 flex items-center justify-center transition shadow-lg border border-white/30 cursor-pointer z-10"
+                                className="w-10 h-10 rounded-full bg-black/5 backdrop-blur-sm text-slate-900 hover:bg-black/10 flex items-center justify-center transition shadow-sm border border-black/10 cursor-pointer z-10"
                             >
                                 <ChevronRight className="w-5 h-5" />
                             </button>
@@ -182,7 +282,7 @@ export function Testimonials() {
                     height: 8px;
                 }
                 .testimonial-slider-container .slick-dots li.slick-active div {
-                    background-color: #ffffff;
+                    background-color: #0066ff;
                     width: 24px;
                     border-radius: 9999px;
                 }
