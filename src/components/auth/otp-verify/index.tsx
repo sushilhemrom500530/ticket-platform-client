@@ -5,8 +5,10 @@ import { Button, message } from 'antd';
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthService } from '@/src/hooks/auth';
 import AuthLayout from '..';
+import Cookies from 'js-cookie';
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
+
 
 export default function OtpVerificationPage() {
     const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
@@ -62,6 +64,7 @@ export default function OtpVerificationPage() {
 
     const handleSubmit = async () => {
         const otpString = otp.join('');
+
         if (otpString.length !== 6) {
             message.error('Please enter the complete OTP');
             return;
@@ -79,16 +82,28 @@ export default function OtpVerificationPage() {
             return;
         }
 
-        setLoading(true);
-        await verifyOtp({ email, otp: otpString })
+        try {
+            setLoading(true);
+            const res = await verifyOtp({
+                email,
+                otp: otpString
+            });
 
-        setTimeout(() => {
+            if (res?.statusCode === 201) {
+                router.push(
+                    `/auth/reset-password?email=${encodeURIComponent(email)}`
+                );
+            }
+
+        } catch (error) {
+            console.error(error);
+
+        } finally {
             setLoading(false);
-        }, 1000);
-
-        router.push(`/auth/reset-password?email=${encodeURIComponent(email)}`)
-
+        }
     };
+
+
     return (
         <AuthLayout
             title="Verify OTP"

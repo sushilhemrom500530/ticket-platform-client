@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Input, Button, Form } from 'antd';
+import { Input, Button, Form, message } from 'antd';
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 import Cookies from "js-cookie";
@@ -18,12 +18,18 @@ export default function ForgetPasswordPage() {
     const [form] = Form.useForm();
 
     const handleSubmit = async (values: { email: string }) => {
+        Cookies.remove("token");
         setLoading(true);
-        await forgotPassword({ email: values.email })
-        setTimeout(() => {
+        const res = await forgotPassword({ email: values.email })
+        console.log("ressssssss", res);
+        if (res?.statusCode !== 201) {
+            message.error(res?.message || 'Something went wrong. Please try again later.');
             setLoading(false);
-        }, 1000);
-        router.push(`/auth/otp-verify?email=${encodeURIComponent(values.email)}`)
+        } else {
+            router.push(`/auth/otp-verify?email=${encodeURIComponent(values.email)}`)
+            setLoading(false);
+            Cookies.set("token", res?.data?.token);
+        }
     };
     return (
         <AuthLayout

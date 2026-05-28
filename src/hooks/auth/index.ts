@@ -87,18 +87,46 @@ export function useAuthService() {
   /** 🔹 Verify OTP */
   const verifyOtp = useCallback(async (payload: VerifyOtpPayload) => {
     setLoading(true);
+
     try {
-      const response = await useApi.post("/auth/verify-otp", payload);
+      const token = Cookies.get("token");
+
+      console.log("token", token);
+
+      if (!token) {
+        message.error("Token not found");
+        return;
+      }
+
+      const response = await useApi.post(
+        "/auth/forgot-otp-verify",
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       const { data, status } = response;
+
       if (status >= 400) {
         message.error(data?.message || "Invalid OTP");
         return data;
       }
+
       message.success("OTP verified successfully");
       return data;
+
     } catch (error: any) {
       console.error("Verify OTP unexpected error:", error);
+
+      message.error(
+        error?.response?.data?.message || "Something went wrong"
+      );
+
       throw error;
+
     } finally {
       setLoading(false);
     }
