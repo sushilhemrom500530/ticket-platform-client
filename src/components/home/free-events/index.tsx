@@ -36,7 +36,7 @@ export function FreeEvents() {
     return (
         <section>
             {isEventsLoading ? (
-                <div>
+                <div className="container mx-auto px-6">
                     <div className="flex justify-between items-end mb-8 animate-pulse">
                         <div className="h-8 bg-slate-200 rounded w-48" />
                         <div className="h-5 bg-slate-200 rounded w-20" />
