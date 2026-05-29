@@ -19,9 +19,10 @@ export default function ResetPasswordPage() {
     const handleSubmit = async (values: { password: string; confirmPassword: string }) => {
         try {
             setLoading(true);
-            await resetPassword({ email, newPassword: values.password });
+            await resetPassword({ newPassword: values.password, confirmPassword: values.confirmPassword });
             router.push("/auth/login");
         } catch (e: any) {
+            console.error(e);
             message.error("Failed to reset password");
         } finally {
             setLoading(false);

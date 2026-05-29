@@ -23,8 +23,8 @@ export interface VerifyOtpPayload {
 }
 
 export interface ResetPasswordPayload {
-  email: string;
   newPassword: string;
+  confirmPassword: string;
 }
 
 export function useAuthService() {
@@ -91,8 +91,6 @@ export function useAuthService() {
     try {
       const token = Cookies.get("token");
 
-      console.log("token", token);
-
       if (!token) {
         message.error("Token not found");
         return;
@@ -131,6 +129,8 @@ export function useAuthService() {
       setLoading(false);
     }
   }, []);
+
+
   const resendOtp = useCallback(async (payload: ForgotPasswordPayload) => {
     setLoading(true);
     try {
@@ -154,7 +154,18 @@ export function useAuthService() {
   const resetPassword = useCallback(async (payload: ResetPasswordPayload) => {
     setLoading(true);
     try {
-      const response = await useApi.post("/auth/reset-password", payload);
+      const token = Cookies.get("token");
+
+      if (!token) {
+        message.error("Token not found");
+        return;
+      }
+
+      const response = await useApi.post("/auth/reset-password", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const { data, status } = response;
       if (status >= 400) {
         message.error(data?.message || "Reset failed");
