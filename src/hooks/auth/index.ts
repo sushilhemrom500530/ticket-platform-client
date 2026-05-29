@@ -58,6 +58,10 @@ export function useAuthService() {
     } catch (error: any) {
       // This will only be triggered for 5xx or Network errors now
       console.error("Login unexpected error:", error);
+      if (error?.message === 'Network Error') {
+        message.error('Server is offline, please try again later');
+        return; // gracefully exit without throwing
+      }
       throw error;
     } finally {
       setLoading(false);
@@ -78,6 +82,10 @@ export function useAuthService() {
       return data;
     } catch (error: any) {
       console.error("Forgot password unexpected error:", error);
+      if (error?.message === 'Network Error') {
+        message.error('Server is offline, please try again later');
+        return; // gracefully exit
+      }
       throw error;
     } finally {
       setLoading(false);
@@ -119,6 +127,11 @@ export function useAuthService() {
     } catch (error: any) {
       console.error("Verify OTP unexpected error:", error);
 
+      if (error?.message === 'Network Error') {
+        message.error('Server is offline, please try again later');
+        return; // gracefully exit
+      }
+
       message.error(
         error?.response?.data?.message || "Something went wrong"
       );
@@ -144,6 +157,10 @@ export function useAuthService() {
       return data;
     } catch (error: any) {
       console.error("Resend OTP unexpected error:", error);
+      if (error?.message === 'Network Error') {
+        message.error('Server is offline, please try again later');
+        return; // gracefully exit
+      }
       throw error;
     } finally {
       setLoading(false);
@@ -175,6 +192,10 @@ export function useAuthService() {
       return data;
     } catch (error: any) {
       console.error("Reset password unexpected error:", error);
+      if (error?.message === 'Network Error') {
+        message.error('Server is offline, please try again later');
+        return; // gracefully exit
+      }
       throw error;
     } finally {
       setLoading(false);

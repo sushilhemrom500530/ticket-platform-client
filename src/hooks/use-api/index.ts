@@ -47,6 +47,8 @@ useApi.interceptors.response.use(
       message.error("Internal Server Error. Please try again later.");
     } else if (!status) {
       message.error("Network Error. Please check your connection.");
+      // Return a plain object to prevent Next.js error overlays if this gets logged via console.error
+      return Promise.reject({ message: "Network Error", isAxiosError: true });
     }
     return Promise.reject(error);
   }
