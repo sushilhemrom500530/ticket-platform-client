@@ -93,7 +93,7 @@ export default function OrganizersPage() {
   return (
     <div className="p-6">
       <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-1 items-center gap-3 w-full">
           <div className="p-3 bg-purple-50 rounded-2xl">
             <ShieldCheck className="w-8 h-8 text-purple-600" />
           </div>
@@ -105,7 +105,7 @@ export default function OrganizersPage() {
         <Input
           prefix={<Search size={18} className="text-gray-400" />}
           placeholder="Search organizers..."
-          className="w-full md:w-64 rounded-xl h-11 border-gray-200"
+          className="w-full md:!w-64 rounded-xl h-11 border-gray-200"
           onChange={(e) => setSearchText(e.target.value)}
         />
       </div>

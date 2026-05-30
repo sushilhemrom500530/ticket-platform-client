@@ -83,7 +83,7 @@ export default function ProfileEdit() {
 
     if (result) {
       message.success("Profile updated successfully!");
-      router.push("/dashboard/settings/profile");
+      router.push("/dashboard/profile");
     }
   };
 
@@ -91,7 +91,7 @@ export default function ProfileEdit() {
     <div className="bg-[#F5F7FB] h-full">
       <Title isShowBackButton title="Edit Personal Information" />
 
-      <div className="px-6 lg:px-14 py-10">
+      <div className="py-10 px-4">
         <div className="grid grid-cols-1 gap-8 xl:grid-cols-[360px_1fr]">
           <aside className="space-y-6">
             <div className="bg-white rounded-2xl shadow-sm border border-[#E4E7EC] p-8">

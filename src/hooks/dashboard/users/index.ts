@@ -106,7 +106,7 @@ export function useMyProfile() {
 
     try {
       const response = await useApi.get<UserResponse<IUserProfile>>(
-        "/users/profile/me"
+        "/users/get-my-profile"
       );
       setProfile(response?.data?.data || null);
     } catch (err: any) {
@@ -135,7 +135,7 @@ export function useUpdateUserStatus() {
 
   const updateUserStatus = async (id: string, status: UserStatus) => {
     setLoading(true);
-    const payload: IStatus = { status }; 
+    const payload: IStatus = { status };
     try {
       const response = await useApi.patch<UserResponse<UserStatus>>(
         `/users/${id}/status`,
@@ -169,7 +169,7 @@ export function useUpdateProfile() {
 
     try {
       const response = await useApi.patch<ProfileResponse<IUserProfile>>(
-        `/users/update-profile`,
+        `/users/update-my-profile`,
         payload
       );
       setLoading(false);
