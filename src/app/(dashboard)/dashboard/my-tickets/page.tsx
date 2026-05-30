@@ -81,8 +81,27 @@ export default function MyTicketsPage() {
           </Link>
           {record.status === "paid" && (
             <button
-              onClick={() => window.open(`/ticket/${record._id}?print=true`, "_blank")}
-              className="text-green-600 hover:underline text-sm font-medium"
+                onClick={async () => {
+                  try {
+                    message.loading({ content: "Generating PDF...", key: "pdf-gen" });
+                    const res = await fetch(`/ticket/${record._id}?download=true`);
+                    if (!res.ok) throw new Error("Network response was not ok");
+                    const blob = await res.blob();
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.download = `ticket-${record._id}.pdf`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    message.success({ content: "Download completed!", key: "pdf-gen", duration: 3 });
+                  } catch (err) {
+                    console.error(err);
+                    message.error({ content: "Failed to generate PDF.", key: "pdf-gen", duration: 3 });
+                  }
+                }}
+              className="text-green-600 hover:underline text-sm font-medium cursor-pointer"
             >
               Download PDF
             </button>
