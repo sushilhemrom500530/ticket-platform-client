@@ -2,15 +2,13 @@
 
 import { useState } from 'react';
 import { Input, Button, Form, message } from 'antd';
-import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
-import { useRouter, useSearchParams } from "next/navigation";
+import { FaLock } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 import { useAuthService } from '@/src/hooks/auth';
 import AuthLayout from '..';
 
 export default function ResetPasswordPage() {
     const [loading, setLoading] = useState(false);
-    const searchParams = useSearchParams();
-    const email = searchParams.get('email') || '';
     const router = useRouter();
     const { resetPassword } = useAuthService();
     const [form] = Form.useForm();
@@ -19,8 +17,10 @@ export default function ResetPasswordPage() {
     const handleSubmit = async (values: { password: string; confirmPassword: string }) => {
         try {
             setLoading(true);
-            await resetPassword({ newPassword: values.password, confirmPassword: values.confirmPassword });
-            router.push("/auth/login");
+            const res = await resetPassword({ newPassword: values.password, confirmPassword: values.confirmPassword });
+            if (res?.statusCode === 201) {
+                return router.push("/auth/login");
+            }
         } catch (e: any) {
             console.error(e);
             message.error("Failed to reset password");

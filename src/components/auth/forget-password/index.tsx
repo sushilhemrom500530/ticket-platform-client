@@ -2,13 +2,11 @@
 
 import { useState } from 'react';
 import { Input, Button, Form, message } from 'antd';
-import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
-import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
+import { FaEnvelope } from "react-icons/fa";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuthService } from '@/src/hooks/auth';
-import { useAuthStore } from '@/src/store/authStore';
 import AuthLayout from '..';
 
 export default function ForgetPasswordPage() {
@@ -29,6 +27,7 @@ export default function ForgetPasswordPage() {
             router.push(`/auth/otp-verify?email=${encodeURIComponent(values.email)}`)
             setLoading(false);
             Cookies.set("token", res?.data?.token);
+            Cookies.set("email", values.email);
         }
     };
     return (

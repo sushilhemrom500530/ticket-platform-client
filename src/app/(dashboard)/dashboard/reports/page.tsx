@@ -27,38 +27,70 @@ export default function ReportsPage() {
 
   const columns = [
     {
-      title: "Report Name",
-      dataIndex: "title",
-      key: "title",
+      title: "Ticket ID",
+      dataIndex: "ticketId",
+      key: "ticketId",
       render: (text: string) => (
         <div className="flex items-center gap-2">
           <FileText size={18} className="text-blue-500" />
-          <span className="font-medium">{text}</span>
+          <span className="font-medium text-gray-800">{text || 'N/A'}</span>
         </div>
       )
     },
     {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
-      render: (type: string) => <Tag className="rounded-lg">{type.toUpperCase().replace('_', ' ')}</Tag>
+      title: "Event",
+      dataIndex: "eventId",
+      key: "event",
+      render: (event: any) => (
+        <span className="font-medium text-gray-700">{event?.title || 'N/A'}</span>
+      )
     },
     {
-      title: "Generated At",
+      title: "User",
+      dataIndex: "userId",
+      key: "user",
+      render: (user: any) => (
+        <div>
+          <div className="font-medium text-gray-800">{user?.fullName || 'N/A'}</div>
+          <div className="text-xs text-gray-500">{user?.email}</div>
+        </div>
+      )
+    },
+    {
+      title: "Qty",
+      dataIndex: "quantity",
+      key: "quantity",
+      align: "center" as const,
+    },
+    {
+      title: "Total Price",
+      dataIndex: "totalPrice",
+      key: "totalPrice",
+      render: (price: number) => (
+        <span className="font-bold text-gray-700">${price?.toFixed(2)}</span>
+      )
+    },
+    {
+      title: "Date",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (date: string) => moment(date).format("MMM DD, YYYY HH:mm")
+      render: (date: string) => <span className="text-gray-600">{moment(date).format("MMM DD, YYYY hh:mm A")}</span>
     },
     {
-      title: "By",
-      dataIndex: "generatedBy",
-      key: "generatedBy",
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <Tag color={status === 'active' ? 'green' : status === 'pending' ? 'orange' : 'red'} className="rounded-md px-2 py-0.5 capitalize font-medium">
+          {status || 'Unknown'}
+        </Tag>
+      )
     },
     {
       title: "Action",
       key: "action",
       render: () => (
-        <Button type="text" icon={<Download size={16} />} className="text-blue-600">Download</Button>
+        <Button type="text" icon={<Download size={16} />} className="text-blue-600 hover:bg-blue-50 rounded-lg">Download</Button>
       )
     }
   ];
@@ -104,9 +136,9 @@ export default function ReportsPage() {
         ))}
       </Row>
 
-      <Card 
-        title="Generated Reports History" 
-        variant="borderless" 
+      <Card
+        title="Generated Reports History"
+        variant="borderless"
         className="shadow-sm border border-gray-100 rounded-2xl overflow-hidden"
         extra={<Button icon={<Filter size={16} />} type="text">Filter</Button>}
       >

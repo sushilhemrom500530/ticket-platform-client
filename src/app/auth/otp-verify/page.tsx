@@ -1,6 +1,5 @@
 import OtpVerificationPage from "@/src/components/auth/otp-verify";
 import { Metadata } from "next";
-import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "OTP Verification Page - Ticket Platform",

@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { Button, message } from 'antd';
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAuthService } from '@/src/hooks/auth';
 import AuthLayout from '..';
 import Cookies from 'js-cookie';
@@ -16,8 +16,7 @@ export default function OtpVerificationPage() {
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
     const { verifyOtp, resendOtp } = useAuthService();
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const email = searchParams.get('email') || '';
+    const email = Cookies.get('email') || '';
 
 
     const handleChange = (index: number, value: string) => {
