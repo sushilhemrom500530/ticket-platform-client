@@ -87,8 +87,8 @@ function NavbarContent() {
 
   // Dynamic Tailwind styling classes
   const navContainerClass = `flex justify-between items-center py-4 px-8 fixed top-0 w-full z-50 transition-all duration-300 ${isHome
-    ? (isScrolled ? 'bg-white/80 backdrop-blur-md text-black shadow-lg px-6 pt-5' : 'bg-transparent text-slate-900 px-6 py-7')
-    : (isScrolled ? 'bg-white/80 backdrop-blur-md text-black shadow-lg px-6 pt-5' : 'bg-white text-slate-800 border-b border-slate-100 px-6 py-7')
+    ? (isScrolled ? 'bg-white/80 backdrop-blur-md text-black shadow-sm px-6 pt-5' : 'bg-transparent text-slate-900 px-6 py-7')
+    : (isScrolled ? 'bg-white/80 backdrop-blur-md text-black shadow px-6 pt-5' : 'bg-white text-slate-800 px-6 py-7')
     }`;
 
   const logoClass = `text-2xl font-black tracking-tighter transition-colors select-none ${isScrolled ? 'text-black' : 'text-slate-900'}`;
@@ -113,7 +113,7 @@ function NavbarContent() {
 
           {/* Pill Search Input */}
           <form onSubmit={handleSearchSubmit} className="relative flex-1 max-w-[280px] hidden md:block">
-            <Search className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 ${isScrolled ? 'text-white/40' : 'text-slate-400'}`} />
+            <Search className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400`} />
             <input
               type="text"
               placeholder="What do you want to see live?"

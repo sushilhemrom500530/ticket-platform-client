@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { adminMenuData, userMenuData } from "../../../data";
 import NavItem from "../nav-menu";
-import logo_image from "../../../assets/dashboard_logo.svg";
 import logout_image from "../../../assets/menu/logout.svg";
 import Image from "next/image";
 import { useAuthService } from "@/src/hooks/auth";
@@ -15,8 +14,8 @@ export default function Sidebar({ navOpened, setNavOpened }: any) {
   const { logoutUser } = useAuthService();
   const { user } = useAuthStore();
 
-  const menuLinks = user?.role === "admin" 
-    ? adminMenuData?.linkData 
+  const menuLinks = user?.role === "admin"
+    ? adminMenuData?.linkData
     : userMenuData?.linkData;
 
   const closeAllSubmenus = (): void => {

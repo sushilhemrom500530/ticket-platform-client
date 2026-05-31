@@ -20,7 +20,7 @@ export default function Profile() {
   const { profile, loading } = useMyProfile();
   const extendedProfile = (profile ?? {}) as ProfileExtras & NonNullable<typeof profile>;
 
-  const statusColor = profile?.status === "Active" ? "green" : "red";
+  const statusColor = profile?.status?.toLowerCase() === "active" ? "green" : "red";
 
   return (
     <div className="space-y-8">
@@ -40,7 +40,7 @@ export default function Profile() {
                     className="object-cover w-full h-full"
                   />
                 </div>
-                <Tag color={statusColor} className="!rounded-full absolute -bottom-3 left-1/2 -translate-x-1/2">
+                <Tag color={statusColor} className="!rounded-full absolute -bottom-3 left-1/2 -translate-x-1/2 z-10 capitalize">
                   {profile?.status ?? "Unknown"}
                 </Tag>
               </div>
@@ -58,7 +58,7 @@ export default function Profile() {
                 </p>
 
                 <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-                  <Link href="/dashboard/settings/profile/edit">
+                  <Link href="/dashboard/profile/edit">
                     <button className="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-6 py-2 rounded-full transition cursor-pointer">
                       <FaEdit /> Edit Profile
                     </button>
@@ -119,7 +119,7 @@ export default function Profile() {
                   </span>
                 }
               >
-                <Tag color="green" className="!rounded-full">{profile?.role ?? "N/A"}</Tag>
+                <Tag color="green" className="!rounded-full capitalize">{profile?.role ?? "N/A"}</Tag>
               </Descriptions.Item>
 
               <Descriptions.Item

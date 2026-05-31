@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import EventCard from "@/src/components/EventCard";
+import EventCard from "../../reuseable/event-card";
 
 // Utility to get beautiful category-specific icons dynamically
 const getCategoryIcon = (name: string) => {
@@ -189,30 +189,36 @@ export default function CategorySection() {
                             ))}
                         </div>
                     </div>
-                ) : (
-                    featuredEvents.length > 0 && (
-                        <div className="pt-4">
-                            <div className="flex justify-between items-end mb-8">
-                                <h2 className="text-2xl font-bold flex items-center gap-3 text-slate-900 tracking-tight">
-                                    <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
-                                    {activeCategory && activeCategory !== "all"
-                                        ? "Filtered Events"
-                                        : "Featured Events"}
-                                </h2>
-                                <Link
-                                    href="/events"
-                                    className="text-blue-600 hover:underline font-medium text-sm flex items-center gap-1"
-                                >
-                                    View All <ArrowRight className="w-4 h-4" />
-                                </Link>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up">
-                                {featuredEvents.map((event) => (
-                                    <EventCard key={event._id} event={event} />
-                                ))}
-                            </div>
+                ) : featuredEvents.length > 0 ? (
+                    <div className="pt-4">
+                        <div className="flex justify-between items-end mb-8">
+                            <h2 className="text-2xl font-bold flex items-center gap-3 text-slate-900 tracking-tight">
+                                <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
+                                {activeCategory && activeCategory !== "all"
+                                    ? "Filtered Events"
+                                    : "Featured Events"}
+                            </h2>
+                            <Link
+                                href="/events"
+                                className="text-blue-600 hover:underline font-medium text-sm flex items-center gap-1"
+                            >
+                                View All <ArrowRight className="w-4 h-4" />
+                            </Link>
                         </div>
-                    )
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up">
+                            {featuredEvents.map((event) => (
+                                <EventCard key={event._id} event={event} />
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                        <Ticket className="w-12 h-12 text-slate-300 mb-4" />
+                        <h3 className="text-lg font-semibold text-slate-700 mb-1">No events found</h3>
+                        <p className="text-sm text-slate-400">
+                            There are no events available in this category right now.
+                        </p>
+                    </div>
                 )}
             </div>
         </section>

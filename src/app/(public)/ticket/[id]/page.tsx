@@ -3,10 +3,8 @@
 import React, { use, useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import api from "@/src/services/api";
-import { message, Spin } from "antd";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
-import { Printer } from "lucide-react";
 
 export default function TicketPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -19,7 +17,7 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
         const response = await api.get(`/event-tickets/${id}`);
         setTicket(response.data.data);
       } catch (error) {
-        message.error("Failed to load ticket details");
+        console.error("Failed to load ticket details", error);
       } finally {
         setLoading(false);
       }
@@ -42,7 +40,10 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Spin size="large" description="Loading your ticket..." />
+        <div className="flex flex-col items-center">
+          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-gray-500 font-medium">Loading your ticket...</p>
+        </div>
       </div>
     );
   }
@@ -82,7 +83,7 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 flex flex-col justify-center items-center p-4">
+    <div className="min-h-screen bg-gray-100 pb-10 pt-32 flex flex-col justify-center items-center p-4">
       <style jsx global>{`
         @media print {
           .no-print { display: none !important; }
@@ -91,8 +92,10 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
           .shadow-xl { shadow: none !important; border: 2px solid #16a34a !important; }
         }
       `}</style>
-      <div className="bg-white max-w-4xl w-full border-2 border-green-600 p-6 md:p-10 text-sm font-sans shadow-xl relative">
-
+      <div
+        id="ticket-container"
+        className="bg-white w-[794px] min-h-[1123px] mx-auto border-2 border-green-600 p-8 text-sm font-sans shadow-xl relative"
+      >
         {/* Header Section */}
         <div className="flex justify-between items-start mb-6 border-b pb-4">
           <div className="flex items-center gap-4">

@@ -1,15 +1,15 @@
 "use client";
 import { useEffect, useState, Suspense } from "react";
 import api from "@/src/services/api";
-import EventCard from "@/src/components/EventCard";
 import { Select, Input } from "antd";
 import { useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
+import EventCard from "@/src/components/reuseable/event-card";
 
 function EventsContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || undefined;
-  
+
   const [events, setEvents] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [categoryFilter, setCategoryFilter] = useState<string | undefined>(initialCategory);
@@ -29,7 +29,7 @@ function EventsContent() {
         if (categoryFilter) url += `&categoryId=${categoryFilter}`;
         if (typeFilter !== "all") url += `&isPremium=${typeFilter === "premium"}`;
         if (search) url += `&search=${search}`;
-        
+
         const res = await api.get(url);
         setEvents(res.data.data.results || []);
       } catch (error) {
@@ -38,7 +38,7 @@ function EventsContent() {
         setLoading(false);
       }
     };
-    
+
     // debounce search
     const timer = setTimeout(fetchEvents, 300);
     return () => clearTimeout(timer);
@@ -53,9 +53,9 @@ function EventsContent() {
 
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-10 flex flex-col md:flex-row gap-4">
         <div className="flex-grow">
-          <Input 
+          <Input
             size="large"
-            placeholder="Search events by title..." 
+            placeholder="Search events by title..."
             prefix={<Search className="text-gray-400 w-5 h-5 mr-2" />}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
