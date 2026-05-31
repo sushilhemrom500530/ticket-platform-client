@@ -133,7 +133,7 @@ export default function HeroSection() {
                 </div>
             </div>
 
-            <div className="w-full container mx-auto z-10 relative flex flex-col items-center h-[calc(100svh-80px)] justify-center">
+            <div className="w-full container mx-auto z-10 relative flex flex-col items-center h-auto py-12 lg:py-0 lg:h-[calc(100svh-80px)] justify-center">
                 {mounted ? (
                     <Slider
                         dots={true}

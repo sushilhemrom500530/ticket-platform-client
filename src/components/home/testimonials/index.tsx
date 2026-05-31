@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -41,33 +41,34 @@ const TESTIMONIALS = [
 
 export function Testimonials() {
     const sliderRef = useRef<Slider>(null);
+    const [mounted, setMounted] = useState(false);
+    const [slidesToShow, setSlidesToShow] = useState(3);
+
+    useEffect(() => {
+        setMounted(true);
+        const handleResize = () => {
+            if (window.innerWidth < 768) {
+                setSlidesToShow(1);
+            } else {
+                setSlidesToShow(3);
+            }
+        };
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     const settings = {
         className: "center",
         centerMode: true,
         infinite: true,
         centerPadding: "0px",
-        slidesToShow: 3,
+        slidesToShow: slidesToShow,
         speed: 500,
         autoplay: true,
         autoplaySpeed: 4500,
         arrows: false,
         dots: true,
-        responsive: [
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 3,
-                },
-            },
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 1,
-                    centerPadding: "0px",
-                },
-            },
-        ],
         appendDots: (dots: React.ReactNode) => (
             <div>
                 <ul className="flex justify-center gap-2 mt-4">
@@ -204,29 +205,31 @@ export function Testimonials() {
 
                     {/* Right Slider */}
                     <div className="lg:w-2/3 w-full testimonial-slider-container">
-                        <Slider ref={sliderRef} {...settings}>
-                            {TESTIMONIALS.map((testimonial, i) => (
-                                <div key={i} className="py-10">
-                                    <div className="testimonial-card bg-white rounded-3xl p-8 shadow-2xl flex flex-col items-center text-center mx-3 transition-all duration-500 ease-out border border-white">
-                                        <div className="w-24 h-24 rounded-full border-4 border-indigo-500 p-1 mb-6 shadow-md bg-white">
-                                            <div className="w-full h-full bg-blue-50 rounded-full flex items-center justify-center text-blue-600 font-bold text-2xl">
-                                                {testimonial.avatar}
+                        {mounted && (
+                            <Slider key={`${mounted}-${slidesToShow}`} ref={sliderRef} {...settings}>
+                                {TESTIMONIALS.map((testimonial, i) => (
+                                    <div key={i} className="py-10">
+                                        <div className="testimonial-card bg-white rounded-3xl p-8 shadow-2xl flex flex-col items-center text-center mx-3 transition-all duration-500 ease-out border border-white">
+                                            <div className="w-24 h-24 rounded-full border-4 border-indigo-500 p-1 mb-6 shadow-md bg-white">
+                                                <div className="w-full h-full bg-blue-50 rounded-full flex items-center justify-center text-blue-600 font-bold text-2xl">
+                                                    {testimonial.avatar}
+                                                </div>
                                             </div>
+                                            <h3 className="font-extrabold text-slate-900 text-xl mb-2">{testimonial.name}</h3>
+                                            <div className="flex items-center justify-center gap-1 mb-4">
+                                                {[...Array(5)].map((_, i) => (
+                                                    <Star key={i} className="w-4 h-4 text-orange-500 fill-orange-500" />
+                                                ))}
+                                                <span className="text-slate-900 font-bold ml-2 text-sm">5.0</span>
+                                            </div>
+                                            <p className="text-slate-500 text-sm leading-relaxed font-medium px-2">
+                                                {testimonial.text}
+                                            </p>
                                         </div>
-                                        <h3 className="font-extrabold text-slate-900 text-xl mb-2">{testimonial.name}</h3>
-                                        <div className="flex items-center justify-center gap-1 mb-4">
-                                            {[...Array(5)].map((_, i) => (
-                                                <Star key={i} className="w-4 h-4 text-orange-500 fill-orange-500" />
-                                            ))}
-                                            <span className="text-slate-900 font-bold ml-2 text-sm">5.0</span>
-                                        </div>
-                                        <p className="text-slate-500 text-sm leading-relaxed font-medium px-2">
-                                            {testimonial.text}
-                                        </p>
                                     </div>
-                                </div>
-                            ))}
-                        </Slider>
+                                ))}
+                            </Slider>
+                        )}
 
                         {/* Custom Navigation Arrows */}
                         <div className="flex justify-center gap-4 mt-2">
