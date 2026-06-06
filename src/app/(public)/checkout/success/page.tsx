@@ -8,7 +8,7 @@ import { CheckCircle2, Ticket, ArrowRight } from "lucide-react";
 function SuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  
+
   const [verifying, setVerifying] = useState(true);
   const [success, setSuccess] = useState(false);
   const [ticketId, setTicketId] = useState<string | null>(null);
@@ -16,7 +16,7 @@ function SuccessContent() {
   useEffect(() => {
     const paymentID = searchParams.get("paymentID") || searchParams.get("payment_ref_id");
     const status = searchParams.get("status");
-    const methodFromUrl = searchParams.get("method") as "bkash" | "nagad" | "sslcommerz";
+    const methodFromUrl = searchParams.get("method") as "bkash" | "nagad" | "sslcommerz" | "stripe";
 
     if (!paymentID || (status !== "success" && status !== "Success")) {
       setVerifying(false);
@@ -30,7 +30,7 @@ function SuccessContent() {
         if (!method) {
           method = searchParams.get("paymentID") ? "bkash" : "nagad";
         }
-        
+
         const response = await api.post("/payments/verify", {
           paymentIntent: paymentID,
           method: method
@@ -70,10 +70,10 @@ function SuccessContent() {
         </div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Payment Failed</h1>
         <p className="text-gray-600 mb-8">We couldn't verify your payment. If money was deducted, please contact support.</p>
-        <Button 
-          type="primary" 
-          block 
-          size="large" 
+        <Button
+          type="primary"
+          block
+          size="large"
           onClick={() => router.push("/events")}
           className="bg-gray-900 h-12 rounded-xl"
         >
@@ -88,26 +88,26 @@ function SuccessContent() {
       <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8">
         <CheckCircle2 className="w-12 h-12 text-green-600" />
       </div>
-      
+
       <h1 className="text-4xl font-black text-gray-900 mb-4">Awesome!</h1>
       <p className="text-xl text-gray-600 mb-10">Your ticket has been booked successfully. Get ready for the event!</p>
-      
+
       <div className="flex flex-col gap-4">
-        <Button 
-          type="primary" 
-          block 
-          size="large" 
+        <Button
+          type="primary"
+          block
+          size="large"
           icon={<Ticket className="w-5 h-5 mr-2" />}
           onClick={() => router.push(`/ticket/${ticketId}`)}
           className="bg-blue-600 hover:bg-blue-500 h-16 text-lg font-bold rounded-2xl border-none shadow-lg shadow-blue-500/30 flex items-center justify-center"
         >
           View Your Ticket <ArrowRight className="ml-2 w-5 h-5" />
         </Button>
-        
-        <Button 
-          type="default" 
-          block 
-          size="large" 
+
+        <Button
+          type="default"
+          block
+          size="large"
           onClick={() => router.push("/dashboard/tickets")}
           className="h-14 rounded-2xl border-gray-200 text-gray-600 font-medium"
         >

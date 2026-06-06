@@ -205,7 +205,7 @@ export function useAuthService() {
   /** 🔹 Get My Profile */
   const getMe = useCallback(async () => {
     try {
-      const response = await useApi.get("/user/get-my-profile");
+      const response = await useApi.get("/users/get-my-profile");
       const { data, status } = response;
       if (status >= 400) {
         return null;

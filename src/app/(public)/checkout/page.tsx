@@ -16,7 +16,7 @@ function CheckoutContent() {
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [purchasing, setPurchasing] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<"bkash" | "nagad" | "sslcommerz">("sslcommerz");
+  const [paymentMethod, setPaymentMethod] = useState<"bkash" | "nagad" | "sslcommerz" | "stripe">("stripe");
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -133,8 +133,19 @@ function CheckoutContent() {
                 <Radio value="sslcommerz">
                   <div className="flex items-center gap-3">
                     <span className="font-bold text-blue-600">SSLCommerz</span>
-                    <span className="text-xs px-2 py-0.5 bg-blue-100 text-blue-600 rounded-full">Recommended</span>
                     <span className="text-xs text-gray-500">Pay with Card, Mobile Banking or Net Banking</span>
+                  </div>
+                </Radio>
+              </div>
+              <div
+                className={`border p-4 rounded-xl cursor-pointer transition ${paymentMethod === 'stripe' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'}`}
+                onClick={() => setPaymentMethod('stripe')}
+              >
+                <Radio value="stripe">
+                  <div className="flex items-center gap-3">
+                    <span className="font-bold text-indigo-600">Stripe (Card Payment)</span>
+                    <span className="text-xs px-2 py-0.5 bg-indigo-100 text-indigo-600 rounded-full">Recommended</span>
+                    <span className="text-xs text-gray-500">Securely pay with any Credit or Debit Card</span>
                   </div>
                 </Radio>
               </div>
