@@ -10,13 +10,13 @@ function EventsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  
-  const initialCategory = searchParams.get("category") || undefined;
+
+  const initialCategoryParam = searchParams.get("category") || undefined;
 
   const [events, setEvents] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
-  const [categoryFilter, setCategoryFilter] = useState<string | undefined>(undefined);
-  const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [categoryFilters, setCategoryFilters] = useState<string[]>([]);
+  const [typeFilters, setTypeFilters] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [categoriesLoaded, setCategoriesLoaded] = useState(false);
@@ -25,15 +25,18 @@ function EventsContent() {
     api.get("/categories").then(res => {
       const fetchedCategories = res.data.data;
       setCategories(fetchedCategories);
-      if (initialCategory) {
-        const matched = fetchedCategories.find((c: any) => c.name.toLowerCase() === initialCategory.toLowerCase() || c._id === initialCategory);
-        if (matched) {
-          setCategoryFilter(matched._id);
+      if (initialCategoryParam) {
+        const names = initialCategoryParam.split(",");
+        const matchedIds = fetchedCategories
+          .filter((c: any) => names.some(n => n.toLowerCase() === c.name.toLowerCase() || n === c._id))
+          .map((c: any) => c._id);
+        if (matchedIds.length > 0) {
+          setCategoryFilters(matchedIds);
         }
       }
       setCategoriesLoaded(true);
     }).catch(console.error);
-  }, [initialCategory]);
+  }, [initialCategoryParam]);
 
   useEffect(() => {
     if (!categoriesLoaded) return;
@@ -42,8 +45,16 @@ function EventsContent() {
       setLoading(true);
       try {
         let url = `/events?limit=50`;
-        if (categoryFilter) url += `&categoryId=${categoryFilter}`;
-        if (typeFilter !== "all") url += `&isPremium=${typeFilter === "premium"}`;
+        if (categoryFilters.length > 0) url += `&categoryId=${categoryFilters.join(",")}`;
+
+        const isPremiumFlags: string[] = [];
+        if (typeFilters.includes("premium")) isPremiumFlags.push("true");
+        if (typeFilters.includes("free")) isPremiumFlags.push("false");
+
+        if (isPremiumFlags.length > 0) {
+          url += `&isPremium=${isPremiumFlags.join(",")}`;
+        }
+
         if (search) url += `&search=${search}`;
 
         const res = await api.get(url);
@@ -58,23 +69,40 @@ function EventsContent() {
     // debounce search
     const timer = setTimeout(fetchEvents, 300);
     return () => clearTimeout(timer);
-  }, [categoryFilter, typeFilter, search, categoriesLoaded]);
+  }, [categoryFilters, typeFilters, search, categoriesLoaded]);
 
-  const handleCategoryChange = (val: string | undefined) => {
-    setCategoryFilter(val);
+  const handleCategoryChange = (id: string, checked: boolean) => {
+    let newFilters = [...categoryFilters];
+    if (checked) {
+      newFilters.push(id);
+    } else {
+      newFilters = newFilters.filter(f => f !== id);
+    }
+    setCategoryFilters(newFilters);
+
     const params = new URLSearchParams(searchParams.toString());
-    const matchedCategory = categories.find(c => c._id === val);
-    if (matchedCategory) {
-      params.set("category", matchedCategory.name);
+    if (newFilters.length > 0) {
+      const names = newFilters.map(f => categories.find(c => c._id === f)?.name).filter(Boolean);
+      params.set("category", names.join(","));
     } else {
       params.delete("category");
     }
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
+  const handleTypeChange = (type: string, checked: boolean) => {
+    let newFilters = [...typeFilters];
+    if (checked) {
+      newFilters.push(type);
+    } else {
+      newFilters = newFilters.filter(f => f !== type);
+    }
+    setTypeFilters(newFilters);
+  };
+
   const clearFilters = () => {
-    setCategoryFilter(undefined);
-    setTypeFilter("all");
+    setCategoryFilters([]);
+    setTypeFilters([]);
     setSearch("");
     router.replace(pathname, { scroll: false });
   };
@@ -86,10 +114,10 @@ function EventsContent() {
         <p className="text-gray-500 text-lg">Find the perfect event matching your interests.</p>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-8 items-start">
         {/* Left Sidebar Filters */}
-        <div className="w-full lg:w-1/4 flex flex-col gap-6">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col gap-6">
+        <div className="w-full lg:w-1/4 flex flex-col gap-6 sticky top-24">
+          <div className="bg-white p-6 rounded-2xl border border-gray-100 flex flex-col gap-6">
             <div>
               <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">Search</h3>
               <Input
@@ -104,30 +132,38 @@ function EventsContent() {
 
             <div>
               <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">Category</h3>
-              <Select
-                size="large"
-                className="w-full"
-                placeholder="Select category"
-                value={categoryFilter}
-                onChange={handleCategoryChange}
-                allowClear
-                options={categories.map(c => ({ label: c.name, value: c._id }))}
-              />
+              <div className="flex flex-col gap-3 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                {categories.map((c) => (
+                  <Checkbox
+                    key={c._id}
+                    checked={categoryFilters.includes(c._id)}
+                    onChange={(e) => handleCategoryChange(c._id, e.target.checked)}
+                    className="ml-0 text-gray-700"
+                  >
+                    {c.name}
+                  </Checkbox>
+                ))}
+              </div>
             </div>
 
-            <div>
+            <div className="pt-4 border-t border-gray-50">
               <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">Event Type</h3>
-              <Select
-                size="large"
-                className="w-full"
-                value={typeFilter}
-                onChange={setTypeFilter}
-                options={[
-                  { label: "All Types", value: "all" },
-                  { label: "Premium Only", value: "premium" },
-                  { label: "Free Only", value: "free" },
-                ]}
-              />
+              <div className="flex flex-col gap-3">
+                <Checkbox
+                  checked={typeFilters.includes("premium")}
+                  onChange={(e) => handleTypeChange("premium", e.target.checked)}
+                  className="ml-0 text-gray-700"
+                >
+                  Premium
+                </Checkbox>
+                <Checkbox
+                  checked={typeFilters.includes("free")}
+                  onChange={(e) => handleTypeChange("free", e.target.checked)}
+                  className="ml-0 text-gray-700"
+                >
+                  Free
+                </Checkbox>
+              </div>
             </div>
 
             <div className="pt-4 border-t border-gray-50">
@@ -156,14 +192,14 @@ function EventsContent() {
 
         {/* Right Content Area */}
         <div className="w-full lg:w-3/4">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 bg-white p-5 rounded-2xl shadow-sm border border-gray-100 gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 bg-white p-5 rounded-2xl border border-gray-100 gap-4">
             <div className="flex flex-col gap-2">
               <span className="text-gray-600 font-medium">
                 Showing <span className="text-gray-900 font-bold">{events.length}</span> events
               </span>
-              
+
               {/* Active Filters Message */}
-              {(categoryFilter || search || typeFilter !== "all") && (
+              {(categoryFilters.length > 0 || search || typeFilters.length > 0) && (
                 <div className="flex flex-wrap items-center gap-2 mt-1">
                   <span className="text-xs text-gray-500 mr-1 uppercase tracking-wider font-semibold">Active Filters:</span>
                   {search && (
@@ -171,19 +207,22 @@ function EventsContent() {
                       Search: "{search}"
                     </span>
                   )}
-                  {categoryFilter && categories.length > 0 && (
-                    <span className="inline-flex items-center gap-1 bg-purple-50 text-purple-700 text-xs font-medium px-2.5 py-1 rounded-md border border-purple-200">
-                      Category: {categories.find(c => c._id === categoryFilter)?.name}
+                  {categoryFilters.map(id => {
+                    const catName = categories.find(c => c._id === id)?.name;
+                    return catName ? (
+                      <span key={id} className="inline-flex items-center gap-1 bg-purple-50 text-purple-700 text-xs font-medium px-2.5 py-1 rounded-md border border-purple-200">
+                        Category: {catName}
+                      </span>
+                    ) : null;
+                  })}
+                  {typeFilters.map(type => (
+                    <span key={type} className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-xs font-medium px-2.5 py-1 rounded-md border border-emerald-200">
+                      Type: {type === "premium" ? "Premium" : "Free"}
                     </span>
-                  )}
-                  {typeFilter !== "all" && (
-                    <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-xs font-medium px-2.5 py-1 rounded-md border border-emerald-200">
-                      Type: {typeFilter === "premium" ? "Premium" : "Free"}
-                    </span>
-                  )}
-                  <button 
+                  ))}
+                  <button
                     onClick={clearFilters}
-                    className="text-xs text-gray-500 hover:text-red-600 underline ml-2 transition-colors font-medium"
+                    className="text-xs text-gray-500 hover:text-red-600 underline ml-2 transition-colors font-medium cursor-pointer"
                   >
                     Clear All
                   </button>

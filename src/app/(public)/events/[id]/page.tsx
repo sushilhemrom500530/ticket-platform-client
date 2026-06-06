@@ -48,7 +48,7 @@ export default function EventDetailsPage() {
         <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
         <div className="absolute bottom-0 left-0 w-full container mx-auto px-6 pb-8">
-          <span className={`px-4 py-1.5 text-sm font-bold rounded-full shadow-md inline-block mb-4 ${event.isPremium ? 'bg-gradient-to-r from-yellow-400 to-amber-600 text-white' : 'bg-green-500 text-white'}`}>
+          <span className={`px-4 py-1.5 text-sm font-bold rounded-full inline-block mb-4 ${event.isPremium ? 'bg-gradient-to-r from-yellow-400 to-amber-600 text-white' : 'bg-green-500 text-white'}`}>
             {event.isPremium ? "Premium Event" : "Free Event"}
           </span>
           <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-2">{event.title}</h1>
@@ -58,14 +58,14 @@ export default function EventDetailsPage() {
 
       <div className="container mx-auto px-6 mt-8 flex flex-col lg:flex-row gap-8">
         {/* Main Content */}
-        <div className="lg:w-2/3 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+        <div className="lg:w-2/3 bg-white p-8 rounded-2xl border border-gray-100">
           <h2 className="text-2xl font-bold mb-6 text-gray-900 border-b pb-4">About this Event</h2>
           <p className="text-gray-600 text-lg leading-relaxed whitespace-pre-wrap">{event.description}</p>
         </div>
 
         {/* Sidebar / Ticket Box */}
         <div className="lg:w-1/3">
-          <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 sticky top-24">
+          <div className="bg-white p-8 rounded-2xl border border-gray-100 sticky top-24">
 
             <div className="flex items-center text-gray-700 mb-6 bg-gray-50 p-4 rounded-xl">
               <Calendar className="w-6 h-6 mr-4 text-blue-500" />
@@ -103,7 +103,7 @@ export default function EventDetailsPage() {
                 size="large"
                 disabled={isSoldOut}
                 onClick={handleAction}
-                className={`w-full h-14 text-lg font-bold rounded-xl shadow-lg ${isSoldOut ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-500 shadow-blue-500/30 border-none'}`}
+                className={`w-full h-14 text-lg font-bold rounded-xl ${isSoldOut ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-500 border-none'}`}
               >
                 {isSoldOut ? "Sold Out" : "Buy Ticket"}
               </Button>
@@ -111,7 +111,7 @@ export default function EventDetailsPage() {
               <Button
                 type="primary"
                 size="large"
-                className="w-full h-14 text-lg font-bold rounded-xl bg-green-600 hover:bg-green-500 shadow-lg shadow-green-500/30 border-none"
+                className="w-full h-14 text-lg font-bold rounded-xl bg-green-600 hover:bg-green-500 border-none"
               >
                 This is a Free Event (No ticket required)
               </Button>
