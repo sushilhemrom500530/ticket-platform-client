@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Input, Button, Form } from 'antd';
-import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
@@ -13,14 +12,18 @@ import AuthLayout from '..';
 
 export default function RegisterPage() {
     const [remember, setRemember] = useState(false);
-    const { login, loading } = useAuthService();
+    const { register, loading } = useAuthService();
     const { setUser } = useAuthStore();
     const router = useRouter();
     const [form] = Form.useForm();
 
-    const handleSubmit = async (values: { email: string; password: string }) => {
+    const handleSubmit = async (values: { fullName: string; email: string; password: string }) => {
         try {
-            const res = await login({ ...values, remember });
+            const formData = {
+                ...values,
+                role: "user",
+            };
+            const res = await register(formData);
 
             if (res?.success || res?.statusCode === 200) {
                 const token = res?.data?.token || res?.data?.tokens?.accessToken;
@@ -38,10 +41,10 @@ export default function RegisterPage() {
                     setUser(user);
                 }
 
-                router.push("/dashboard");
+                router.push("/auth/email-verification");
             }
         } catch (error) {
-            console.error("Unexpected login error:", error);
+            console.error("Unexpected register error:", error);
         }
     };
 
@@ -58,7 +61,7 @@ export default function RegisterPage() {
                 onFinish={handleSubmit}
                 autoComplete="off"
                 className="w-full">
-                <Form.Item name="fullname"
+                <Form.Item name="fullName"
                     rules={[
                         { required: true, message: "Full name is required." },
                         { min: 3, message: "Full name must be at least 3 characters." },
