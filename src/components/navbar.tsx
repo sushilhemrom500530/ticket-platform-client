@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useAuthStore } from "../store/authStore";
-import { Button, Dropdown, Avatar } from "antd";
+import { Dropdown, Avatar } from "antd";
 import type { MenuProps } from "antd";
 import { UserOutlined, LogoutOutlined, DashboardOutlined } from "@ant-design/icons";
 import { useEffect, useState, Suspense } from "react";
