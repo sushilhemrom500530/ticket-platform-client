@@ -125,7 +125,7 @@ export const adminMenuData: MenuData = {
         },
         {
           label: "Settings",
-          href: "/dashboard/settings/system",
+          href: "/dashboard/settings",
           icon: Settings,
         },
       ],

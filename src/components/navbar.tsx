@@ -24,8 +24,10 @@ function NavbarContent() {
   const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [dynamicNavItems, setDynamicNavItems] = useState<any[]>(navItems);
 
   const isHome = pathname === "/";
+
   const currentCategory = searchParams.get("category") || "";
 
   // Fix hydration mismatch by only rendering auth-dependent UI on the client
@@ -37,8 +39,25 @@ function NavbarContent() {
     };
 
     window.addEventListener("scroll", handleScroll);
+    fetchNavItems();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const fetchNavItems = async () => {
+    try {
+      const { menubarService } = await import("@/src/services/menubarService");
+      const res = await menubarService.getAllMenubars();
+      if (res.success && res.data) {
+        const activeItems = res.data.filter((item: any) => item.isActive);
+        activeItems.sort((a: any, b: any) => a.order - b.order);
+        if (activeItems.length > 0) {
+          setDynamicNavItems(activeItems);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching menubar items:", error);
+    }
+  };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -131,7 +150,7 @@ function NavbarContent() {
 
           {/* Category Links */}
           <div className="flex items-center gap-5 select-none hidden lg:flex">
-            {navItems.map((item: any) => {
+            {dynamicNavItems.map((item: any) => {
               let catName = item.label;
               if (item.label === "Shows") catName = "Comedy";
               const isActive = currentCategory.toLowerCase() === catName.toLowerCase();
@@ -238,7 +257,7 @@ function NavbarContent() {
             <div>
               <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">Categories</p>
               <nav className="flex flex-col space-y-2">
-                {navItems.map((item: any) => {
+                {dynamicNavItems.map((item: any) => {
                   let catName = item.label;
                   if (item.label === "Shows") catName = "Comedy";
                   const isActive = currentCategory.toLowerCase() === catName.toLowerCase();
@@ -328,7 +347,8 @@ function NavbarContent() {
 
 export default function Navbar() {
   return (
-    <Suspense fallback={<div className="h-[72px] w-full bg-slate-950/10 fixed top-0 z-50" />}>
+    <Suspense fallback={
+      <div className="h-[72px] w-full bg-slate-950/10 fixed top-0 z-50" />}>
       <NavbarContent />
     </Suspense>
   );
