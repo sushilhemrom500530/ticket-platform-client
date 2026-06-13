@@ -45,14 +45,29 @@ export default function ManageCategoriesPage() {
   };
 
   const columns = [
-    { title: "Name", dataIndex: "name", key: "name" },
-    { title: "Created At", dataIndex: "createdAt", key: "createdAt", render: (d: string) => new Date(d).toLocaleDateString() },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name"
+    },
+    {
+      title: "Created At",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (d: string) => new Date(d).toLocaleDateString()
+    },
     {
       title: "Actions",
       key: "actions",
       render: (_: any, record: any) => (
-        <Popconfirm title="Delete category?" onConfirm={() => handleDelete(record._id)}>
-          <Button danger icon={<Trash className="w-4 h-4" />} />
+        <Popconfirm
+          title="Delete category?"
+          onConfirm={() => handleDelete(record._id)}
+        >
+          <Button
+            danger
+            icon={<Trash className="w-4 h-4" />}
+          />
         </Popconfirm>
       ),
     },
@@ -62,13 +77,22 @@ export default function ManageCategoriesPage() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Manage Categories</h1>
-        <Button type="primary" icon={<Plus className="w-4 h-4" />} onClick={() => setIsModalVisible(true)} className="bg-blue-600">
+        <Button
+          type="primary"
+          icon={<Plus className="w-4 h-4" />}
+          onClick={() => setIsModalVisible(true)}
+          className="bg-blue-600">
           Create Category
         </Button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <Table columns={columns} dataSource={categories} rowKey="_id" loading={loading} />
+      <div className="bg-white rounded-xl overflow-hidden">
+        <Table
+          columns={columns}
+          dataSource={categories}
+          rowKey="_id"
+          loading={loading}
+        />
       </div>
 
       <Modal
@@ -77,11 +101,24 @@ export default function ManageCategoriesPage() {
         onCancel={() => setIsModalVisible(false)}
         footer={null}
       >
-        <Form form={form} layout="vertical" onFinish={onFinish}>
-          <Form.Item name="name" label="Category Name" rules={[{ required: true }]}>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+        >
+          <Form.Item
+            name="name"
+            label="Category Name"
+            rules={[{ required: true }]}
+          >
             <Input />
           </Form.Item>
-          <Button type="primary" htmlType="submit" className="w-full bg-blue-600">Create</Button>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="w-full bg-blue-600">
+            Create
+          </Button>
         </Form>
       </Modal>
     </div>

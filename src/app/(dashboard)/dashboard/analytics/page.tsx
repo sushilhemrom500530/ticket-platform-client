@@ -24,11 +24,11 @@ export default function AnalyticsPage() {
 
       <Row gutter={[16, 16]} className="mb-8">
         <Col xs={24} sm={12} lg={6}>
-          <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl">
-            <Statistic 
-              title="Total Sales" 
-              value={124500} 
-              prefix={<DollarSign size={20} className="text-emerald-500 mr-2" />} 
+          <Card className="bg-white rounded-2xl">
+            <Statistic
+              title="Total Sales"
+              value={124500}
+              prefix={<DollarSign size={20} className="text-emerald-500 mr-2" />}
               precision={2}
             />
             <div className="mt-2 text-xs text-emerald-600 font-bold flex items-center gap-1">
@@ -37,11 +37,11 @@ export default function AnalyticsPage() {
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl">
-            <Statistic 
-              title="New Users" 
-              value={456} 
-              prefix={<Users size={20} className="text-blue-500 mr-2" />} 
+          <Card className="bg-white rounded-2xl">
+            <Statistic
+              title="New Users"
+              value={456}
+              prefix={<Users size={20} className="text-blue-500 mr-2" />}
             />
             <div className="mt-2 text-xs text-blue-600 font-bold flex items-center gap-1">
               <TrendingUp size={12} /> +8.2% from last week
@@ -49,11 +49,11 @@ export default function AnalyticsPage() {
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl">
-            <Statistic 
-              title="Tickets Sold" 
-              value={3240} 
-              prefix={<Ticket size={20} className="text-purple-500 mr-2" />} 
+          <Card className="bg-white rounded-2xl">
+            <Statistic
+              title="Tickets Sold"
+              value={3240}
+              prefix={<Ticket size={20} className="text-purple-500 mr-2" />}
             />
             <div className="mt-2 text-xs text-purple-600 font-bold flex items-center gap-1">
               <TrendingUp size={12} /> +5.1% from last week
@@ -61,11 +61,11 @@ export default function AnalyticsPage() {
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl">
-            <Statistic 
-              title="Active Events" 
-              value={84} 
-              prefix={<Calendar size={20} className="text-orange-500 mr-2" />} 
+          <Card className="bg-white rounded-2xl">
+            <Statistic
+              title="Active Events"
+              value={84}
+              prefix={<Calendar size={20} className="text-orange-500 mr-2" />}
             />
             <div className="mt-2 text-xs text-orange-600 font-bold">Stable performance</div>
           </Card>
@@ -74,7 +74,10 @@ export default function AnalyticsPage() {
 
       <Row gutter={[24, 24]}>
         <Col xs={24} lg={16}>
-          <Card title="Revenue Growth" variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl min-h-[400px] flex items-center justify-center">
+          <Card
+            title="Revenue Growth"
+            className="bg-white rounded-2xl min-h-[400px] flex items-center justify-center"
+          >
             <div className="text-gray-300 text-center">
               <BarChart3 size={64} className="mx-auto mb-4 opacity-20" />
               <p className="text-lg">Interactive Chart Area</p>
@@ -83,8 +86,11 @@ export default function AnalyticsPage() {
           </Card>
         </Col>
         <Col xs={24} lg={8}>
-          <Card title="User Distribution" variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl min-h-[400px] flex items-center justify-center">
-             <div className="text-gray-300 text-center">
+          <Card
+            title="User Distribution"
+            className="bg-white rounded-2xl min-h-[400px] flex items-center justify-center"
+          >
+            <div className="text-gray-300 text-center">
               <div className="w-32 h-32 border-8 border-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
                 <Users size={32} className="opacity-20" />
               </div>

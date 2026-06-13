@@ -79,8 +79,15 @@ export default function CouponsPage() {
       key: "action",
       render: () => (
         <Space size="middle">
-          <Button type="text" icon={<Edit size={16} />} />
-          <Button type="text" danger icon={<Trash2 size={16} />} />
+          <Button
+            type="text"
+            icon={<Edit size={16} />}
+          />
+          <Button
+            type="text"
+            danger
+            icon={<Trash2 size={16} />}
+          />
         </Space>
       ),
     },
@@ -98,9 +105,9 @@ export default function CouponsPage() {
             <p className="text-gray-500">Create and manage discount codes</p>
           </div>
         </div>
-        <Button 
-          type="primary" 
-          icon={<Plus size={18} />} 
+        <Button
+          type="primary"
+          icon={<Plus size={18} />}
           className="h-11 rounded-xl bg-amber-600 hover:bg-amber-700 border-none font-bold shadow-lg shadow-amber-100"
           onClick={() => setIsModalOpen(true)}
         >
@@ -108,8 +115,13 @@ export default function CouponsPage() {
         </Button>
       </div>
 
-      <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl overflow-hidden">
-        <Table columns={columns} dataSource={coupons} loading={loading} rowKey="_id" />
+      <Card className="bg-white rounded-2xl">
+        <Table
+          columns={columns}
+          dataSource={coupons}
+          loading={loading}
+          rowKey="_id"
+        />
       </Card>
 
       <Modal
@@ -119,30 +131,75 @@ export default function CouponsPage() {
         footer={null}
         className="rounded-2xl overflow-hidden"
       >
-        <Form form={form} layout="vertical" onFinish={handleSubmit} className="mt-4">
-          <Form.Item name="code" label="Coupon Code" rules={[{ required: true }]}>
-            <Input placeholder="e.g. SUMMER50" className="rounded-lg h-10" />
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          className="mt-4"
+        >
+          <Form.Item
+            name="code"
+            label="Coupon Code"
+            rules={[{ required: true }]}
+          >
+            <Input
+              placeholder="e.g. SUMMER50"
+              className="rounded-lg h-10"
+            />
           </Form.Item>
           <div className="grid grid-cols-2 gap-4">
-            <Form.Item name="discountType" label="Type" rules={[{ required: true }]}>
+            <Form.Item
+              name="discountType"
+              label="Type"
+              rules={[{ required: true }]}>
               <Select className="rounded-lg h-10">
-                <Select.Option value="percentage">Percentage</Select.Option>
-                <Select.Option value="fixed">Fixed Amount</Select.Option>
+                <Select.Option
+                  value="percentage"
+                >
+                  Percentage
+                </Select.Option>
+                <Select.Option
+                  value="fixed"
+                >
+                  Fixed Amount
+                </Select.Option>
               </Select>
             </Form.Item>
-            <Form.Item name="discountValue" label="Value" rules={[{ required: true }]}>
-              <Input type="number" className="rounded-lg h-10" />
+            <Form.Item
+              name="discountValue"
+              label="Value"
+              rules={[{ required: true }]}
+            >
+              <Input
+                type="number"
+                className="rounded-lg h-10"
+              />
             </Form.Item>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Form.Item name="expiryDate" label="Expiry Date" rules={[{ required: true }]}>
-              <DatePicker className="w-full rounded-lg h-10" />
+            <Form.Item
+              name="expiryDate"
+              label="Expiry Date"
+              rules={[{ required: true }]}>
+              <DatePicker
+                className="w-full rounded-lg h-10"
+              />
             </Form.Item>
-            <Form.Item name="usageLimit" label="Usage Limit" rules={[{ required: true }]}>
-              <Input type="number" className="rounded-lg h-10" />
+            <Form.Item
+              name="usageLimit"
+              label="Usage Limit"
+              rules={[{ required: true }]}>
+              <Input
+                type="number"
+                className="rounded-lg h-10"
+              />
             </Form.Item>
           </div>
-          <Button type="primary" block htmlType="submit" className="h-11 rounded-xl bg-amber-600 border-none font-bold mt-2">
+          <Button
+            type="primary"
+            block
+            htmlType="submit"
+            className="h-11 rounded-xl bg-amber-600 border-none font-bold mt-2">
             Create Coupon
           </Button>
         </Form>
