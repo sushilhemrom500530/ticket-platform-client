@@ -22,9 +22,21 @@ export interface VerifyOtpPayload {
   otp: string;
 }
 
+export interface VerifyUserEmailPayload {
+  token?: string;
+  otp: string;
+}
+
 export interface ResetPasswordPayload {
   newPassword: string;
   confirmPassword: string;
+}
+
+export interface RegisterPayload {
+  fullName: string;
+  email: string;
+  password: string;
+  role: string;
 }
 
 export function useAuthService() {
@@ -58,6 +70,43 @@ export function useAuthService() {
     } catch (error: any) {
       // This will only be triggered for 5xx or Network errors now
       console.error("Login unexpected error:", error);
+      if (error?.message === 'Network Error') {
+        message.error('Server is offline, please try again later');
+        return; // gracefully exit without throwing
+      }
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  /** 🔹 Register */
+  const register = useCallback(async (payload: RegisterPayload) => {
+    setLoading(true);
+    try {
+      const response = await useApi.post("/auth/register", payload);
+      const { data, status } = response;
+
+      if (status >= 400) {
+        const errorMsg = data?.message || "Registration failed";
+        const errorMessages = data?.errorMessages;
+
+        if (errorMessages && Array.isArray(errorMessages) && errorMessages.length > 0) {
+          const uniqueMessages = Array.from(new Set(errorMessages.map((err: any) => err.message)));
+          uniqueMessages.forEach((msg: any) => {
+            message.error(msg);
+          });
+        } else {
+          message.error(errorMsg);
+        }
+        return data; // Return failure data
+      }
+
+      message.success("Registration successful");
+      return data;
+    } catch (error: any) {
+      // This will only be triggered for 5xx or Network errors now
+      console.error("Registration unexpected error:", error);
       if (error?.message === 'Network Error') {
         message.error('Server is offline, please try again later');
         return; // gracefully exit without throwing
@@ -106,6 +155,56 @@ export function useAuthService() {
 
       const response = await useApi.post(
         "/auth/forgot-otp-verify",
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const { data, status } = response;
+
+      if (status >= 400) {
+        message.error(data?.message || "Invalid OTP");
+        return data;
+      }
+
+      message.success("OTP verified successfully");
+      return data;
+
+    } catch (error: any) {
+      console.error("Verify OTP unexpected error:", error);
+
+      if (error?.message === 'Network Error') {
+        message.error('Server is offline, please try again later');
+        return; // gracefully exit
+      }
+
+      message.error(
+        error?.response?.data?.message || "Something went wrong"
+      );
+
+      throw error;
+
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+  /** 🔹 email Verification */
+  const verifyUserEmail = useCallback(async (payload: VerifyUserEmailPayload) => {
+    setLoading(true);
+
+    try {
+      const token = Cookies.get("token");
+
+      if (!token) {
+        message.error("Token not found");
+        return;
+      }
+
+      const response = await useApi.post(
+        "/auth/otp-verify",
         payload,
         {
           headers: {
@@ -205,7 +304,7 @@ export function useAuthService() {
   /** 🔹 Get My Profile */
   const getMe = useCallback(async () => {
     try {
-      const response = await useApi.get("/user/get-my-profile");
+      const response = await useApi.get("/users/get-my-profile");
       const { data, status } = response;
       if (status >= 400) {
         return null;
@@ -225,5 +324,5 @@ export function useAuthService() {
     router.push("/auth/login");
   }
 
-  return { login, forgotPassword, verifyOtp, resetPassword, loading, logoutUser, resendOtp, getMe };
+  return { register, login, forgotPassword, verifyOtp, verifyUserEmail, resetPassword, loading, logoutUser, resendOtp, getMe };
 }

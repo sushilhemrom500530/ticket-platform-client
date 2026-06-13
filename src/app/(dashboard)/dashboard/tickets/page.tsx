@@ -66,11 +66,11 @@ export default function MyTicketsPage() {
       <h1 className="text-3xl font-bold mb-6 flex items-center">
         <Ticket className="mr-3 text-blue-600" /> My Tickets
       </h1>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <Table 
-          columns={columns} 
-          dataSource={tickets} 
-          rowKey="_id" 
+      <div className="bg-white rounded-xl overflow-hidden">
+        <Table
+          columns={columns}
+          dataSource={tickets}
+          rowKey="_id"
           loading={loading}
           pagination={{ pageSize: 10 }}
         />

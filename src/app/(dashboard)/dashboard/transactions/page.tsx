@@ -78,22 +78,34 @@ export default function TransactionsPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button icon={<Download size={16} />} className="rounded-xl h-10 border-gray-200">Export CSV</Button>
-          <Button icon={<Filter size={16} />} className="rounded-xl h-10 border-gray-200">Filter</Button>
+          <Button
+            icon={<Download size={16} />}
+            className="rounded-xl h-10 border-gray-200"
+          >
+            Export CSV
+          </Button>
+          <Button
+            icon={<Filter size={16} />}
+            className="rounded-xl h-10 border-gray-200"
+          >
+            Filter
+          </Button>
         </div>
       </div>
 
-      <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl overflow-hidden">
+      <Card
+        className="bg-white rounded-2xl overflow-hidden"
+      >
         <div className="p-4 border-b border-gray-100 bg-gray-50/50">
-          <Input 
+          <Input
             prefix={<Search size={18} className="text-gray-400" />}
             placeholder="Search by ID or name..."
             className="max-w-md rounded-xl h-10 border-gray-200 shadow-none"
           />
         </div>
-        <Table 
-          columns={columns} 
-          dataSource={transactions} 
+        <Table
+          columns={columns}
+          dataSource={transactions}
           loading={loading}
           rowKey="_id"
         />

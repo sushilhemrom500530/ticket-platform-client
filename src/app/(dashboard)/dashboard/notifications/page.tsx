@@ -39,26 +39,47 @@ export default function NotificationsPage() {
           <Bell className="w-8 h-8 text-orange-500" />
           <h1 className="text-3xl font-bold text-gray-800">Notifications</h1>
         </div>
-        <Button variant="outlined" className="rounded-lg border-gray-200">Mark all as read</Button>
+        <Button
+          variant="outlined"
+          className="rounded-lg border-gray-200"
+        >
+          Mark all as read
+        </Button>
       </div>
 
       {notifications.length > 0 ? (
-        <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl overflow-hidden">
+        <Card
+          className="bg-white rounded-2xl overflow-hidden"
+        >
           <List
             itemLayout="horizontal"
             dataSource={notifications}
             renderItem={(item: any) => (
               <List.Item
-                className={`px-6 py-4 hover:bg-gray-50 transition cursor-pointer ${!item.isRead ? "bg-blue-50/30" : ""}`}
-                actions={[<span key="date" className="text-xs text-gray-400">{moment(item.createdAt).fromNow()}</span>]}
+                className={`
+                  px-6 py-4 hover:bg-gray-50 transition cursor-pointer 
+                  ${!item.isRead ? "bg-blue-50/30" : ""}`}
+                actions={[
+                  <span key="date" className="text-xs text-gray-400">
+                    {moment(item.createdAt).fromNow()}
+                  </span>
+                ]}
               >
                 <List.Item.Meta
                   avatar={
-                    <div className={`p-2 rounded-xl ${!item.isRead ? "bg-white" : "bg-gray-100"}`}>
+                    <div className={`
+                      p-2 rounded-xl 
+                      ${!item.isRead ? "bg-white" : "bg-gray-100"}`}>
                       {getIcon(item.type)}
                     </div>
                   }
-                  title={<span className={`font-semibold ${!item.isRead ? "text-gray-900" : "text-gray-600"}`}>{item.title}</span>}
+                  title={<span
+                    className={`
+                      font-semibold 
+                      ${!item.isRead ? "text-gray-900" : "text-gray-600"}`}
+                  >
+                    {item.title}
+                  </span>}
                   description={item.message}
                 />
               </List.Item>
@@ -66,7 +87,9 @@ export default function NotificationsPage() {
           />
         </Card>
       ) : (
-        <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl py-20">
+        <Card
+          className="bg-white rounded-2xl py-20"
+        >
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
             description={

@@ -89,12 +89,15 @@ export default function ProfileEdit() {
 
   return (
     <div className="bg-[#F5F7FB] h-full">
-      <Title isShowBackButton title="Edit Personal Information" />
+      <Title
+        isShowBackButton
+        title="Edit Personal Information"
+      />
 
       <div className="py-10 px-4">
         <div className="grid grid-cols-1 gap-8 xl:grid-cols-[360px_1fr]">
           <aside className="space-y-6">
-            <div className="bg-white rounded-2xl shadow-sm border border-[#E4E7EC] p-8">
+            <div className="bg-white rounded-2xl border border-[#E4E7EC] p-8">
               <div className="flex flex-col items-center text-center gap-5">
                 <div className="relative w-32 h-32 rounded-full overflow-hidden ring ring-primary/10 ">
                   <Image

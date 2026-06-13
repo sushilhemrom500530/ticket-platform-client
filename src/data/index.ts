@@ -124,8 +124,8 @@ export const adminMenuData: MenuData = {
           icon: UserRound,
         },
         {
-          label: "System Settings",
-          href: "/dashboard/settings/system",
+          label: "Settings",
+          href: "/dashboard/settings",
           icon: Settings,
         },
       ],
@@ -176,6 +176,14 @@ export const userMenuData: MenuData = {
     },
   ],
 };
+
+export const navItems: MenuItem[] = [
+  { label: "Events", href: "/events", icon: CalendarDays },
+  { label: "Sports", href: "/events?category=sports", icon: Ticket },
+  { label: "Music", href: "/events?category=music", icon: Heart },
+  { label: "Shows", href: "/events?category=shows", icon: Bell },
+
+]
 
 // For backward compatibility if needed, but we should update the component
 export const menuData = adminMenuData;

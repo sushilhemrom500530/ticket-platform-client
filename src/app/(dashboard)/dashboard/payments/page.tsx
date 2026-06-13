@@ -20,7 +20,7 @@ export default function PaymentsPage() {
       // For now using the same endpoint as user but for all
       const data = response.data.data;
       setPayments(data);
-      
+
       const revenue = data.reduce((sum: number, p: any) => sum + (p.status === "paid" ? p.amount : 0), 0);
       const success = data.filter((p: any) => p.status === "paid").length;
       const pending = data.filter((p: any) => p.status === "pending").length;
@@ -82,46 +82,47 @@ export default function PaymentsPage() {
     <div className="p-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
-          <CreditCard className="w-8 h-8 text-indigo-600" /> Payments Overview
+          <CreditCard className="w-8 h-8 text-indigo-600" />
+          Payments Overview
         </h1>
       </div>
 
       <Row gutter={[16, 16]} className="mb-8">
         <Col xs={24} md={8}>
-          <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl">
-            <Statistic 
-              title="Total Revenue" 
-              value={summary.totalRevenue} 
-              prefix={<TrendingUp className="mr-2 text-emerald-500" />} 
+          <Card className="bg-white rounded-2xl">
+            <Statistic
+              title="Total Revenue"
+              value={summary.totalRevenue}
+              prefix={<TrendingUp className="mr-2 text-emerald-500" />}
               precision={2}
               suffix="$"
             />
           </Card>
         </Col>
         <Col xs={24} md={8}>
-          <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl">
-            <Statistic 
-              title="Successful Payments" 
-              value={summary.successfulPayments} 
-              prefix={<CheckCircle2 className="mr-2 text-blue-500" />} 
+          <Card className="bg-white rounded-2xl">
+            <Statistic
+              title="Successful Payments"
+              value={summary.successfulPayments}
+              prefix={<CheckCircle2 className="mr-2 text-blue-500" />}
             />
           </Card>
         </Col>
         <Col xs={24} md={8}>
-          <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl">
-            <Statistic 
-              title="Pending Payments" 
-              value={summary.pendingPayments} 
-              prefix={<AlertCircle className="mr-2 text-amber-500" />} 
+          <Card className="bg-white rounded-2xl">
+            <Statistic
+              title="Pending Payments"
+              value={summary.pendingPayments}
+              prefix={<AlertCircle className="mr-2 text-amber-500" />}
             />
           </Card>
         </Col>
       </Row>
 
-      <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl overflow-hidden">
-        <Table 
-          columns={columns} 
-          dataSource={payments} 
+      <Card className="bg-white rounded-2xl overflow-hidden">
+        <Table
+          columns={columns}
+          dataSource={payments}
           loading={loading}
           rowKey="_id"
         />

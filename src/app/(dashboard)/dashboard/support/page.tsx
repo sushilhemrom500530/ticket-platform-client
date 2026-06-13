@@ -71,8 +71,8 @@ export default function SupportPage() {
       dataIndex: "status",
       key: "status",
       render: (status: string) => (
-        <Tag 
-          icon={status === "resolved" ? <CheckCircle size={12} /> : <Clock size={12} />} 
+        <Tag
+          icon={status === "resolved" ? <CheckCircle size={12} /> : <Clock size={12} />}
           color={status === "resolved" ? "green" : status === "open" ? "blue" : "gray"}
           className="rounded-full px-3 flex items-center gap-1 w-fit"
         >
@@ -90,9 +90,9 @@ export default function SupportPage() {
       title: "Action",
       key: "action",
       render: (_: any, record: any) => (
-        <Button 
-          type="primary" 
-          size="small" 
+        <Button
+          type="primary"
+          size="small"
           className="rounded-lg bg-indigo-600 border-none"
           onClick={() => {
             setSelectedTicket(record);
@@ -118,7 +118,7 @@ export default function SupportPage() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-           <Input
+          <Input
             prefix={<Search size={18} className="text-gray-400" />}
             placeholder="Search tickets..."
             className="w-full md:w-64 rounded-xl h-11 border-gray-200"
@@ -126,8 +126,15 @@ export default function SupportPage() {
         </div>
       </div>
 
-      <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl overflow-hidden">
-        <Table columns={columns} dataSource={tickets} loading={loading} rowKey="_id" />
+      <Card
+        className="bg-white rounded-2xl overflow-hidden"
+      >
+        <Table
+          columns={columns}
+          dataSource={tickets}
+          loading={loading}
+          rowKey="_id"
+        />
       </Card>
 
       <Modal
@@ -135,11 +142,15 @@ export default function SupportPage() {
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         footer={[
-          <Button key="close" onClick={() => setIsModalOpen(false)}>Close</Button>,
+          <Button
+            key="close"
+            onClick={() => setIsModalOpen(false)}>
+            Close
+          </Button>,
           selectedTicket?.status !== "resolved" && (
-            <Button 
-              key="resolve" 
-              type="primary" 
+            <Button
+              key="resolve"
+              type="primary"
               className="bg-green-600 border-none"
               onClick={() => handleStatusChange(selectedTicket._id, "resolved")}
             >
@@ -166,11 +177,11 @@ export default function SupportPage() {
               </div>
             </div>
             <div className="flex gap-4">
-               <div>
+              <div>
                 <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Priority</label>
                 <div><Tag className="rounded-full px-3">{selectedTicket.priority.toUpperCase()}</Tag></div>
               </div>
-               <div>
+              <div>
                 <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Current Status</label>
                 <div><Tag color="blue" className="rounded-full px-3">{selectedTicket.status.toUpperCase()}</Tag></div>
               </div>

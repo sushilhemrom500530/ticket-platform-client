@@ -76,10 +76,10 @@ export default function PaymentHistoryPage() {
         <h1 className="text-3xl font-bold text-gray-800">Payment History</h1>
       </div>
 
-      <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl overflow-hidden">
-        <Table 
-          columns={columns} 
-          dataSource={payments} 
+      <Card className="bg-white rounded-2xl overflow-hidden">
+        <Table
+          columns={columns}
+          dataSource={payments}
           loading={loading}
           rowKey="_id"
           locale={{ emptyText: "No payment history found" }}

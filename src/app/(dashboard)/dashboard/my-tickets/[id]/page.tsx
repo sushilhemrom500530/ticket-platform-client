@@ -43,8 +43,7 @@ export default function TicketDetailsPage() {
             </div>
 
             <Card
-                className="rounded-2xl shadow-lg border-0 overflow-hidden mb-6"
-                variant="borderless"
+                className="rounded-2xl bg-white overflow-hidden mb-6"
             >
                 <div className="p-6">
                     {event?.image && (

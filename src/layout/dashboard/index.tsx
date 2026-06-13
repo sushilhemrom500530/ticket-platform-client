@@ -20,7 +20,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       >
         <Header navOpened={navOpened} setNavOpened={setNavOpened} />
         {/* min-h-[calc(100vh-48px)]  */}
-        <main className="overflow-y-auto overflow-x-hidden w-full min-h-[calc(100vh-178px)] h-full bg-[#fff] font-primary mt-3 pr-3">
+        <main className="overflow-y-auto overflow-x-hidden w-full min-h-[calc(100vh-178px)] h-full bg-[#F2F4F7] font-primary  pr-3">
           {children}
         </main>
       </div>

@@ -1,9 +1,11 @@
 "use client";
 import { Card, Form, Input, Button, Switch, Divider, Select, message } from "antd";
 import { Settings, Globe, Shield, Bell, Database, Mail } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function SystemSettingsPage() {
   const [form] = Form.useForm();
+  const router = useRouter();
 
   const onFinish = (values: any) => {
     message.success("System settings updated successfully");
@@ -11,7 +13,7 @@ export default function SystemSettingsPage() {
   };
 
   return (
-    <div className="p-6 max-w-4xl">
+    <div className="p-6 w-full lg:w-4/5 mx-auto">
       <div className="mb-8 flex items-center gap-3">
         <div className="p-3 bg-gray-100 rounded-2xl">
           <Settings className="w-8 h-8 text-gray-700" />
@@ -22,9 +24,9 @@ export default function SystemSettingsPage() {
         </div>
       </div>
 
-      <Form 
-        form={form} 
-        layout="vertical" 
+      <Form
+        form={form}
+        layout="vertical"
         onFinish={onFinish}
         initialValues={{
           siteName: "Ticket Platform",
@@ -93,7 +95,10 @@ export default function SystemSettingsPage() {
           <div className="text-xs text-gray-400 mb-4">SMTP credentials are managed via environment variables for security.</div>
         </Card>
 
-        <div className="mt-8 flex justify-end">
+        <div className="mt-8 flex justify-end gap-3">
+          <Button onClick={() => router.back()} className="h-12 px-10 rounded-xl border-none font-bold shadow-lg">
+            Cancel
+          </Button>
           <Button type="primary" htmlType="submit" className="h-12 px-10 rounded-xl bg-gray-800 border-none font-bold shadow-lg">
             Save All Changes
           </Button>

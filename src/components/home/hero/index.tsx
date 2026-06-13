@@ -8,9 +8,28 @@ import Link from "next/link";
 export default function HeroSection() {
     const [mounted, setMounted] = useState(false);
 
+    const [events, setEvents] = useState<any[]>([]);
+
     useEffect(() => {
         setMounted(true);
+        fetchBanners();
     }, []);
+
+    const fetchBanners = async () => {
+        try {
+            const { bannerService } = await import("@/src/services/bannerService");
+            const res = await bannerService.getAllBanners();
+            if (res.success && res.data) {
+                const activeBanners = res.data.filter((b: any) => b.isActive);
+                setEvents(activeBanners.length > 0 ? activeBanners : carouselEvents);
+            } else {
+                setEvents(carouselEvents);
+            }
+        } catch (error) {
+            console.error("Error fetching banners:", error);
+            setEvents(carouselEvents);
+        }
+    };
 
     const carouselEvents = [
         {
@@ -133,7 +152,7 @@ export default function HeroSection() {
                 </div>
             </div>
 
-            <div className="w-full container mx-auto z-10 relative flex flex-col items-center h-[calc(100svh-80px)] justify-center">
+            <div className="w-full container mx-auto z-10 relative flex flex-col items-center h-auto py-12 lg:py-0 lg:h-[calc(100svh-80px)] justify-center">
                 {mounted ? (
                     <Slider
                         dots={true}
@@ -146,7 +165,7 @@ export default function HeroSection() {
                         arrows={false}
                         className="w-full pb-8"
                     >
-                        {carouselEvents.map((event) => (
+                        {events.map((event) => (
                             <div key={event._id} className="outline-none">
                                 <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 pt-14 relative w-full">
                                     {/* Left Side: Details */}
