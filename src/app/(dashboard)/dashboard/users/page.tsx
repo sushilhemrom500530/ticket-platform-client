@@ -62,7 +62,9 @@ export default function UsersPage() {
       dataIndex: "status",
       key: "status",
       render: (status: string) => (
-        <Tag color={status === "active" ? "green" : "red"} className="rounded-full px-3">
+        <Tag
+          color={status === "active" ? "green" : "red"}
+          className="rounded-full px-3">
           {status?.toUpperCase() || "ACTIVE"}
         </Tag>
       ),
@@ -72,7 +74,11 @@ export default function UsersPage() {
       key: "action",
       render: (_: any, record: any) => (
         <Space size="middle">
-          <Button type="text" icon={<Mail size={16} className="text-blue-500" />} />
+          <Button
+            type="text"
+            icon={<Mail size={16}
+              className="text-blue-500" />}
+          />
           <Button
             type="text"
             danger={record.status !== "blocked"}
@@ -106,10 +112,14 @@ export default function UsersPage() {
         </div>
       </div>
 
-      <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl overflow-hidden">
+      <Card
+        className="bg-white rounded-2xl overflow-hidden"
+      >
         <Table
           columns={columns}
-          dataSource={users.filter(u => u.fullName?.toLowerCase().includes(searchText.toLowerCase()))}
+          dataSource={
+            users.filter(u => u.fullName?.toLowerCase().includes(searchText.toLowerCase()))
+          }
           loading={loading}
           rowKey="_id"
           pagination={{ pageSize: 10 }}

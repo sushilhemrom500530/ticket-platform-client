@@ -5,6 +5,7 @@ import { Card, Statistic, Row, Col, Button, Table, Tag, Space } from "antd";
 import { Ticket, CalendarDays, Heart, Bell, User, Tags } from "lucide-react";
 import { useAuthStore } from "@/src/store/authStore";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 export default function DashboardPage() {
@@ -22,6 +23,7 @@ export default function DashboardPage() {
   });
   const [loading, setLoading] = useState(true);
   const { user, isAuthenticated } = useAuthStore();
+  const router = useRouter();
 
   useEffect(() => {
     if (!user) return;
@@ -213,7 +215,12 @@ export default function DashboardPage() {
               className="rounded-2xl"
             >
               <div className="pt-4">
-                <Chart options={chartOptions} series={chartSeries} type="area" height={320} />
+                <Chart
+                  options={chartOptions}
+                  series={chartSeries}
+                  type="area"
+                  height={320}
+                />
               </div>
             </Card>
           </Col>
@@ -225,7 +232,7 @@ export default function DashboardPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
                   <div className="flex items-center gap-4">
-                    <div className="p-2 bg-white rounded-lg shadow-sm">
+                    <div className="p-2 bg-white rounded-lg border border-slate-100">
                       <User className="text-slate-500" size={20} />
                     </div>
                     <span className="text-slate-600 font-medium">Total Users</span>
@@ -255,7 +262,13 @@ export default function DashboardPage() {
             <Card
               title={<div className="flex items-center justify-between py-1">
                 <span className="text-lg font-semibold">Recent Ticket Purchases</span>
-                <Button type="link" className="text-blue-600 font-medium">View All Transactions</Button>
+                <Button
+                  type="link"
+                  className="text-blue-600 font-medium"
+                  onClick={() => router.push("/dashboard/transactions")}
+                >
+                  View All Transactions
+                </Button>
               </div>}
               className="rounded-2xl overflow-hidden"
             >
@@ -282,8 +295,14 @@ export default function DashboardPage() {
       </div>
 
       <Row gutter={[16, 16]}>
-        <Col xs={24} sm={12} md={8}>
-          <Card className="rounded-2xl hover:shadow-lg transition-all duration-300 h-full">
+        <Col
+          xs={24}
+          sm={12}
+          md={8}
+        >
+          <Card
+            className="rounded-2xl transition-all duration-300 h-full border border-transparent hover:border-blue-100"
+          >
             <Statistic
               title="My Tickets"
               value={stats.myTickets}
@@ -292,8 +311,14 @@ export default function DashboardPage() {
             />
           </Card>
         </Col>
-        <Col xs={24} sm={12} md={8}>
-          <Card className="rounded-2xl hover:shadow-lg transition-all duration-300 h-full">
+        <Col
+          xs={24}
+          sm={12}
+          md={8}
+        >
+          <Card
+            className="rounded-2xl transition-all duration-300 h-full border border-transparent hover:border-blue-100"
+          >
             <Statistic
               title="Favorites"
               value={stats.myFavorites}
@@ -302,8 +327,14 @@ export default function DashboardPage() {
             />
           </Card>
         </Col>
-        <Col xs={24} sm={12} md={8}>
-          <Card className="rounded-2xl hover:shadow-lg transition-all duration-300 h-full">
+        <Col
+          xs={24}
+          sm={12}
+          md={8}
+        >
+          <Card
+            className="rounded-2xl transition-all duration-300 h-full border border-transparent hover:border-blue-100"
+          >
             <Statistic
               title="Notifications"
               value={stats.myNotifications}
@@ -315,14 +346,19 @@ export default function DashboardPage() {
       </Row>
 
       <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card title="Recent Activity" className="rounded-2xl">
+        <Card
+          title="Recent Activity"
+          className="rounded-2xl bg-white">
           <div className="flex flex-col items-center justify-center py-10 text-gray-400">
             <CalendarDays className="w-12 h-12 mb-3 opacity-20" />
             <p>No recent activity found</p>
           </div>
         </Card>
 
-        <Card title="Quick Actions" className="rounded-2xl">
+        <Card
+          title="Quick Actions"
+          className="rounded-2xl bg-white"
+        >
           <div className="grid grid-cols-2 gap-4">
             <button className="p-4 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition font-medium flex flex-col items-center gap-2">
               <Ticket className="w-6 h-6" />
