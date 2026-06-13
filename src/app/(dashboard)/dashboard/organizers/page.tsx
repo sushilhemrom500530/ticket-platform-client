@@ -110,7 +110,7 @@ export default function OrganizersPage() {
         />
       </div>
 
-      <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-2xl overflow-hidden">
+      <Card className="bg-white rounded-2xl overflow-hidden">
         <Table
           columns={columns}
           dataSource={organizers.filter(o => o.fullName?.toLowerCase().includes(searchText.toLowerCase()))}

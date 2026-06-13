@@ -15,11 +15,33 @@ export default function ManageTicketsPage() {
   }, []);
 
   const columns = [
-    { title: "Ticket ID", dataIndex: "ticketId", key: "ticketId", render: (t: string) => <span className="font-mono text-gray-500">{t}</span> },
-    { title: "Event", dataIndex: ["eventId", "title"], key: "event" },
-    { title: "User Email", dataIndex: ["userId", "email"], key: "user" },
-    { title: "Quantity", dataIndex: "quantity", key: "quantity" },
-    { title: "Total Price", dataIndex: "totalPrice", key: "totalPrice", render: (p: number) => `$${p.toFixed(2)}` },
+    {
+      title: "Ticket ID",
+      dataIndex: "ticketId",
+      key: "ticketId",
+      render: (t: string) => <span className="font-mono text-gray-500">{t}</span>
+    },
+    {
+      title: "Event",
+      dataIndex: ["eventId", "title"],
+      key: "event"
+    },
+    {
+      title: "User Email",
+      dataIndex: ["userId", "email"],
+      key: "user"
+    },
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity"
+    },
+    {
+      title: "Total Price",
+      dataIndex: "totalPrice",
+      key: "totalPrice",
+      render: (p: number) => `$${p.toFixed(2)}`
+    },
     {
       title: "Status",
       dataIndex: "status",
@@ -33,8 +55,13 @@ export default function ManageTicketsPage() {
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-6">Manage Tickets</h1>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <Table columns={columns} dataSource={tickets} rowKey="_id" loading={loading} />
+      <div className="bg-white rounded-xl overflow-hidden">
+        <Table
+          columns={columns}
+          dataSource={tickets}
+          rowKey="_id"
+          loading={loading}
+        />
       </div>
     </div>
   );

@@ -28,10 +28,10 @@ export default function Profile() {
 
       <Spin spinning={loading}>
         <div className="space-y-10 px-4">
-          <section className="relative overflow-hidden rounded-3xl  text-black px-10 py-8 shadow">
+          <section className="relative overflow-hidden rounded-3xl text-black px-10 py-8 bg-white">
             <div className="flex flex-col lg:flex-row items-center gap-8">
               <div className="relative">
-                <div className="w-36 h-36 rounded-full border-4 border-white/40 overflow-hidden shadow-xl">
+                <div className="w-36 h-36 rounded-full border-4 border-white/40 overflow-hidden">
                   <Image
                     src={profile?.profileUrl ?? user_image}
                     alt="user avatar"
@@ -40,13 +40,19 @@ export default function Profile() {
                     className="object-cover w-full h-full"
                   />
                 </div>
-                <Tag color={statusColor} className="!rounded-full absolute -bottom-3 left-1/2 -translate-x-1/2 z-10 capitalize">
+                <Tag
+                  color={statusColor}
+                  className="!rounded-full absolute -bottom-3 left-1/2 -translate-x-1/2 z-10 capitalize"
+                >
                   {profile?.status ?? "Unknown"}
                 </Tag>
               </div>
 
               <div className="flex-1 text-center lg:text-left space-y-3">
-                <Tag color={statusColor} className="uppercase tracking-widest text-sm ">
+                <Tag
+                  color={statusColor}
+                  className="uppercase tracking-widest text-sm "
+                >
                   {profile?.role ?? "User"}
                 </Tag>
 
@@ -60,7 +66,8 @@ export default function Profile() {
                 <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
                   <Link href="/dashboard/profile/edit">
                     <button className="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-6 py-2 rounded-full transition cursor-pointer">
-                      <FaEdit /> Edit Profile
+                      <FaEdit />
+                      Edit Profile
                     </button>
                   </Link>
                 </div>
@@ -69,7 +76,11 @@ export default function Profile() {
           </section>
 
           <section className="rounded-3xl bg-white p-6 shadow-sm border border-slate-100">
-            <Descriptions column={1} bordered size="small">
+            <Descriptions
+              column={1}
+              bordered
+              size="small"
+            >
               <Descriptions.Item
                 label={
                   <span className="flex items-center gap-2">
@@ -119,7 +130,12 @@ export default function Profile() {
                   </span>
                 }
               >
-                <Tag color="green" className="!rounded-full capitalize">{profile?.role ?? "N/A"}</Tag>
+                <Tag
+                  color="green"
+                  className="!rounded-full capitalize"
+                >
+                  {profile?.role ?? "N/A"}
+                </Tag>
               </Descriptions.Item>
 
               <Descriptions.Item

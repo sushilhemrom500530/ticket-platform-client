@@ -90,15 +90,30 @@ export default function ReportsPage() {
       title: "Action",
       key: "action",
       render: () => (
-        <Button type="text" icon={<Download size={16} />} className="text-blue-600 hover:bg-blue-50 rounded-lg">Download</Button>
+        <Button
+          type="text"
+          icon={<Download size={16} />}
+          className="text-blue-600 hover:bg-blue-50 rounded-lg"
+        >
+          Download
+        </Button>
       )
     }
   ];
 
   const quickReports = [
-    { title: "Monthly Sales Report", icon: <FileSpreadsheet className="text-emerald-500" /> },
-    { title: "User Activity Summary", icon: <FileText className="text-blue-500" /> },
-    { title: "Event Performance", icon: <FilePieChart className="text-purple-500" /> },
+    {
+      title: "Monthly Sales Report",
+      icon: <FileSpreadsheet className="text-emerald-500" />
+    },
+    {
+      title: "User Activity Summary",
+      icon: <FileText className="text-blue-500" />
+    },
+    {
+      title: "Event Performance",
+      icon: <FilePieChart className="text-purple-500" />
+    },
   ];
 
   return (
@@ -113,15 +128,25 @@ export default function ReportsPage() {
             <p className="text-gray-500">Generate and download platform reports</p>
           </div>
         </div>
-        <Button type="primary" className="h-11 rounded-xl bg-slate-800 border-none font-bold">
+        <Button
+          type="primary"
+          className="h-11 rounded-xl bg-slate-800 border-none font-bold"
+        >
           Generate New Report
         </Button>
       </div>
 
       <Row gutter={[20, 20]} className="mb-8">
         {quickReports.map((report, idx) => (
-          <Col xs={24} md={8} key={idx}>
-            <Card hoverable className="rounded-2xl border-none shadow-sm group">
+          <Col
+            xs={24}
+            md={8}
+            key={idx}
+          >
+            <Card
+              hoverable
+              className="rounded-2xl border-none bg-white group"
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="p-3 bg-gray-50 rounded-xl group-hover:bg-white transition-colors">
@@ -138,11 +163,22 @@ export default function ReportsPage() {
 
       <Card
         title="Generated Reports History"
-        variant="borderless"
-        className="shadow-sm border border-gray-100 rounded-2xl overflow-hidden"
-        extra={<Button icon={<Filter size={16} />} type="text">Filter</Button>}
+        className="rounded-2xl border-none bg-white"
+        extra={
+          <Button
+            icon={<Filter size={16} />}
+            type="text"
+          >
+            Filter
+          </Button>
+        }
       >
-        <Table columns={columns} dataSource={reports} loading={loading} rowKey="_id" />
+        <Table
+          columns={columns}
+          dataSource={reports}
+          loading={loading}
+          rowKey="_id"
+        />
       </Card>
     </div>
   );
