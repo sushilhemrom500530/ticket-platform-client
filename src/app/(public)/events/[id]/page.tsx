@@ -5,6 +5,7 @@ import api from "@/src/services/api";
 import { Button, message } from "antd";
 import { Calendar, MapPin, Ticket, User as UserIcon } from "lucide-react";
 import { useAuthStore } from "@/src/store/authStore";
+import RelatedEvents from "@/src/components/related-events";
 
 export default function EventDetailsPage() {
   const { id } = useParams();
@@ -47,12 +48,14 @@ export default function EventDetailsPage() {
       <div className="w-full h-[400px] relative">
         <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 w-full container mx-auto px-6 pb-8">
-          <span className={`px-4 py-1.5 text-sm font-bold rounded-full inline-block mb-4 ${event.isPremium ? 'bg-gradient-to-r from-yellow-400 to-amber-600 text-white' : 'bg-green-500 text-white'}`}>
-            {event.isPremium ? "Premium Event" : "Free Event"}
-          </span>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-2">{event.title}</h1>
-          <p className="text-lg text-gray-300">{event.categoryId?.name}</p>
+        <div className="absolute inset-0 flex flex-col justify-end pb-8">
+          <div className="container mx-auto px-6 capitalize">
+            <span className={`px-4 py-1.5 text-sm font-bold rounded-full inline-block mb-4 ${event.isPremium ? 'bg-gradient-to-r from-yellow-400 to-amber-600 text-white' : 'bg-green-500 text-white'}`}>
+              {event.isPremium ? "Premium Event" : "Free Event"}
+            </span>
+            <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-2">{event.title}</h1>
+            <p className="text-lg text-gray-300">{event.categoryId?.name}</p>
+          </div>
         </div>
       </div>
 
@@ -60,7 +63,7 @@ export default function EventDetailsPage() {
         {/* Main Content */}
         <div className="lg:w-2/3 bg-white p-8 rounded-2xl border border-gray-100">
           <h2 className="text-2xl font-bold mb-6 text-gray-900 border-b pb-4">About this Event</h2>
-          <p className="text-gray-600 text-lg leading-relaxed whitespace-pre-wrap">{event.description}</p>
+          <p className="text-gray-600 text-lg leading-relaxed whitespace-pre-wrap capitalize">{event.description}</p>
         </div>
 
         {/* Sidebar / Ticket Box */}
@@ -79,7 +82,7 @@ export default function EventDetailsPage() {
               <MapPin className="w-6 h-6 mr-4 text-red-500" />
               <div>
                 <p className="font-semibold">Location</p>
-                <p className="text-sm">{event.location}</p>
+                <p className="text-sm capitalize">{event.location}</p>
               </div>
             </div>
 
@@ -119,6 +122,9 @@ export default function EventDetailsPage() {
           </div>
         </div>
       </div>
+
+      {/* related events */}
+      <RelatedEvents currentEvent={event} />
     </div>
   );
 }
