@@ -181,7 +181,7 @@ export default function HeroSection() {
                                         </p>
                                         <div className="flex flex-wrap justify-center lg:justify-start items-center gap-4">
                                             <Link href={`/events/${event._id}`}>
-                                                <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-lg shadow-blue-600/30 active:scale-95 cursor-pointer">
+                                                <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-xl transition-all active:scale-95 cursor-pointer">
                                                     Get Tickets
                                                 </button>
                                             </Link>
