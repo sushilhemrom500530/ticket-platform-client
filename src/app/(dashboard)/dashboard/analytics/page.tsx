@@ -1,8 +1,37 @@
 "use client";
-import { Card, Row, Col, Statistic, Select } from "antd";
+import { Card, Row, Col, Statistic, Select, Spin, message } from "antd";
 import { BarChart3, TrendingUp, Users, Ticket, DollarSign, Calendar } from "lucide-react";
+import { useState, useEffect } from "react";
+import api from "@/src/services/api";
 
 export default function AnalyticsPage() {
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const response = await api.get("/dashboard/analytics");
+        if (response.data.success) {
+          setData(response.data.data);
+        }
+      } catch (error) {
+        message.error("Failed to load analytics data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAnalytics();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spin size="large" description="Loading Analytics..." />
+      </div>
+    );
+  }
+
   return (
     <div className="p-6">
       <div className="mb-8 flex justify-between items-center">
@@ -27,7 +56,7 @@ export default function AnalyticsPage() {
           <Card className="bg-white rounded-2xl">
             <Statistic
               title="Total Sales"
-              value={124500}
+              value={data?.totalSales || 0}
               prefix={<DollarSign size={20} className="text-emerald-500 mr-2" />}
               precision={2}
             />
@@ -40,7 +69,7 @@ export default function AnalyticsPage() {
           <Card className="bg-white rounded-2xl">
             <Statistic
               title="New Users"
-              value={456}
+              value={data?.newUsers || 0}
               prefix={<Users size={20} className="text-blue-500 mr-2" />}
             />
             <div className="mt-2 text-xs text-blue-600 font-bold flex items-center gap-1">
@@ -52,7 +81,7 @@ export default function AnalyticsPage() {
           <Card className="bg-white rounded-2xl">
             <Statistic
               title="Tickets Sold"
-              value={3240}
+              value={data?.ticketsSold || 0}
               prefix={<Ticket size={20} className="text-purple-500 mr-2" />}
             />
             <div className="mt-2 text-xs text-purple-600 font-bold flex items-center gap-1">
@@ -64,7 +93,7 @@ export default function AnalyticsPage() {
           <Card className="bg-white rounded-2xl">
             <Statistic
               title="Active Events"
-              value={84}
+              value={data?.activeEvents || 0}
               prefix={<Calendar size={20} className="text-orange-500 mr-2" />}
             />
             <div className="mt-2 text-xs text-orange-600 font-bold">Stable performance</div>
