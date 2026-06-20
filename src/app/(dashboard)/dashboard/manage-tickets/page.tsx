@@ -2,13 +2,14 @@
 import { useEffect, useState } from "react";
 import api from "@/src/services/api";
 import { Table, Tag, message } from "antd";
+import Link from "next/link";
 
 export default function ManageTicketsPage() {
   const [tickets, setTickets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get("/tickets/all?limit=100")
+    api.get("/event-tickets/get-all?limit=100")
       .then(res => setTickets(res.data.data.results))
       .catch(() => message.error("Failed to load tickets"))
       .finally(() => setLoading(false));
@@ -48,6 +49,17 @@ export default function ManageTicketsPage() {
       key: "status",
       render: (status: string) => (
         <Tag color={status === "active" ? "green" : "red"}>{status.toUpperCase()}</Tag>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_: any, record: any) => (
+        <Link href={`/ticket/${record?.eventId?._id}`}>
+          <span className="text-blue-600 hover:underline text-sm font-medium cursor-pointer">
+            View Ticket
+          </span>
+        </Link>
       ),
     },
   ];
