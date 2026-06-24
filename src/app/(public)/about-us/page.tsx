@@ -1,3 +1,33 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "About Us - Ticket Platform",
+    description: "Ticket Platform is a modern event management and ticketing solution dedicated to helping organizers create, manage, promote, and sell tickets for events of every size. Since 2020, we have been empowering businesses, communities, educational institutions, and event organizers with reliable technology that simplifies the entire event lifecycle.",
+    keywords: ["Event Management", "Ticketing", "Event Platform", "Ticket Platform", "Event Organizer", "Event Management System", "Event Ticketing System", "Event Management Software", "Event Ticketing Software"],
+    openGraph: {
+        title: "About Us - Ticket Platform",
+        description: "Ticket Platform is a modern event management and ticketing solution dedicated to helping organizers create, manage, promote, and sell tickets for events of every size. Since 2020, we have been empowering businesses, communities, educational institutions, and event organizers with reliable technology that simplifies the entire event lifecycle.",
+        url: "https://ticket-platform-frontend.vercel.app/about-us",
+        siteName: "Ticket Platform",
+        images: [
+            {
+                url: "https://ticket-platform-frontend.vercel.app/api/og?title=About%20Us%20-%20Ticket%20Platform",
+                width: 1200,
+                height: 630,
+                alt: "About Us - Ticket Platform",
+            },
+        ],
+        locale: "en_US",
+        type: "website",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "About Us - Ticket Platform",
+        description: "Ticket Platform is a modern event management and ticketing solution dedicated to helping organizers create, manage, promote, and sell tickets for events of every size. Since 2020, we have been empowering businesses, communities, educational institutions, and event organizers with reliable technology that simplifies the entire event lifecycle.",
+        images: ["https://ticket-platform-frontend.vercel.app/api/og?title=About%20Us%20-%20Ticket%20Platform"],
+    },
+}
+
 export default function AboutUsPage() {
     return (
         <section className="bg-slate-50 py-24">
