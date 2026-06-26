@@ -3,6 +3,9 @@ import { Card, Row, Col, Statistic, Select, Spin, message } from "antd";
 import { BarChart3, TrendingUp, Users, Ticket, DollarSign, Calendar } from "lucide-react";
 import { useState, useEffect } from "react";
 import api from "@/src/services/api";
+import dynamic from "next/dynamic";
+
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 export default function AnalyticsPage() {
   const [data, setData] = useState<any>(null);
@@ -31,6 +34,110 @@ export default function AnalyticsPage() {
       </div>
     );
   }
+
+  const revenueChartOptions: any = {
+    chart: {
+      id: "revenue-growth",
+      toolbar: { show: false },
+      fontFamily: "Inter, sans-serif",
+    },
+    grid: {
+      show: true,
+      borderColor: "#f1f5f9",
+      strokeDashArray: 4,
+    },
+    xaxis: {
+      categories: data?.revenueGrowth?.map((item: any) => item.name) || [],
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+      labels: {
+        style: { colors: "#64748b", fontFamily: "Inter, sans-serif" }
+      }
+    },
+    yaxis: {
+      labels: {
+        style: { colors: "#64748b", fontFamily: "Inter, sans-serif" },
+        formatter: (val: number) => `$${val.toLocaleString()}`,
+      }
+    },
+    colors: ["#3b82f6"],
+    stroke: { curve: "smooth", width: 3 },
+    fill: {
+      type: "gradient",
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.4,
+        opacityTo: 0.05,
+        stops: [0, 90, 100],
+      },
+    },
+    dataLabels: { enabled: false },
+    tooltip: {
+      theme: "light",
+      x: { show: true },
+      y: {
+        formatter: (val: number) => `$${val.toLocaleString()}`
+      }
+    }
+  };
+
+  const revenueChartSeries = [
+    {
+      name: "Revenue",
+      data: data?.revenueGrowth?.map((item: any) => item.revenue) || [],
+    },
+  ];
+
+  const distributionChartOptions: any = {
+    chart: {
+      id: "user-distribution",
+      fontFamily: "Inter, sans-serif",
+    },
+    labels: data?.userDistribution?.map((item: any) => item.name) || [],
+    colors: ["#3b82f6", "#10b981"],
+    legend: {
+      position: "bottom",
+      fontFamily: "Inter, sans-serif",
+      labels: {
+        colors: "#64748b"
+      }
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: function (val: number) {
+        return val.toFixed(1) + "%";
+      }
+    },
+    plotOptions: {
+      pie: {
+        donut: {
+          size: "70%",
+          labels: {
+            show: true,
+            total: {
+              show: true,
+              label: "Total",
+              formatter: () => {
+                const total = data?.userDistribution?.reduce((acc: number, curr: any) => acc + curr.value, 0) || 0;
+                return total.toString();
+              },
+              style: {
+                fontSize: "16px",
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 600,
+                color: "#374151"
+              }
+            }
+          }
+        }
+      }
+    },
+    tooltip: {
+      theme: "light",
+    }
+  };
+
+  const distributionChartSeries = data?.userDistribution?.map((item: any) => item.value) || [];
 
   return (
     <div className="p-6">
@@ -105,26 +212,48 @@ export default function AnalyticsPage() {
         <Col xs={24} lg={16}>
           <Card
             title="Revenue Growth"
-            className="bg-white rounded-2xl min-h-[400px] flex items-center justify-center"
+            className="bg-white rounded-2xl min-h-[400px]"
           >
-            <div className="text-gray-300 text-center">
-              <BarChart3 size={64} className="mx-auto mb-4 opacity-20" />
-              <p className="text-lg">Interactive Chart Area</p>
-              <p className="text-sm">Revenue trends over the selected period</p>
+            <div className="pt-4 w-full">
+              {data?.revenueGrowth?.length > 0 ? (
+                <Chart
+                  options={revenueChartOptions}
+                  series={revenueChartSeries}
+                  type="area"
+                  height={320}
+                />
+              ) : (
+                <div className="text-gray-300 text-center py-12">
+                  <BarChart3 size={64} className="mx-auto mb-4 opacity-20" />
+                  <p className="text-lg">No Revenue Data</p>
+                </div>
+              )}
             </div>
           </Card>
         </Col>
         <Col xs={24} lg={8}>
           <Card
             title="User Distribution"
-            className="bg-white rounded-2xl min-h-[400px] flex items-center justify-center"
+            className="bg-white rounded-2xl min-h-[400px]"
           >
-            <div className="text-gray-300 text-center">
-              <div className="w-32 h-32 border-8 border-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <Users size={32} className="opacity-20" />
-              </div>
-              <p className="text-lg">Donut Chart Area</p>
-              <p className="text-sm">New vs Returning Users</p>
+            <div className="pt-4 flex items-center justify-center min-h-[320px]">
+              {data?.userDistribution?.length > 0 ? (
+                <div className="w-full">
+                  <Chart
+                    options={distributionChartOptions}
+                    series={distributionChartSeries}
+                    type="donut"
+                    height={320}
+                  />
+                </div>
+              ) : (
+                <div className="text-gray-300 text-center py-12">
+                  <div className="w-32 h-32 border-8 border-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <Users size={32} className="opacity-20" />
+                  </div>
+                  <p className="text-lg">No User Data</p>
+                </div>
+              )}
             </div>
           </Card>
         </Col>
