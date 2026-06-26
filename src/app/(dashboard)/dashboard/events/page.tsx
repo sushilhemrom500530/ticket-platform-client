@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import api from "@/src/services/api";
 import { Table, Button, Modal, Form, Input, Select, InputNumber, Switch, message, Popconfirm, Upload } from "antd";
 import { Plus, Edit, Trash } from "lucide-react";
+import EventModal from "@/src/components/ticket-create";
 
 export default function ManageEventsPage() {
   const [events, setEvents] = useState<any[]>([]);
@@ -173,7 +174,7 @@ export default function ManageEventsPage() {
         />
       </div>
 
-      <Modal
+      {/* <Modal
         title={editingId ? "Edit Event" : "Create Event"}
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
@@ -287,7 +288,17 @@ export default function ManageEventsPage() {
             {editingId ? "Update Event" : "Create Event"}
           </Button>
         </Form>
-      </Modal>
+      </Modal> */}
+      <EventModal
+        editingId={editingId}
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        form={form}
+        onFinish={onFinish}
+        categories={categories}
+        normFile={normFile}
+        isPremium={isPremium}
+      />
     </div>
   );
 }

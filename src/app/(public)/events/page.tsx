@@ -13,6 +13,7 @@ function EventsContent() {
 
   const initialCategoryParam = searchParams.get("category") || undefined;
 
+  const [fetchedEvents, setFetchedEvents] = useState<any[]>([]);
   const [events, setEvents] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [categoryFilters, setCategoryFilters] = useState<string[]>([]);
@@ -20,6 +21,10 @@ function EventsContent() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [categoriesLoaded, setCategoriesLoaded] = useState(false);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
+  const [topRatedFilters, setTopRatedFilters] = useState<string[]>([]);
+  const [professionalFilters, setProfessionalFilters] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState("new");
 
   useEffect(() => {
     api.get("/categories").then(res => {
@@ -58,7 +63,7 @@ function EventsContent() {
         if (search) url += `&search=${search}`;
 
         const res = await api.get(url);
-        setEvents(res.data.data.results || []);
+        setFetchedEvents(res.data.data.results || []);
       } catch (error) {
         console.error("Failed to fetch events", error);
       } finally {
@@ -70,6 +75,47 @@ function EventsContent() {
     const timer = setTimeout(fetchEvents, 300);
     return () => clearTimeout(timer);
   }, [categoryFilters, typeFilters, search, categoriesLoaded]);
+
+  useEffect(() => {
+    let filtered = [...fetchedEvents];
+
+    if (priceRange[0] > 0 || priceRange[1] < 500) {
+      filtered = filtered.filter((e) => {
+        const price = e.price || 0;
+        return price >= priceRange[0] && price <= priceRange[1];
+      });
+    }
+
+    if (topRatedFilters.length > 0) {
+      filtered = filtered.filter((e) => {
+        const rating = e.rating || 0;
+        if (topRatedFilters.includes("4 Stars & Up") && rating < 4) return false;
+        if (topRatedFilters.includes("Top Rated Events Only") && rating < 4.5) return false;
+        return true;
+      });
+    }
+
+    if (professionalFilters.length > 0) {
+      filtered = filtered.filter((e) => {
+        return e.categoryId?.name && professionalFilters.includes(e.categoryId.name);
+      });
+    }
+
+    filtered.sort((a, b) => {
+      if (sortBy === "new") {
+        return new Date(b.createdAt || b.date).getTime() - new Date(a.createdAt || a.date).getTime();
+      } else if (sortBy === "old") {
+        return new Date(a.createdAt || a.date).getTime() - new Date(b.createdAt || b.date).getTime();
+      } else if (sortBy === "asc") {
+        return (a.title || "").localeCompare(b.title || "");
+      } else if (sortBy === "desc") {
+        return (b.title || "").localeCompare(a.title || "");
+      }
+      return 0;
+    });
+
+    setEvents(filtered);
+  }, [fetchedEvents, priceRange, topRatedFilters, professionalFilters, sortBy]);
 
   const handleCategoryChange = (id: string, checked: boolean) => {
     let newFilters = [...categoryFilters];
@@ -100,10 +146,22 @@ function EventsContent() {
     setTypeFilters(newFilters);
   };
 
+  const handleTopRatedChange = (filter: string, checked: boolean) => {
+    setTopRatedFilters(prev => checked ? [...prev, filter] : prev.filter(f => f !== filter));
+  };
+
+  const handleProfessionalChange = (filter: string, checked: boolean) => {
+    setProfessionalFilters(prev => checked ? [...prev, filter] : prev.filter(f => f !== filter));
+  };
+
   const clearFilters = () => {
     setCategoryFilters([]);
     setTypeFilters([]);
     setSearch("");
+    setPriceRange([0, 500]);
+    setTopRatedFilters([]);
+    setProfessionalFilters([]);
+    setSortBy("new");
     router.replace(pathname, { scroll: false });
   };
 
@@ -168,23 +226,47 @@ function EventsContent() {
 
             <div className="pt-4 border-t border-gray-50">
               <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">Price Range</h3>
-              <Slider range defaultValue={[0, 100]} max={500} tooltip={{ formatter: (val) => `$${val}` }} />
+              <Slider 
+                range 
+                value={priceRange} 
+                onChange={(val: number[]) => setPriceRange([val[0], val[1]])}
+                max={500} 
+                tooltip={{ formatter: (val) => `$${val}` }} 
+              />
             </div>
 
             <div className="pt-4 border-t border-gray-50">
               <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">Top Rated</h3>
               <div className="flex flex-col gap-3">
-                <Checkbox>4 Stars & Up</Checkbox>
-                <Checkbox className="ml-0">Top Rated Events Only</Checkbox>
+                <Checkbox 
+                  checked={topRatedFilters.includes("4 Stars & Up")}
+                  onChange={(e) => handleTopRatedChange("4 Stars & Up", e.target.checked)}
+                >4 Stars & Up</Checkbox>
+                <Checkbox 
+                  className="ml-0"
+                  checked={topRatedFilters.includes("Top Rated Events Only")}
+                  onChange={(e) => handleTopRatedChange("Top Rated Events Only", e.target.checked)}
+                >Top Rated Events Only</Checkbox>
               </div>
             </div>
 
             <div className="pt-4 border-t border-gray-50">
               <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">Professional</h3>
               <div className="flex flex-col gap-3">
-                <Checkbox>Tech & IT</Checkbox>
-                <Checkbox className="ml-0">Business & Finance</Checkbox>
-                <Checkbox className="ml-0">Networking</Checkbox>
+                <Checkbox 
+                  checked={professionalFilters.includes("Tech & IT")}
+                  onChange={(e) => handleProfessionalChange("Tech & IT", e.target.checked)}
+                >Tech & IT</Checkbox>
+                <Checkbox 
+                  className="ml-0"
+                  checked={professionalFilters.includes("Business & Finance")}
+                  onChange={(e) => handleProfessionalChange("Business & Finance", e.target.checked)}
+                >Business & Finance</Checkbox>
+                <Checkbox 
+                  className="ml-0"
+                  checked={professionalFilters.includes("Networking")}
+                  onChange={(e) => handleProfessionalChange("Networking", e.target.checked)}
+                >Networking</Checkbox>
               </div>
             </div>
           </div>
@@ -199,7 +281,7 @@ function EventsContent() {
               </span>
 
               {/* Active Filters Message */}
-              {(categoryFilters.length > 0 || search || typeFilters.length > 0) && (
+              {(categoryFilters.length > 0 || search || typeFilters.length > 0 || priceRange[0] > 0 || priceRange[1] < 500 || topRatedFilters.length > 0 || professionalFilters.length > 0) && (
                 <div className="flex flex-wrap items-center gap-2 mt-1">
                   <span className="text-xs text-gray-500 mr-1 uppercase tracking-wider font-semibold">Active Filters:</span>
                   {search && (
@@ -207,6 +289,21 @@ function EventsContent() {
                       Search: "{search}"
                     </span>
                   )}
+                  {(priceRange[0] > 0 || priceRange[1] < 500) && (
+                    <span className="inline-flex items-center gap-1 bg-orange-50 text-orange-700 text-xs font-medium px-2.5 py-1 rounded-md border border-orange-200">
+                      Price: ${priceRange[0]} - ${priceRange[1]}
+                    </span>
+                  )}
+                  {topRatedFilters.map(filter => (
+                    <span key={filter} className="inline-flex items-center gap-1 bg-yellow-50 text-yellow-700 text-xs font-medium px-2.5 py-1 rounded-md border border-yellow-200">
+                      Rating: {filter}
+                    </span>
+                  ))}
+                  {professionalFilters.map(filter => (
+                    <span key={filter} className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 text-xs font-medium px-2.5 py-1 rounded-md border border-indigo-200">
+                      Pro: {filter}
+                    </span>
+                  ))}
                   {categoryFilters.map(id => {
                     const catName = categories.find(c => c._id === id)?.name;
                     return catName ? (
@@ -235,7 +332,8 @@ function EventsContent() {
               <Select
                 size="middle"
                 className="w-40"
-                defaultValue="new"
+                value={sortBy}
+                onChange={setSortBy}
                 options={[
                   { label: "Newest", value: "new" },
                   { label: "Oldest", value: "old" },

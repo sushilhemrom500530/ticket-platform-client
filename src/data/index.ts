@@ -57,6 +57,16 @@ export const adminMenuData: MenuData = {
           icon: LayoutDashboard,
         },
         {
+          label: "Analytics",
+          href: "/dashboard/analytics",
+          icon: BarChart3,
+        },
+        {
+          label: "Reports",
+          href: "/dashboard/reports",
+          icon: TbReportAnalytics,
+        },
+        {
           label: "Manage Events",
           href: "/dashboard/events",
           icon: MdDashboardCustomize,
@@ -97,17 +107,6 @@ export const adminMenuData: MenuData = {
           href: "/dashboard/coupons",
           icon: TbDiscount,
         },
-        {
-          label: "Analytics",
-          href: "/dashboard/analytics",
-          icon: BarChart3,
-        },
-        {
-          label: "Reports",
-          href: "/dashboard/reports",
-          icon: TbReportAnalytics,
-        },
-
         {
           label: "Notifications",
           href: "/dashboard/notifications",

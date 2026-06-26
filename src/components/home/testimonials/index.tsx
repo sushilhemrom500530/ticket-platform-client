@@ -209,7 +209,7 @@ export function Testimonials() {
                             <Slider key={`${mounted}-${slidesToShow}`} ref={sliderRef} {...settings}>
                                 {TESTIMONIALS.map((testimonial, i) => (
                                     <div key={i} className="py-10">
-                                        <div className="testimonial-card bg-white rounded-3xl p-8 shadow-2xl flex flex-col items-center text-center mx-3 transition-all duration-500 ease-out border border-white">
+                                        <div className="testimonial-card bg-white rounded-3xl p-8 border border-slate-300 flex flex-col items-center text-center mx-3 transition-all duration-500 ease-out">
                                             <div className="w-24 h-24 rounded-full border-4 border-indigo-500 p-1 mb-6 shadow-md bg-white">
                                                 <div className="w-full h-full bg-blue-50 rounded-full flex items-center justify-center text-blue-600 font-bold text-2xl">
                                                     {testimonial.avatar}
@@ -271,8 +271,9 @@ export function Testimonials() {
                 }
                 
                 .testimonial-slider-container .slick-slide.slick-center .testimonial-card {
-                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-                    border-color: rgba(255, 255, 255, 1);
+                    box-shadow: none;
+                    border-color: #cbd5e1;
+                    background-color: white;
                 }
 
                 .testimonial-slider-container .slick-dots li {
