@@ -84,7 +84,7 @@ function SuccessContent() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto mt-20 p-10 bg-white rounded-3xl shadow-2xl border border-green-50 text-center">
+    <div className="max-w-2xl mx-auto mt-20 p-10 bg-white rounded-3xl border border-slate-200 text-center mb-20 mt-32">
       <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8">
         <CheckCircle2 className="w-12 h-12 text-green-600" />
       </div>
