@@ -12,7 +12,8 @@ const EventModal: React.FC<IEventModalProps> = ({
     onFinish,
     categories,
     normFile,
-    isPremium
+    isPremium,
+    isLoading
 }) => {
     return (
         <Modal
@@ -349,6 +350,7 @@ const EventModal: React.FC<IEventModalProps> = ({
 
                 {/* Submit Button */}
                 <Button
+                    loading={isLoading}
                     type="primary"
                     htmlType="submit"
                     className="w-full bg-blue-600 h-12 text-lg dynamic-submit-btn"

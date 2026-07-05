@@ -34,4 +34,5 @@ export interface IEventModalProps {
     categories: IEventCategory[];
     normFile: (e: any) => any;
     isPremium: boolean;
+    isLoading: boolean;
 }

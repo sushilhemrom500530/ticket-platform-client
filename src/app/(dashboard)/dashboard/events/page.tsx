@@ -12,6 +12,7 @@ export default function ManageEventsPage() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form] = Form.useForm();
+  const [isLoading, setIsLoading] = useState(false);
 
   const isPremium = Form.useWatch('isPremium', form);
 
@@ -61,29 +62,62 @@ export default function ManageEventsPage() {
   };
 
   const onFinish = async (values: any) => {
+    setIsLoading(true);
     try {
       const formData = new FormData();
 
-      console.log("values", values)
+      const payload = { ...values };
 
-      // const { image, ...rest } = values;
-      // formData.append("data", JSON.stringify(rest));
+      if (payload.image && payload.image[0]?.originFileObj) {
+        formData.append("image", payload.image[0].originFileObj);
+      }
+      delete payload.image;
 
-      // if (image && image[0]?.originFileObj) {
-      //   formData.append("image", image[0].originFileObj);
-      // }
+      if (payload.organizers) {
+        payload.organizers = payload.organizers.map((org: any, index: number) => {
+          if (org.photo?.[0]?.originFileObj) {
+            // MATCH BACKEND EXPECTATION EXACTLY
+            formData.append("organizers.photo", org.photo[0].originFileObj);
+          }
+          const { photo, ...restOrg } = org;
+          return restOrg;
+        });
+      }
 
-      // if (editingId) {
-      //   await api.put(`/events/${editingId}`, formData);
-      //   message.success("Event updated");
-      // } else {
-      //   await api.post("/events", formData);
-      //   message.success("Event created");
-      // }
-      // setIsModalVisible(false);
-      // fetchEvents();
+      // 4. Extract and append Performer/Sponsor photos
+      if (payload.performers) {
+        payload.performers = payload.performers.map((perf: any, index: number) => {
+          if (perf.profilePhoto?.[0]?.originFileObj) {
+            // MATCH BACKEND EXPECTATION EXACTLY
+            formData.append("performers.profilePhoto", perf.profilePhoto[0].originFileObj);
+          }
+          const { profilePhoto, ...restPerf } = perf;
+          return restPerf;
+        });
+      }
+
+      formData.append("data", JSON.stringify(payload));
+
+      if (editingId) {
+        await api.put(`/events/${editingId}`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        setIsLoading(false);
+        message.success("Event updated");
+      } else {
+        await api.post("/events", formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        setIsLoading(false);
+        message.success("Event created");
+      }
+
+      setIsModalVisible(false);
+      form.resetFields();
+      fetchEvents();
     } catch (error: any) {
       message.error(error.response?.data?.message || "Failed to save event");
+      setIsLoading(false);
     }
   };
 
@@ -300,6 +334,7 @@ export default function ManageEventsPage() {
         categories={categories}
         normFile={normFile}
         isPremium={isPremium}
+        isLoading={isLoading}
       />
     </div>
   );
