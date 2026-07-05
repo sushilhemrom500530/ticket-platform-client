@@ -1,9 +1,14 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import { Table, Tag, Input, Button, message, Card, Statistic, Row, Col } from "antd";
-import { QrCode, CheckCircle, XCircle, Ticket, DollarSign, Search } from "lucide-react";
+import { Table, Tag, Input, Button, message, Card, Statistic, Row, Col, Space, Descriptions, Modal } from "antd";
+import { QrCode, CheckCircle, XCircle, Eye, Ticket, DollarSign, Search, Link } from "lucide-react";
 import api from "@/src/services/api";
+import moment from "moment";
+import { QRCodeSVG } from "qrcode.react";
+import { TagOutlined, DollarOutlined } from "@ant-design/icons";
+
+
 
 type EventManageProps = {
     eventId: string;
@@ -15,6 +20,11 @@ export default function EventManage({ eventId }: EventManageProps) {
     const [search, setSearch] = useState("");
     const [scanInput, setScanInput] = useState("");
     const scanInputRef = useRef<any>(null);
+
+    // example  6a47f4e74d8c6756d4f82094
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedTicket, setSelectedTicket] = useState<any>(null);
 
     const fetchEventData = async () => {
         setLoading(true);
@@ -122,6 +132,18 @@ export default function EventManage({ eventId }: EventManageProps) {
             key: "quantity",
         },
         {
+            title: "Status",
+            dataIndex: "status",
+            key: "status",
+            render: (status: string) => {
+                let color = "blue";
+                if (status === "paid") color = "green";
+                if (status === "cancelled") color = "red";
+                if (status === "expired") color = "orange";
+                return <Tag color={color}>{status?.toUpperCase()}</Tag>;
+            },
+        },
+        {
             title: "Check-in Status",
             dataIndex: "entryStatus",
             key: "entryStatus",
@@ -138,18 +160,36 @@ export default function EventManage({ eventId }: EventManageProps) {
             title: "Action",
             key: "action",
             render: (_: any, record: any) => (
-                <Button
-                    type="primary"
-                    size="small"
-                    disabled={record.isUsed}
-                    className={record.isUsed ? "bg-gray-400" : "bg-blue-600"}
-                    onClick={() => handleQuickCheckIn(record.ticketNumber)}
-                >
-                    {record.isUsed ? "Checked In" : "Manual Check-in"}
-                </Button>
+                <div className="flex gap-2">
+                    <Link href={`/ticket/${record?._id}`}>
+                        <Button
+                            type="primary"
+                            icon={<Eye />}
+                            size="small"
+                        >
+                            View
+                        </Button>
+                    </Link>
+                    <Button
+                        type="primary"
+                        size="small"
+                        disabled={record.isUsed}
+                        className={record.isUsed ? "bg-gray-400" : "bg-blue-600"}
+                        onClick={() => handleQuickCheckIn(record.ticketNumber)}
+                    >
+                        {record.isUsed ? "Checked In" : "Manual Check-in"}
+                    </Button>
+
+                </div>
             ),
         },
     ];
+
+    const showTicketModal = (ticket: any) => {
+        setSelectedTicket(ticket);
+        setIsModalVisible(true);
+    };
+
 
     if (loading && !data) {
         return (
@@ -170,35 +210,66 @@ export default function EventManage({ eventId }: EventManageProps) {
 
     return (
         <div className="p-6 max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div className="mb-6 flex justify-between items-center">
+                <div>
+                    <h1 className="text-3xl font-bold">{event?.title || "Event Details"}</h1>
+                    <p className="text-gray-500 mt-1">
+                        {event?.date ? moment(event.date).format("MMMM Do YYYY, h:mm A") : ""} • {event?.location}
+                    </p>
+                </div>
+            </div>
+            {/* <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4"> 
                 <div>
                     <h1 className="text-3xl font-extrabold text-gray-900 leading-tight">{event?.title}</h1>
                     <p className="text-gray-500 font-medium flex items-center gap-2 mt-1">
                         Event Management Dashboard
                     </p>
-                </div>
-
-                {/* Quick Scan Input */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-2">
-                    <form onSubmit={handleScanSubmit} className="flex flex-col gap-1 w-[260px]">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Quick Scan (Ctrl+K)</span>
-                        <div className="flex gap-2">
-                            <Input
-                                ref={scanInputRef}
-                                prefix={<QrCode className="w-4 h-4 text-gray-400" />}
-                                placeholder="Scan Ticket Barcode..."
-                                value={scanInput}
-                                onChange={(e) => setScanInput(e.target.value)}
-                                autoFocus
-                            />
-                            <Button type="primary" htmlType="submit">Check</Button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            {/* Metrics Row */}
+                </div>  
+            </div>*/}
+            {/* Event Overview */}
             <Row gutter={[16, 16]} className="mb-8">
+                <Col xs={24} sm={12} md={6}>
+                    <Card variant="borderless" className="shadow-sm">
+                        <Statistic
+                            title="Total Revenue"
+                            value={(event?.soldTickets || 0) * (event?.price || 0)}
+                            precision={2}
+                            prefix={<DollarOutlined className="text-green-500" />}
+                        />
+                    </Card>
+                </Col>
+                <Col xs={24} sm={12} md={6}>
+                    <Card variant="borderless" className="shadow-sm">
+                        <Statistic
+                            title="Tickets Sold"
+                            value={event?.soldTickets || 0}
+                            suffix={`/ ${event?.totalTickets || 0}`}
+                            prefix={<TagOutlined className="text-blue-500" />}
+                        />
+                    </Card>
+                </Col>
+                <Col xs={24} sm={12} md={6}>
+                    <Card variant="borderless" className="shadow-sm">
+                        <Statistic
+                            title="Remaining Tickets"
+                            value={(event?.totalTickets || 0) - (event?.soldTickets || 0)}
+                            prefix={<TagOutlined className="text-orange-500" />}
+                        />
+                    </Card>
+                </Col>
+                <Col xs={24} sm={12} md={6}>
+                    <Card variant="borderless" className="shadow-sm">
+                        <Statistic
+                            title="Price per Ticket"
+                            value={event?.price || 0}
+                            precision={2}
+                            prefix={<DollarOutlined className="text-purple-500" />}
+                        />
+                    </Card>
+                </Col>
+            </Row>
+            {/* Metrics Row */}
+            {/* <Row gutter={[16, 16]} className="mb-8">
                 <Col xs={12} sm={12} md={6}>
                     <Card variant="borderless" className="shadow-sm border border-gray-100 rounded-xl overflow-hidden">
                         <Statistic
@@ -236,23 +307,39 @@ export default function EventManage({ eventId }: EventManageProps) {
                         />
                     </Card>
                 </Col>
-            </Row>
+            </Row> */}
 
-            {/* Attendee Table */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 overflow-hidden mt-6">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                    <h2 className="text-xl font-bold flex items-center gap-2 text-gray-800">
-                        Guest List
-                    </h2>
-                    <Input
-                        prefix={<Search className="w-4 h-4 text-gray-400" />}
-                        placeholder="Search by Name or Email"
-                        className="w-full lg:!w-72 rounded-lg"
-                        size="large"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        allowClear
-                    />
+            <Card title="Manage Tickets" className="shadow-sm">
+                <div className="flex flex-col md:flex-row justify-between mb-4 gap-4">
+                    <Space>
+                        <Input
+                            prefix={<Search className="w-4 h-4 text-gray-400" />}
+                            placeholder="Search by Name or Email"
+                            className="w-full lg:!w-72 rounded-lg"
+                            size="large"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            allowClear
+                        />
+                    </Space>
+                    <Space>
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-2">
+                            <form onSubmit={handleScanSubmit} className="flex flex-col gap-1 w-[260px]">
+                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Quick Scan (Ctrl+K)</span>
+                                <div className="flex gap-2">
+                                    <Input
+                                        ref={scanInputRef}
+                                        prefix={<QrCode className="w-4 h-4 text-gray-400" />}
+                                        placeholder="Scan Ticket Barcode..."
+                                        value={scanInput}
+                                        onChange={(e) => setScanInput(e.target.value)}
+                                        autoFocus
+                                    />
+                                    <Button type="primary" htmlType="submit">Check</Button>
+                                </div>
+                            </form>
+                        </div>
+                    </Space>
                 </div>
 
                 <Table
@@ -263,7 +350,62 @@ export default function EventManage({ eventId }: EventManageProps) {
                     loading={loading}
                     className="custom-event-table"
                 />
-            </div>
+            </Card>
+
+            {/* View Ticket Modal */}
+            <Modal
+                title="Ticket Details"
+                open={isModalVisible}
+                onCancel={() => setIsModalVisible(false)}
+                footer={[
+                    <Button key="close" onClick={() => setIsModalVisible(false)}>
+                        Close
+                    </Button>,
+                ]}
+                width={600}
+            >
+                {selectedTicket && (
+                    <div className="p-4">
+                        <Row gutter={24}>
+                            <Col span={16}>
+                                <Descriptions title="Booking Information" column={1} size="small" bordered>
+                                    <Descriptions.Item label="Ticket Number">
+                                        <span className="font-bold text-blue-600">{selectedTicket.ticketNumber}</span>
+                                    </Descriptions.Item>
+                                    <Descriptions.Item label="Status">
+                                        {selectedTicket.status?.toUpperCase()}
+                                    </Descriptions.Item>
+                                    <Descriptions.Item label="Entry Status">
+                                        {selectedTicket.entryStatus === "checked_in" ? "Checked In" : "Not Checked In"}
+                                    </Descriptions.Item>
+                                    <Descriptions.Item label="Quantity">
+                                        {selectedTicket.quantity}
+                                    </Descriptions.Item>
+                                    <Descriptions.Item label="Price Paid">
+                                        ${selectedTicket.price}
+                                    </Descriptions.Item>
+                                    {selectedTicket.user && (
+                                        <Descriptions.Item label="Attendee">
+                                            {selectedTicket.user.firstName} {selectedTicket.user.lastName} ({selectedTicket.user.email})
+                                        </Descriptions.Item>
+                                    )}
+                                    <Descriptions.Item label="Purchase Date">
+                                        {moment(selectedTicket.createdAt).format("MMMM Do YYYY, h:mm a")}
+                                    </Descriptions.Item>
+                                </Descriptions>
+                            </Col>
+                            <Col span={8} className="flex flex-col items-center justify-center">
+                                {selectedTicket.qrCode && (
+                                    <div className="p-2 border rounded-lg bg-white mb-2 shadow-sm">
+                                        <QRCodeSVG value={selectedTicket.qrCode} size={120} />
+                                    </div>
+                                )}
+                                <div className="text-xs text-gray-500 mt-2 text-center">Scan to verify entry</div>
+                            </Col>
+                        </Row>
+                    </div>
+                )}
+            </Modal>
         </div>
     );
 }
