@@ -196,7 +196,7 @@ export function useAuthService() {
     setLoading(true);
 
     try {
-      const token = Cookies.get("token");
+      const token = Cookies.get("verify_token");
 
       if (!token) {
         message.error("Token not found");

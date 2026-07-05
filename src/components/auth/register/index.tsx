@@ -30,16 +30,22 @@ export default function RegisterPage() {
                 const user = res?.data?.results || res?.data?.user;
 
                 if (token) {
-                    Cookies.set("token", token, {
+                    Cookies.set("verify_token", token, {
                         expires: remember ? 7 : undefined,
                         secure: process.env.NODE_ENV === "production",
                         sameSite: "lax",
                     });
                 }
 
-                if (user) {
-                    setUser(user);
-                }
+                Cookies.set("email", values.email, {
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: "lax",
+                });
+
+
+                // if (user) {
+                //     setUser(user);
+                // }
 
                 router.push("/auth/email-verification");
             }

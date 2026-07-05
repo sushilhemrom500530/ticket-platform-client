@@ -42,7 +42,7 @@ const PrivacyPolicy = () => {
                     <section>
                         <h2 className="text-xl font-semibold text-gray-900 mb-3">5. Contact Us</h2>
                         <p>
-                            If you have any questions regarding your data or this policy, please reach out to our support team at <a href="mailto:support@yourplatform.com" className="text-blue-600 hover:underline">support@yourplatform.com</a>.
+                            If you have any questions regarding your data or this policy, please reach out to our support team at <a href="mailto:support@ticketplatform.com" className="text-blue-600 hover:underline">support@ticketplatform.com</a>.
                         </p>
                     </section>
                 </div>

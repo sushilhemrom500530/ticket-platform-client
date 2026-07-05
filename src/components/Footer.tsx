@@ -104,7 +104,7 @@ export default function Footer() {
           <p>Copyright &copy; {new Date().getFullYear()} TicketPro. All rights reserved.</p>
           <div className="flex gap-6 mt-4 md:mt-0">
             <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy</Link>
-            <Link href="/terms-and-conditions" className="hover:text-white transition-colors">Terms</Link>
+            <Link href="/terms-and-service" className="hover:text-white transition-colors">Terms</Link>
           </div>
         </div>
       </div>

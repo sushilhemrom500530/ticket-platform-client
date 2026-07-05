@@ -1,9 +1,10 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Button, message } from 'antd';
 import { useRouter } from "next/navigation";
 import { useAuthService } from '@/src/hooks/auth';
+import { useAuthStore } from '@/src/store/authStore';
 import AuthLayout from '..';
 import Cookies from 'js-cookie';
 export const dynamic = 'force-dynamic';
@@ -15,8 +16,27 @@ export default function EmailVerificationPage() {
     const [loading, setLoading] = useState(false);
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
     const { verifyUserEmail, resendOtp } = useAuthService();
+    const { setUser } = useAuthStore();
     const router = useRouter();
-    const email = Cookies.get('email') || '';
+    const [email, setEmail] = useState('');
+    const [mounted, setMounted] = useState(false);
+    const [token, setToken] = useState('');
+
+    useEffect(() => {
+        setMounted(true);
+        const cookieEmail = Cookies.get('email');
+        const cookieToken = Cookies.get('verify_token');
+        if (cookieEmail) {
+            setEmail(cookieEmail);
+        }
+        if (cookieToken) {
+            setToken(cookieToken);
+        }
+    }, []);
+
+    if (!mounted) {
+        return null; // Prevent hydration mismatch
+    }
 
 
     const handleChange = (index: number, value: string) => {
@@ -69,28 +89,34 @@ export default function EmailVerificationPage() {
             return;
         }
 
-        if (!email) {
-            message.error("Email is required");
-            return;
-        }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailRegex.test(email)) {
-            message.error("Invalid email format");
-            return;
-        }
-
         try {
             setLoading(true);
             const res = await verifyUserEmail({
-                otp: otpString
+                otp: otpString,
+                token: token
             });
 
-            if (res?.statusCode === 201) {
-                router.push(
-                    `/auth/reset-password?email=${encodeURIComponent(email)}`
-                );
+            if (res?.statusCode === 201 || res?.success || res?.statusCode === 200) {
+                Cookies.remove('email');
+                Cookies.remove('verify_token');
+
+                const token = res?.data?.token;
+
+                const user = res?.data?.user;
+
+                if (token) {
+                    Cookies.set("token", token, {
+                        secure: process.env.NODE_ENV === "production",
+                        sameSite: "lax",
+                    });
+                }
+
+
+                if (user) {
+                    setUser(user);
+                }
+
+                router.push('/');
             }
 
         } catch (error) {
