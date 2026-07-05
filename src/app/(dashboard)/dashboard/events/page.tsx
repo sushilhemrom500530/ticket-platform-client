@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import api from "@/src/services/api";
 import { Table, Button, Form, message, Popconfirm } from "antd";
-import { Plus, Edit, Trash } from "lucide-react";
+import { Plus, Edit, Trash, View, Eye } from "lucide-react";
 import EventModal from "@/src/components/ticket-create";
+import Link from "next/link";
 
 export default function ManageEventsPage() {
   const [events, setEvents] = useState<any[]>([]);
@@ -222,6 +223,11 @@ export default function ManageEventsPage() {
       key: "actions",
       render: (_: any, record: any) => (
         <div className="flex gap-2">
+          <Link href={`/dashboard/events/${record._id}`}>
+            <Button
+              icon={<Eye className="w-4 h-4" />}
+            />
+          </Link>
           <Button
             icon={<Edit className="w-4 h-4" />}
             onClick={() => handleEdit(record)}
