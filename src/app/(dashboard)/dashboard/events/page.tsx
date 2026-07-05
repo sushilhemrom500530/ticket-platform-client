@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import api from "@/src/services/api";
-import { Table, Button, Modal, Form, Input, Select, InputNumber, Switch, message, Popconfirm, Upload } from "antd";
+import { Table, Button, Form, message, Popconfirm } from "antd";
 import { Plus, Edit, Trash } from "lucide-react";
 import EventModal from "@/src/components/ticket-create";
 
@@ -37,6 +37,30 @@ export default function ManageEventsPage() {
 
   const handleEdit = (record: any) => {
     setEditingId(record._id);
+
+    // 1. Format existing Organizer photos into Ant Design's Upload fileList format
+    const formattedOrganizers = record.organizers?.map((org: any, index: number) => ({
+      ...org,
+      photo: org.photo ? [{
+        uid: `org-${index}`,
+        name: "existing_org_image",
+        status: "done",
+        url: org.photo,
+      }] : [],
+    })) || [];
+
+    // 2. Format existing Performer photos into Ant Design's Upload fileList format
+    const formattedPerformers = record.performers?.map((perf: any, index: number) => ({
+      ...perf,
+      profilePhoto: perf.profilePhoto ? [{
+        uid: `perf-${index}`,
+        name: "existing_perf_image",
+        status: "done",
+        url: perf.profilePhoto,
+      }] : [],
+    })) || [];
+
+    // 3. Set the form values
     form.setFieldsValue({
       ...record,
       categoryId: record.categoryId?._id,
@@ -47,7 +71,10 @@ export default function ManageEventsPage() {
         status: "done",
         url: record.image,
       }] : [],
+      organizers: formattedOrganizers,
+      performers: formattedPerformers,
     });
+
     setIsModalVisible(true);
   };
 
@@ -65,7 +92,6 @@ export default function ManageEventsPage() {
     setIsLoading(true);
     try {
       const formData = new FormData();
-
       const payload = { ...values };
 
       if (payload.image && payload.image[0]?.originFileObj) {
@@ -73,26 +99,61 @@ export default function ManageEventsPage() {
       }
       delete payload.image;
 
+
       if (payload.organizers) {
-        payload.organizers = payload.organizers.map((org: any, index: number) => {
-          if (org.photo?.[0]?.originFileObj) {
-            // MATCH BACKEND EXPECTATION EXACTLY
-            formData.append("organizers.photo", org.photo[0].originFileObj);
+        payload.organizers = payload.organizers.map((org: any) => {
+          // Determine the photo value
+          let photoValue = org.photo;
+
+          // If it's an array (from AntD Upload), extract the URL or mark as new
+          if (Array.isArray(org.photo)) {
+            if (org.photo[0]?.originFileObj) {
+              formData.append("organizers.photo", org.photo[0].originFileObj);
+              photoValue = "NEW_FILE";
+            } else if (org.photo[0]?.url) {
+              photoValue = org.photo[0].url;
+            } else {
+              photoValue = ""; // No photo
+            }
           }
-          const { photo, ...restOrg } = org;
-          return restOrg;
+
+          return {
+            _id: org._id,
+            name: org.name,
+            contactNumber: org.contactNumber,
+            address: org.address,
+            description: org.description,
+            photo: photoValue // THIS IS NOW A STRING
+          };
         });
       }
 
-      // 4. Extract and append Performer/Sponsor photos
+      // Do the same for performers
       if (payload.performers) {
-        payload.performers = payload.performers.map((perf: any, index: number) => {
-          if (perf.profilePhoto?.[0]?.originFileObj) {
-            // MATCH BACKEND EXPECTATION EXACTLY
-            formData.append("performers.profilePhoto", perf.profilePhoto[0].originFileObj);
+        payload.performers = payload.performers.map((perf: any) => {
+          let photoValue = perf.profilePhoto;
+
+          if (Array.isArray(perf.profilePhoto)) {
+            if (perf.profilePhoto[0]?.originFileObj) {
+              formData.append("performers.profilePhoto", perf.profilePhoto[0].originFileObj);
+              photoValue = "NEW_FILE";
+            } else if (perf.profilePhoto[0]?.url) {
+              photoValue = perf.profilePhoto[0].url;
+            } else {
+              photoValue = "";
+            }
           }
-          const { profilePhoto, ...restPerf } = perf;
-          return restPerf;
+
+          return {
+            _id: perf._id,
+            name: perf.name,
+            contactNumber: perf.contactNumber,
+            address: perf.address,
+            passion: perf.passion,
+            bio: perf.bio,
+            description: perf.description,
+            profilePhoto: photoValue // THIS IS NOW A STRING
+          };
         });
       }
 
@@ -102,13 +163,11 @@ export default function ManageEventsPage() {
         await api.put(`/events/${editingId}`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
-        setIsLoading(false);
         message.success("Event updated");
       } else {
         await api.post("/events", formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
-        setIsLoading(false);
         message.success("Event created");
       }
 
@@ -117,7 +176,8 @@ export default function ManageEventsPage() {
       fetchEvents();
     } catch (error: any) {
       message.error(error.response?.data?.message || "Failed to save event");
-      setIsLoading(false);
+    } finally {
+      setIsLoading(false); // Make sure to stop loading even if it fails
     }
   };
 
@@ -150,12 +210,12 @@ export default function ManageEventsPage() {
       title: "Price",
       dataIndex: "price",
       key: "price",
-      render: (p: number) => `$${p}`
+      render: (p: number) => `$${p || 0}`
     },
     {
       title: "Tickets",
       key: "tickets",
-      render: (_: any, record: any) => `${record.soldTickets}/${record.totalTickets}`
+      render: (_: any, record: any) => `${record.soldTickets || 0}/${record.totalTickets}`
     },
     {
       title: "Actions",
@@ -210,121 +270,6 @@ export default function ManageEventsPage() {
         />
       </div>
 
-      {/* <Modal
-        title={editingId ? "Edit Event" : "Create Event"}
-        open={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        footer={null}
-        width={600}
-      >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={onFinish}
-        >
-          <Form.Item
-            name="title"
-            label="Title"
-            rules={[{ required: true }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true }]}
-          >
-            <Input.TextArea rows={3} />
-          </Form.Item>
-
-          <Form.Item
-            name="image"
-            label="Event Image"
-            valuePropName="fileList"
-            getValueFromEvent={normFile}
-          >
-            <Upload
-              listType="picture-card"
-              maxCount={1}
-              beforeUpload={() => false}
-            >
-              <div>
-                <Plus className="w-4 h-4 mx-auto" />
-                <div style={{ marginTop: 8 }}>Upload</div>
-              </div>
-            </Upload>
-          </Form.Item>
-
-          <div className="flex gap-4">
-            <Form.Item
-              name="categoryId"
-              label="Category"
-              rules={[{ required: true }]}
-              className="flex-1"
-            >
-              <Select
-                options={categories.map(c => ({ label: c.name, value: c._id }))}
-              />
-            </Form.Item>
-            <Form.Item
-              name="date"
-              label="Date & Time"
-              rules={[{ required: true }]}
-              className="flex-1"
-            >
-              <Input type="datetime-local" />
-            </Form.Item>
-          </div>
-          <div className="flex gap-4">
-            <Form.Item
-              name="location"
-              label="Location"
-              rules={[{ required: true }]}
-              className="flex-1"
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="totalTickets"
-              label="Total Tickets"
-              rules={[{ required: true }]}
-              className="flex-1"
-            >
-              <InputNumber min={1} className="w-full" />
-            </Form.Item>
-          </div>
-          <div className="flex gap-4 items-center">
-            <Form.Item
-              name="isPremium"
-              label="Premium Event"
-              valuePropName="checked"
-            >
-
-              <Switch />
-            </Form.Item>
-            {isPremium && (
-              <Form.Item
-                name="price"
-                label="Price ($)"
-                rules={[{ required: true }]}
-              >
-                <InputNumber
-                  min={0}
-                  step={0.01}
-                  className="w-full"
-                />
-              </Form.Item>
-            )}
-          </div>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="w-full bg-blue-600 h-12 text-lg"
-          >
-            {editingId ? "Update Event" : "Create Event"}
-          </Button>
-        </Form>
-      </Modal> */}
       <EventModal
         editingId={editingId}
         isModalVisible={isModalVisible}
