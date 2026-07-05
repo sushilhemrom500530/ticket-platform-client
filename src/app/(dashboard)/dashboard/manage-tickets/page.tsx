@@ -10,27 +10,33 @@ export default function ManageTicketsPage() {
 
   useEffect(() => {
     api.get("/event-tickets/get-all?limit=100")
-      .then(res => setTickets(res.data.data.results))
+      .then(res => {
+        setTickets(res.data.data)
+        console.log("tickets", res.data.data)
+      })
       .catch(() => message.error("Failed to load tickets"))
       .finally(() => setLoading(false));
   }, []);
 
+
+
   const columns = [
     {
       title: "Ticket ID",
-      dataIndex: "ticketId",
+      dataIndex: "ticketNumber",
       key: "ticketId",
       render: (t: string) => <span className="font-mono text-gray-500">{t}</span>
     },
     {
       title: "Event",
-      dataIndex: ["eventId", "title"],
+      dataIndex: ["event", "title"],
       key: "event"
     },
     {
-      title: "User Email",
-      dataIndex: ["userId", "email"],
-      key: "user"
+      title: "User ID",
+      dataIndex: "user",
+      key: "user",
+      render: (u: string) => <span className="text-gray-500">{u}</span>
     },
     {
       title: "Quantity",
@@ -39,23 +45,23 @@ export default function ManageTicketsPage() {
     },
     {
       title: "Total Price",
-      dataIndex: "totalPrice",
+      dataIndex: "totalFare",
       key: "totalPrice",
-      render: (p: number) => `$${p.toFixed(2)}`
+      render: (p: number) => `$${(p || 0).toFixed(2)}`
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
       render: (status: string) => (
-        <Tag color={status === "active" ? "green" : "red"}>{status.toUpperCase()}</Tag>
+        <Tag color={status === "paid" ? "green" : "red"}>{status.toUpperCase()}</Tag>
       ),
     },
     {
       title: "Action",
       key: "action",
       render: (_: any, record: any) => (
-        <Link href={`/ticket/${record?.eventId?._id}`}>
+        <Link href={`/ticket/${record?._id}`}>
           <span className="text-blue-600 hover:underline text-sm font-medium cursor-pointer">
             View Ticket
           </span>

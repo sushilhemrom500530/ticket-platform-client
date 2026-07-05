@@ -17,13 +17,16 @@ export default function EventDetailsPage() {
   useEffect(() => {
     if (id) {
       api.get(`/events/${id}`)
-        .then((res) => setEvent(res.data.data))
+        .then((res) => {
+          setEvent(res.data.data)
+          console.log("find event : ", res.data.data)
+        })
         .catch(() => message.error("Failed to load event details"))
         .finally(() => setLoading(false));
     }
   }, [id]);
 
-  if (loading) return <div className="flex justify-center p-20">
+  if (loading) return <div className="flex justify-center p-20 items-center h-[60vh]">
     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600">
     </div>
   </div>;
@@ -62,8 +65,60 @@ export default function EventDetailsPage() {
       <div className="container mx-auto px-6 mt-8 flex flex-col lg:flex-row gap-8">
         {/* Main Content */}
         <div className="lg:w-2/3 bg-white p-8 rounded-2xl border border-gray-100">
-          <h2 className="text-2xl font-bold mb-6 text-gray-900 border-b pb-4">About this Event</h2>
-          <p className="text-gray-600 text-lg leading-relaxed whitespace-pre-wrap capitalize">{event.description}</p>
+          <div className="mb-10">
+            <h2 className="text-2xl font-bold mb-6 text-gray-900 border-b border-b-gray-200 pb-4">About this Event</h2>
+            <p className="text-gray-600 text-lg leading-relaxed whitespace-pre-wrap capitalize">{event.description}</p>
+          </div>
+
+          {/* Organizers Section */}
+          {event?.organizers && event?.organizers.length > 0 && (
+            <div className="mt-10">
+              <h2 className="text-2xl font-bold mb-6 text-gray-900 border-b border-b-gray-200 pb-4">Organizers</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {event.organizers.map((org: any) => (
+                  <div key={org._id} className="flex gap-4 p-4 border border-gray-200 rounded-xl bg-gray-50 items-start">
+                    {org.photo ? (
+                      <img src={org.photo} alt={org.name} className="w-16 h-16 min-w-[64px] rounded-full object-cover" />
+                    ) : (
+                      <div className="w-16 h-16 min-w-[64px] rounded-full bg-gray-200 flex items-center justify-center">
+                        <UserIcon className="w-8 h-8 text-gray-400" />
+                      </div>
+                    )}
+                    <div>
+                      <h3 className="font-bold text-lg">{org.name}</h3>
+                      <p className="text-sm text-gray-500">{org.contactNumber}</p>
+                      <p className="text-sm text-gray-500 mt-1 line-clamp-2">{org.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Performers Section */}
+          {event?.performers && event?.performers.length > 0 && (
+            <div className="mt-10">
+              <h2 className="text-2xl font-bold mb-6 text-gray-900 border-b border-b-gray-200 pb-4">Performers</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {event.performers.map((perf: any) => (
+                  <div key={perf._id} className="flex gap-4 p-4 border border-gray-200 rounded-xl bg-gray-50 items-start">
+                    {perf.profilePhoto ? (
+                      <img src={perf.profilePhoto} alt={perf.name} className="w-16 h-16 min-w-[64px] rounded-full object-cover" />
+                    ) : (
+                      <div className="w-16 h-16 min-w-[64px] rounded-full bg-gray-200 flex items-center justify-center">
+                        <UserIcon className="w-8 h-8 text-gray-400" />
+                      </div>
+                    )}
+                    <div>
+                      <h3 className="font-bold text-lg">{perf.name}</h3>
+                      <p className="text-sm text-blue-600 font-medium">{perf.passion}</p>
+                      <p className="text-sm text-gray-500 mt-1 line-clamp-2">{perf.bio}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Sidebar / Ticket Box */}

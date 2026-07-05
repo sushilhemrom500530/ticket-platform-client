@@ -39,6 +39,10 @@ interface IUserProfile {
   address?: string;
   role?: string;
   status?: string;
+  gender?: string;
+  dateOfBirth?: string;
+  district?: string;
+  country?: string;
 }
 
 export function useUsers(initialRole: string = "User") {

@@ -12,6 +12,10 @@ interface User {
   status?: string;
   phoneNumber?: string;
   address?: string;
+  dateOfBirth?: string;
+  gender?: string;
+  district?: string;
+  country?: string;
 }
 
 interface AuthState {

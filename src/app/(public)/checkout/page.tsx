@@ -2,7 +2,7 @@
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/src/services/api";
-import { Button, message, InputNumber, Divider, Radio, Space } from "antd";
+import { Button, message, InputNumber, Divider, Radio, Space, Form, Input, Select } from "antd";
 import { CreditCard } from "lucide-react";
 import { useAuthStore } from "@/src/store/authStore";
 
@@ -17,6 +17,8 @@ function CheckoutContent() {
   const [loading, setLoading] = useState(true);
   const [purchasing, setPurchasing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<"bkash" | "nagad" | "sslcommerz" | "stripe">("stripe");
+  const [form] = Form.useForm();
+
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -53,8 +55,26 @@ function CheckoutContent() {
       return;
     }
 
+    let values;
+    try {
+      values = await form.validateFields();
+    } catch (error) {
+      message.error("Please fill all required fields");
+      return;
+    }
+
     setPurchasing(true);
     try {
+      // Update profile with the required fields
+      await api.patch('/users/update-my-profile', {
+        phoneNumber: values.phoneNumber,
+        gender: values.gender,
+        dateOfBirth: values.dateOfBirth,
+        address: values.address,
+        district: values.district,
+        country: values.country,
+      });
+
       const callbackURL = `${window.location.origin}/checkout/success`;
 
       const response = await api.post("/payments/create", {
@@ -89,7 +109,7 @@ function CheckoutContent() {
   const totalPrice = event.price * quantity;
 
   return (
-    <div className="container mx-auto px-6 py-12 max-w-4xl">
+    <div className="container mx-auto px-6 py-12 max-w-6xl">
       <h1 className="text-3xl font-extrabold mb-8 flex items-center">
         <CreditCard className="mr-3 w-8 h-8 text-blue-600" /> Checkout
       </h1>
@@ -105,6 +125,92 @@ function CheckoutContent() {
               <p className="text-gray-500 text-sm">{event.location}</p>
             </div>
           </div>
+
+          <Divider />
+
+          <h2 className="text-xl font-bold mb-4">Billing Information</h2>
+          <Form
+            form={form}
+            layout="vertical"
+            initialValues={{
+              fullName: user?.fullName,
+              email: user?.email,
+              phoneNumber: user?.phoneNumber,
+              gender: user?.gender,
+              dateOfBirth: user?.dateOfBirth,
+              address: user?.address,
+              district: user?.district,
+              country: user?.country,
+            }}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Form.Item label="Full Name" name="fullName">
+                <Input readOnly disabled />
+              </Form.Item>
+              <Form.Item label="Email" name="email">
+                <Input readOnly disabled />
+              </Form.Item>
+              <Form.Item
+                label="Phone Number"
+                name="phoneNumber"
+                rules={[{
+                  required: true,
+                  message: 'Phone Number is required'
+                }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Gender"
+                name="gender"
+                rules={[{
+                  required: true,
+                  message: 'Gender is required'
+                }]}>
+                <Select placeholder="Select Gender">
+                  <Select.Option value="male">Male</Select.Option>
+                  <Select.Option value="female">Female</Select.Option>
+                  <Select.Option value="other">Other</Select.Option>
+                </Select>
+              </Form.Item>
+              <Form.Item
+                label="Date of Birth"
+                name="dateOfBirth"
+                rules={[{
+                  required: true,
+                  message: 'Date of Birth is required'
+                }]}>
+                <Input type="date" />
+              </Form.Item>
+              <Form.Item
+                label="Address"
+                name="address"
+                rules={[{
+                  required: true,
+                  message: 'Address is required'
+                }]}>
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="District"
+                name="district"
+                rules={[{
+                  required: true,
+                  message: 'District is required'
+                }]}>
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Country"
+                name="country"
+                rules={[{
+                  required: true,
+                  message: 'Country is required'
+                }]}>
+                <Input />
+              </Form.Item>
+            </div>
+          </Form>
 
           <Divider />
 
@@ -176,7 +282,7 @@ function CheckoutContent() {
 
         </div>
 
-        <div className="md:w-1/3 bg-gray-50 p-6 rounded-2xl border border-gray-200">
+        <div className="md:w-1/3 bg-gray-50 p-6 rounded-2xl border border-gray-200 sticky top-24 h-fit z-10">
           <h2 className="text-xl font-bold mb-6">Payment Details</h2>
 
           <div className="flex justify-between mb-3 text-gray-600">
