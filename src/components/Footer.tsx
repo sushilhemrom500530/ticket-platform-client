@@ -24,7 +24,7 @@ export default function Footer() {
         .animate-blob-auth-3 { animation: blob-bounce-auth-3 18s ease-in-out infinite; }
         .animate-blob-auth-4 { animation: blob-bounce-auth-4 28s ease-in-out infinite; }
       `}</style>
-      
+
       {/* Background Animated Blobs */}
       <div className="absolute top-[-150px] left-[-100px] w-[600px] h-[600px] bg-gradient-to-br from-[#0066ff] to-[#0047b3] rounded-full animate-blob-auth-1 blur-[100px] opacity-30 pointer-events-none"></div>
       <div className="absolute bottom-[-150px] right-[-100px] w-[500px] h-[500px] bg-gradient-to-tr from-[#00bfff] to-[#0047b3] rounded-full animate-blob-auth-2 blur-[100px] opacity-20 pointer-events-none"></div>
@@ -32,20 +32,20 @@ export default function Footer() {
       <div className="absolute top-[20%] right-[20%] w-[300px] h-[300px] bg-[#0066ff] rounded-full animate-blob-auth-4 blur-[90px] opacity-20 pointer-events-none"></div>
 
       <div className="container mx-auto px-6 max-w-7xl relative z-10">
-        
+
         {/* Top Section (Newsletter) */}
         <div className="flex flex-col lg:flex-row items-center justify-between pb-12 mb-12 border-b border-white/10 gap-8">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight">Let's find harmony together.</h2>
-          
+
           <div className="w-full lg:w-auto flex-1 max-w-lg">
             <form className="flex w-full items-center border border-white/20 rounded-md overflow-hidden bg-transparent focus-within:border-white/60 transition-colors">
-              <input 
-                type="email" 
-                placeholder="Email Address" 
-                className="w-full bg-transparent px-4 py-3.5 text-sm text-white outline-none placeholder:text-gray-500" 
+              <input
+                type="email"
+                placeholder="Email Address"
+                className="w-full bg-transparent px-4 py-3.5 text-sm text-white outline-none placeholder:text-gray-500"
               />
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="px-6 py-3.5 text-sm font-semibold text-white bg-transparent hover:bg-white/10 transition-colors whitespace-nowrap"
               >
                 Submit
@@ -53,19 +53,19 @@ export default function Footer() {
             </form>
           </div>
         </div>
-        
+
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
           <div className="lg:col-span-1">
-             <h2 className="text-2xl font-bold mb-6 tracking-widest uppercase">TICKET<span className="text-[#0066ff]">PRO</span></h2>
-             <p className="text-gray-400 text-sm mb-8 leading-relaxed max-w-xs">
-               Sound Healing & Music Therapy Elementor Template Kit
-             </p>
-             <p className="text-white font-medium text-sm">
-               Listen Live 4PM PST @TicketPro
-             </p>
+            <h2 className="text-2xl font-bold mb-6 tracking-widest uppercase">TICKET<span className="text-[#0066ff]">PRO</span></h2>
+            <p className="text-gray-400 text-sm mb-8 leading-relaxed max-w-xs">
+              Sound Healing & Music Therapy Elementor Template Kit
+            </p>
+            <p className="text-white font-medium text-sm">
+              Listen Live 4PM PST @TicketPro
+            </p>
           </div>
-          
+
           <div>
             <h3 className="font-bold text-white mb-6 text-base tracking-wide">Shop</h3>
             <ul className="space-y-4 text-gray-400 text-sm">
@@ -75,7 +75,7 @@ export default function Footer() {
               <li><a href="#" className="hover:text-white transition-colors">Chakra healing sounds</a></li>
             </ul>
           </div>
-          
+
           <div>
             <h3 className="font-bold text-white mb-6 text-base tracking-wide">Quick Links</h3>
             <ul className="space-y-4 text-gray-400 text-sm">
@@ -85,7 +85,7 @@ export default function Footer() {
               <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
             </ul>
           </div>
-          
+
           <div>
             <h3 className="font-bold text-white mb-6 text-base tracking-wide">Stay in Touch</h3>
             <ul className="space-y-4 text-gray-400 text-sm">
@@ -96,7 +96,7 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        
+
         {/* Bottom Section */}
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/10 text-[#6E6E6E] text-xs">
           <p>Copyright &copy; {new Date().getFullYear()} TicketPro. All rights reserved.</p>
