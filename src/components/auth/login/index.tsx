@@ -37,7 +37,7 @@ export default function LoginPage() {
                     setUser(user);
                 }
 
-                router.push("/dashboard");
+                router.push("/");
             }
         } catch (error) {
             console.error("Unexpected login error:", error);

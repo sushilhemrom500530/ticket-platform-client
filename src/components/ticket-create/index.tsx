@@ -1,45 +1,10 @@
 import React from 'react';
 import { Modal, Form, Input, Select, InputNumber, Switch, Upload, Button, Row, Col, Card } from 'antd';
-import type { FormInstance, UploadFile } from 'antd';
-import { Plus } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react'; // Imported Trash2 for the remove button
+import { IEventModalProps } from './interface';
 
-// Data sub-interfaces for clarity & API mapping
-export interface OrganizerData {
-    name: string;
-    contactNumber: string;
-    address: string;
-    description?: string;
-    photo?: UploadFile[];
-}
 
-export interface PerformerData {
-    name: string;
-    contactNumber: string;
-    address: string;
-    passion: string;
-    bio: string;
-    description?: string;
-    profilePhoto?: UploadFile[];
-}
-
-export interface EventCategory {
-    _id: string;
-    name: string;
-}
-
-// Strong definitions for the component props
-interface EventModalProps {
-    editingId: string | null | undefined;
-    isModalVisible: boolean;
-    setIsModalVisible: (visible: boolean) => void;
-    form: FormInstance;
-    onFinish: (values: any) => void;
-    categories: EventCategory[];
-    normFile: (e: any) => any;
-    isPremium: boolean;
-}
-
-const EventModal: React.FC<EventModalProps> = ({
+const EventModal: React.FC<IEventModalProps> = ({
     editingId,
     isModalVisible,
     setIsModalVisible,
@@ -182,152 +147,204 @@ const EventModal: React.FC<EventModalProps> = ({
                     </Row>
                 </Card>
 
-                {/* ==================== SECTION 2: COMPANY / ORGANIZER ==================== */}
-                <Card title="Company / Organizer Details" size="small" className="mb-4 bg-gray-50/50">
-                    <Row gutter={[16, 0]}>
-                        <Col xs={24} sm={12}>
-                            <Form.Item
-                                name={['organizer', 'name']}
-                                label="Organizer Name"
-                                rules={[{ required: true, message: 'Please enter organizer name' }]}
-                            >
-                                <Input placeholder="Company or individual name" />
-                            </Form.Item>
-                        </Col>
+                {/* ==================== SECTION 2: COMPANY / ORGANIZERS ==================== */}
+                <Card title="Company / Organizers Details" size="small" className="mb-4 bg-gray-50/50">
+                    <Form.List name="organizers" initialValue={[{}]}>
+                        {(fields, { add, remove }) => (
+                            <div className="flex flex-col gap-4">
+                                {fields.map(({ key, name, ...restField }, index) => (
+                                    <Card
+                                        key={key}
+                                        type="inner"
+                                        title={`Organizer ${index + 1}`}
+                                        extra={fields.length > 1 && (
+                                            <Trash2
+                                                className="w-4 h-4 text-red-500 cursor-pointer hover:text-red-700"
+                                                onClick={() => remove(name)}
+                                            />
+                                        )}
+                                    >
+                                        <Row gutter={[16, 0]}>
+                                            <Col xs={24} sm={12}>
+                                                <Form.Item
+                                                    {...restField}
+                                                    name={[name, 'name']}
+                                                    label="Organizer Name"
+                                                    rules={[{ required: true, message: 'Please enter organizer name' }]}
+                                                >
+                                                    <Input placeholder="Company or individual name" />
+                                                </Form.Item>
+                                            </Col>
 
-                        <Col xs={24} sm={12}>
-                            <Form.Item
-                                name={['organizer', 'contactNumber']}
-                                label="Contact Number"
-                                rules={[{ required: true, message: 'Please enter contact number' }]}
-                            >
-                                <Input placeholder="Phone number" />
-                            </Form.Item>
-                        </Col>
+                                            <Col xs={24} sm={12}>
+                                                <Form.Item
+                                                    {...restField}
+                                                    name={[name, 'contactNumber']}
+                                                    label="Contact Number"
+                                                    rules={[{ required: true, message: 'Please enter contact number' }]}
+                                                >
+                                                    <Input placeholder="Phone number" />
+                                                </Form.Item>
+                                            </Col>
 
-                        <Col xs={24}>
-                            <Form.Item
-                                name={['organizer', 'address']}
-                                label="Address"
-                                rules={[{ required: true, message: 'Please enter company address' }]}
-                            >
-                                <Input placeholder="Company physical address" />
-                            </Form.Item>
-                        </Col>
+                                            <Col xs={24}>
+                                                <Form.Item
+                                                    {...restField}
+                                                    name={[name, 'address']}
+                                                    label="Address"
+                                                    rules={[{ required: true, message: 'Please enter company address' }]}
+                                                >
+                                                    <Input placeholder="Company physical address" />
+                                                </Form.Item>
+                                            </Col>
 
-                        <Col xs={24}>
-                            <Form.Item
-                                name={['organizer', 'description']}
-                                label="Description (Optional)"
-                            >
-                                <Input.TextArea rows={2} placeholder="Brief about the organizer..." />
-                            </Form.Item>
-                        </Col>
+                                            <Col xs={24}>
+                                                <Form.Item
+                                                    {...restField}
+                                                    name={[name, 'description']}
+                                                    label="Description (Optional)"
+                                                >
+                                                    <Input.TextArea rows={2} placeholder="Brief about the organizer..." />
+                                                </Form.Item>
+                                            </Col>
 
-                        <Col xs={24}>
-                            <Form.Item
-                                name={['organizer', 'photo']}
-                                label="Organizer Photo / Logo"
-                                valuePropName="fileList"
-                                getValueFromEvent={normFile}
-                            >
-                                <Upload
-                                    listType="picture-card"
-                                    maxCount={1}
-                                    beforeUpload={() => false}
-                                >
-                                    <div>
-                                        <Plus className="w-4 h-4 mx-auto" />
-                                        <div style={{ marginTop: 8 }}>Upload Logo</div>
-                                    </div>
-                                </Upload>
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                                            <Col xs={24}>
+                                                <Form.Item
+                                                    {...restField}
+                                                    name={[name, 'photo']}
+                                                    label="Organizer Photo / Logo"
+                                                    valuePropName="fileList"
+                                                    getValueFromEvent={normFile}
+                                                >
+                                                    <Upload listType="picture-card" maxCount={1} beforeUpload={() => false}>
+                                                        <div>
+                                                            <Plus className="w-4 h-4 mx-auto" />
+                                                            <div style={{ marginTop: 8 }}>Upload Logo</div>
+                                                        </div>
+                                                    </Upload>
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Card>
+                                ))}
+
+                                <Button type="dashed" onClick={() => add()} block className="flex items-center justify-center gap-2">
+                                    <Plus className="w-4 h-4" /> Add Another Organizer
+                                </Button>
+                            </div>
+                        )}
+                    </Form.List>
                 </Card>
 
                 {/* ==================== SECTION 3: SPONSORS & ARTISTS ==================== */}
                 <Card title="Sponsors & Artists" size="small" className="mb-6 bg-gray-50/50">
-                    <Row gutter={[16, 0]}>
-                        <Col xs={24} sm={12}>
-                            <Form.Item
-                                name={['performer', 'name']}
-                                label="Sponsor / Artist Name"
-                                rules={[{ required: true, message: 'Please enter sponsor or artist name' }]}
-                            >
-                                <Input placeholder="Name" />
-                            </Form.Item>
-                        </Col>
+                    <Form.List name="performers" initialValue={[{}]}>
+                        {(fields, { add, remove }) => (
+                            <div className="flex flex-col gap-4">
+                                {fields.map(({ key, name, ...restField }, index) => (
+                                    <Card
+                                        key={key}
+                                        type="inner"
+                                        title={`Sponsor / Artist ${index + 1}`}
+                                        extra={fields.length > 1 && (
+                                            <Trash2
+                                                className="w-4 h-4 text-red-500 cursor-pointer hover:text-red-700"
+                                                onClick={() => remove(name)}
+                                            />
+                                        )}
+                                    >
+                                        <Row gutter={[16, 0]}>
+                                            <Col xs={24} sm={12}>
+                                                <Form.Item
+                                                    {...restField}
+                                                    name={[name, 'name']}
+                                                    label="Sponsor / Artist Name"
+                                                    rules={[{ required: true, message: 'Please enter sponsor or artist name' }]}
+                                                >
+                                                    <Input placeholder="Name" />
+                                                </Form.Item>
+                                            </Col>
 
-                        <Col xs={24} sm={12}>
-                            <Form.Item
-                                name={['performer', 'contactNumber']}
-                                label="Contact Number"
-                                rules={[{ required: true, message: 'Please enter contact number' }]}
-                            >
-                                <Input placeholder="Phone number" />
-                            </Form.Item>
-                        </Col>
+                                            <Col xs={24} sm={12}>
+                                                <Form.Item
+                                                    {...restField}
+                                                    name={[name, 'contactNumber']}
+                                                    label="Contact Number"
+                                                    rules={[{ required: true, message: 'Please enter contact number' }]}
+                                                >
+                                                    <Input placeholder="Phone number" />
+                                                </Form.Item>
+                                            </Col>
 
-                        <Col xs={24} sm={12}>
-                            <Form.Item
-                                name={['performer', 'address']}
-                                label="Address"
-                                rules={[{ required: true, message: 'Please enter address' }]}
-                            >
-                                <Input placeholder="City, Country or Full Address" />
-                            </Form.Item>
-                        </Col>
+                                            <Col xs={24} sm={12}>
+                                                <Form.Item
+                                                    {...restField}
+                                                    name={[name, 'address']}
+                                                    label="Address"
+                                                    rules={[{ required: true, message: 'Please enter address' }]}
+                                                >
+                                                    <Input placeholder="City, Country or Full Address" />
+                                                </Form.Item>
+                                            </Col>
 
-                        <Col xs={24} sm={12}>
-                            <Form.Item
-                                name={['performer', 'passion']}
-                                label="Passion / Specialization"
-                                rules={[{ required: true, message: 'Please specify specialization' }]}
-                            >
-                                <Input placeholder="e.g. Rock Band, Main Sponsor, Speaker" />
-                            </Form.Item>
-                        </Col>
+                                            <Col xs={24} sm={12}>
+                                                <Form.Item
+                                                    {...restField}
+                                                    name={[name, 'passion']}
+                                                    label="Passion / Specialization"
+                                                    rules={[{ required: true, message: 'Please specify specialization' }]}
+                                                >
+                                                    <Input placeholder="e.g. Rock Band, Main Sponsor, Speaker" />
+                                                </Form.Item>
+                                            </Col>
 
-                        <Col xs={24}>
-                            <Form.Item
-                                name={['performer', 'bio']}
-                                label="Bio"
-                                rules={[{ required: true, message: 'Please enter a brief bio' }]}
-                            >
-                                <Input.TextArea rows={2} placeholder="Short professional background..." />
-                            </Form.Item>
-                        </Col>
+                                            <Col xs={24}>
+                                                <Form.Item
+                                                    {...restField}
+                                                    name={[name, 'bio']}
+                                                    label="Bio"
+                                                    rules={[{ required: true, message: 'Please enter a brief bio' }]}
+                                                >
+                                                    <Input.TextArea rows={2} placeholder="Short professional background..." />
+                                                </Form.Item>
+                                            </Col>
 
-                        <Col xs={24}>
-                            <Form.Item
-                                name={['performer', 'description']}
-                                label="Description (Optional)"
-                            >
-                                <Input.TextArea rows={2} placeholder="Any supplementary info..." />
-                            </Form.Item>
-                        </Col>
+                                            <Col xs={24}>
+                                                <Form.Item
+                                                    {...restField}
+                                                    name={[name, 'description']}
+                                                    label="Description (Optional)"
+                                                >
+                                                    <Input.TextArea rows={2} placeholder="Any supplementary info..." />
+                                                </Form.Item>
+                                            </Col>
 
-                        <Col xs={24}>
-                            <Form.Item
-                                name={['performer', 'profilePhoto']}
-                                label="Profile Photo"
-                                valuePropName="fileList"
-                                getValueFromEvent={normFile}
-                            >
-                                <Upload
-                                    listType="picture-card"
-                                    maxCount={1}
-                                    beforeUpload={() => false}
-                                >
-                                    <div>
-                                        <Plus className="w-4 h-4 mx-auto" />
-                                        <div style={{ marginTop: 8 }}>Upload Photo</div>
-                                    </div>
-                                </Upload>
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                                            <Col xs={24}>
+                                                <Form.Item
+                                                    {...restField}
+                                                    name={[name, 'profilePhoto']}
+                                                    label="Profile Photo"
+                                                    valuePropName="fileList"
+                                                    getValueFromEvent={normFile}
+                                                >
+                                                    <Upload listType="picture-card" maxCount={1} beforeUpload={() => false}>
+                                                        <div>
+                                                            <Plus className="w-4 h-4 mx-auto" />
+                                                            <div style={{ marginTop: 8 }}>Upload Photo</div>
+                                                        </div>
+                                                    </Upload>
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Card>
+                                ))}
+
+                                <Button type="dashed" onClick={() => add()} block className="flex items-center justify-center gap-2">
+                                    <Plus className="w-4 h-4" /> Add Another Sponsor / Artist
+                                </Button>
+                            </div>
+                        )}
+                    </Form.List>
                 </Card>
 
                 {/* Submit Button */}

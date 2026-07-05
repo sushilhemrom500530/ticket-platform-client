@@ -64,22 +64,24 @@ export default function ManageEventsPage() {
     try {
       const formData = new FormData();
 
-      const { image, ...rest } = values;
-      formData.append("data", JSON.stringify(rest));
+      console.log("values", values)
 
-      if (image && image[0]?.originFileObj) {
-        formData.append("image", image[0].originFileObj);
-      }
+      // const { image, ...rest } = values;
+      // formData.append("data", JSON.stringify(rest));
 
-      if (editingId) {
-        await api.put(`/events/${editingId}`, formData);
-        message.success("Event updated");
-      } else {
-        await api.post("/events", formData);
-        message.success("Event created");
-      }
-      setIsModalVisible(false);
-      fetchEvents();
+      // if (image && image[0]?.originFileObj) {
+      //   formData.append("image", image[0].originFileObj);
+      // }
+
+      // if (editingId) {
+      //   await api.put(`/events/${editingId}`, formData);
+      //   message.success("Event updated");
+      // } else {
+      //   await api.post("/events", formData);
+      //   message.success("Event created");
+      // }
+      // setIsModalVisible(false);
+      // fetchEvents();
     } catch (error: any) {
       message.error(error.response?.data?.message || "Failed to save event");
     }
