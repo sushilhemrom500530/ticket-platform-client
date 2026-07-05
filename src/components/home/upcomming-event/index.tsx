@@ -82,7 +82,7 @@ export default function UpcomingEvent() {
                             ))}
                         </div>
                         <Link href={`/events/${upcomingEvent._id}`}>
-                            <button className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-xl transition whitespace-nowrap shadow-md shadow-blue-200">
+                            <button className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-xl transition whitespace-nowrap shadow-md shadow-blue-200 cursor-pointer">
                                 Get Tickets
                             </button>
                         </Link>

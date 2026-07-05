@@ -2,6 +2,7 @@
 
 import { Collapse, Input, Button } from "antd";
 import BorderAccordion from "../accordion";
+import Link from "next/link";
 
 const faqData = [
     {
@@ -165,13 +166,15 @@ export default function FAQContent() {
                         happy to assist you.
                     </p>
 
-                    <Button
-                        type="primary"
-                        size="large"
-                        className="mt-8"
-                    >
-                        Contact Support
-                    </Button>
+                    <Link href="/contact-us">
+                        <Button
+                            type="primary"
+                            size="large"
+                            className="mt-8"
+                        >
+                            Contact Support
+                        </Button>
+                    </Link>
                 </div>
 
             </div>

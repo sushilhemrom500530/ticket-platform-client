@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Footer() {
   return (
     <footer className="relative bg-[#0A0A0A] text-white pt-20 pb-8 overflow-hidden border-t border-white/10 mt-auto">
@@ -79,10 +81,10 @@ export default function Footer() {
           <div>
             <h3 className="font-bold text-white mb-6 text-base tracking-wide">Quick Links</h3>
             <ul className="space-y-4 text-gray-400 text-sm">
-              <li><a href="#" className="hover:text-white transition-colors">Services</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Retreat</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Events</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+              <li><Link href="/events" className="hover:text-white transition-colors">Events</Link></li>
+              <li><Link href="/frequently-ask" className="hover:text-white transition-colors">Frequently Asked</Link></li>
+              <li><Link href="/about-us" className="hover:text-white transition-colors">About Us</Link></li>
+              <li><Link href="/contact-us" className="hover:text-white transition-colors">Contact</Link></li>
             </ul>
           </div>
 
@@ -101,8 +103,8 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/10 text-[#6E6E6E] text-xs">
           <p>Copyright &copy; {new Date().getFullYear()} TicketPro. All rights reserved.</p>
           <div className="flex gap-6 mt-4 md:mt-0">
-            <a href="#" className="hover:text-white transition-colors">Privacy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms</a>
+            <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy</Link>
+            <Link href="/terms-and-conditions" className="hover:text-white transition-colors">Terms</Link>
           </div>
         </div>
       </div>

@@ -123,67 +123,6 @@ export default function ContactUsPage() {
                         </div>
                     </div>
                 </div>
-
-                {/* FAQ */}
-                <div className="mt-24">
-                    <div className="text-center">
-                        <h2 className="text-3xl font-bold">
-                            Frequently Asked Questions
-                        </h2>
-
-                        <p className="mt-4 text-slate-600">
-                            Quick answers to common questions.
-                        </p>
-                    </div>
-
-                    <div className="mt-12 grid gap-6 md:grid-cols-2">
-                        <div className="rounded-2xl border border-slate-200 bg-white p-6">
-                            <h3 className="font-semibold">
-                                How quickly will I receive a response?
-                            </h3>
-
-                            <p className="mt-3 text-slate-600">
-                                Most inquiries receive a response within
-                                24 business hours.
-                            </p>
-                        </div>
-
-                        <div className="rounded-2xl border border-slate-200 bg-white p-6">
-                            <h3 className="font-semibold">
-                                Can I host any type of event?
-                            </h3>
-
-                            <p className="mt-3 text-slate-600">
-                                Yes. We support conferences, concerts,
-                                workshops, festivals, corporate events,
-                                and more.
-                            </p>
-                        </div>
-
-                        <div className="rounded-2xl border border-slate-200 bg-white p-6">
-                            <h3 className="font-semibold">
-                                Do you offer technical support?
-                            </h3>
-
-                            <p className="mt-3 text-slate-600">
-                                Absolutely. Our support team is available
-                                to help with platform-related issues.
-                            </p>
-                        </div>
-
-                        <div className="rounded-2xl border border-slate-200 bg-white p-6">
-                            <h3 className="font-semibold">
-                                Can organizations partner with Ticket Platform?
-                            </h3>
-
-                            <p className="mt-3 text-slate-600">
-                                Yes. We welcome partnerships with event
-                                organizers, communities, and businesses.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </section>
     );
