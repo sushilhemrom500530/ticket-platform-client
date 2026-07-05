@@ -7,6 +7,7 @@ import { useAuthService } from '@/src/hooks/auth';
 import { useAuthStore } from '@/src/store/authStore';
 import AuthLayout from '..';
 import Cookies from 'js-cookie';
+import { LuLoaderCircle } from 'react-icons/lu';
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
 
@@ -20,6 +21,7 @@ export default function EmailVerificationPage() {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [mounted, setMounted] = useState(false);
+    const [isResendLoading, setIsResendLoading] = useState(false);
     const [token, setToken] = useState('');
 
     useEffect(() => {
@@ -53,7 +55,9 @@ export default function EmailVerificationPage() {
     };
 
     const handleResendOtp = async () => {
+        setIsResendLoading(true);
         await resendOtp({ email })
+        setIsResendLoading(false);
     }
 
     const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -159,8 +163,14 @@ export default function EmailVerificationPage() {
                     <p className="text-sm text-gray-500 font-medium">
                         Didn't receive code?
                     </p>
-                    <button onClick={handleResendOtp} className="text-sm font-bold text-[#0052cc] hover:text-[#003d99] transition-colors cursor-pointer">
-                        Resend
+                    <button onClick={handleResendOtp} className="text-sm font-bold text-[#0052cc] hover:text-[#003d99] transition-colors cursor-pointer flex items-center gap-2">
+                        {
+                            isResendLoading ? (
+                                <LuLoaderCircle size={17} className="animate-spin" />
+                            ) : (
+                                " Resend"
+                            )
+                        }
                     </button>
                 </div>
 

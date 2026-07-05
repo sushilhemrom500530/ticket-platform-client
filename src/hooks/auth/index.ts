@@ -85,7 +85,7 @@ export function useAuthService() {
     setLoading(true);
     try {
       const response = await useApi.post("/auth/register", payload);
-      const { data, status } = response;
+      const { data, status, } = response;
 
       if (status >= 400) {
         const errorMsg = data?.message || "Registration failed";
@@ -102,7 +102,7 @@ export function useAuthService() {
         return data; // Return failure data
       }
 
-      message.success("Registration successful");
+      message.success(response?.data?.message || "Registration successful");
       return data;
     } catch (error: any) {
       // This will only be triggered for 5xx or Network errors now
@@ -146,7 +146,7 @@ export function useAuthService() {
     setLoading(true);
 
     try {
-      const token = Cookies.get("token");
+      const token = Cookies.get("verify_token");
 
       if (!token) {
         message.error("Token not found");
@@ -196,7 +196,7 @@ export function useAuthService() {
     setLoading(true);
 
     try {
-      const token = Cookies.get("verify_token");
+      const token = Cookies.get("token");
 
       if (!token) {
         message.error("Token not found");
@@ -204,7 +204,7 @@ export function useAuthService() {
       }
 
       const response = await useApi.post(
-        "/auth/otp-verify",
+        "/auth/verify-otp",
         payload,
         {
           headers: {
@@ -270,7 +270,7 @@ export function useAuthService() {
   const resetPassword = useCallback(async (payload: ResetPasswordPayload) => {
     setLoading(true);
     try {
-      const token = Cookies.get("token");
+      const token = Cookies.get("verify_token");
 
       if (!token) {
         message.error("Token not found");

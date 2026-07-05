@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, message } from 'antd';
 import { useRouter } from "next/navigation";
 import { useAuthService } from '@/src/hooks/auth';
@@ -8,16 +8,20 @@ import AuthLayout from '..';
 import Cookies from 'js-cookie';
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
-
+import { LuLoaderCircle } from "react-icons/lu";
 
 export default function OtpVerificationPage() {
     const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
     const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState('');
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
     const { verifyOtp, resendOtp } = useAuthService();
     const router = useRouter();
-    const email = Cookies.get('email') || '';
+    const [isResendLoading, setIsResendLoading] = useState(false);
 
+    useEffect(() => {
+        setEmail(Cookies.get('email') || '');
+    }, []);
 
     const handleChange = (index: number, value: string) => {
         if (value.length > 1) return;
@@ -33,7 +37,17 @@ export default function OtpVerificationPage() {
     };
 
     const handleResendOtp = async () => {
-        await resendOtp({ email })
+        setIsResendLoading(true);
+        const res = await resendOtp({ email })
+        console.log("token", res?.data?.token);
+        if (res?.data?.token) {
+            Cookies.set("verify_token", res?.data?.token, {
+                expires: 7,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+            });
+        }
+        setIsResendLoading(false);
     }
 
     const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -89,6 +103,14 @@ export default function OtpVerificationPage() {
             });
 
             if (res?.statusCode === 201) {
+                // Save the verify token for the reset-password step
+                if (res?.data?.token) {
+                    Cookies.set("verify_token", res.data.token, {
+                        expires: 7,
+                        secure: process.env.NODE_ENV === "production",
+                        sameSite: "lax",
+                    });
+                }
                 router.push(
                     `/auth/reset-password?email=${encodeURIComponent(email)}`
                 );
@@ -134,8 +156,14 @@ export default function OtpVerificationPage() {
                     <p className="text-sm text-gray-500 font-medium">
                         Didn't receive code?
                     </p>
-                    <button onClick={handleResendOtp} className="text-sm font-bold text-[#0052cc] hover:text-[#003d99] transition-colors cursor-pointer">
-                        Resend
+                    <button onClick={handleResendOtp} className="text-sm font-bold text-[#0052cc] hover:text-[#003d99] transition-colors cursor-pointer flex items-center gap-2">
+                        {
+                            isResendLoading ? (
+                                <LuLoaderCircle size={17} className="animate-spin" />
+                            ) : (
+                                " Resend"
+                            )
+                        }
                     </button>
                 </div>
 

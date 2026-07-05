@@ -71,7 +71,7 @@ export default function LoginPage() {
                     <Input
                         size="large"
                         prefix={<FaUser className="text-gray-500 mr-2 text-lg" />}
-                        placeholder="User Name"
+                        placeholder="User Email"
                         className="bg-[#F5F5F5] border-none hover:bg-[#EBEBEB] focus:bg-[#EBEBEB] rounded-xl h-14 !text-gray-700"
                     />
                 </Form.Item>
