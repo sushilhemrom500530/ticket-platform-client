@@ -226,23 +226,23 @@ function EventsContent() {
 
             <div className="pt-4 border-t border-gray-50">
               <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">Price Range</h3>
-              <Slider 
-                range 
-                value={priceRange} 
+              <Slider
+                range
+                value={priceRange}
                 onChange={(val: number[]) => setPriceRange([val[0], val[1]])}
-                max={500} 
-                tooltip={{ formatter: (val) => `$${val}` }} 
+                max={500}
+                tooltip={{ formatter: (val) => `$${val}` }}
               />
             </div>
 
             <div className="pt-4 border-t border-gray-50">
               <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">Top Rated</h3>
               <div className="flex flex-col gap-3">
-                <Checkbox 
+                <Checkbox
                   checked={topRatedFilters.includes("4 Stars & Up")}
                   onChange={(e) => handleTopRatedChange("4 Stars & Up", e.target.checked)}
                 >4 Stars & Up</Checkbox>
-                <Checkbox 
+                <Checkbox
                   className="ml-0"
                   checked={topRatedFilters.includes("Top Rated Events Only")}
                   onChange={(e) => handleTopRatedChange("Top Rated Events Only", e.target.checked)}
@@ -253,16 +253,16 @@ function EventsContent() {
             <div className="pt-4 border-t border-gray-50">
               <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">Professional</h3>
               <div className="flex flex-col gap-3">
-                <Checkbox 
+                <Checkbox
                   checked={professionalFilters.includes("Tech & IT")}
                   onChange={(e) => handleProfessionalChange("Tech & IT", e.target.checked)}
                 >Tech & IT</Checkbox>
-                <Checkbox 
+                <Checkbox
                   className="ml-0"
                   checked={professionalFilters.includes("Business & Finance")}
                   onChange={(e) => handleProfessionalChange("Business & Finance", e.target.checked)}
                 >Business & Finance</Checkbox>
-                <Checkbox 
+                <Checkbox
                   className="ml-0"
                   checked={professionalFilters.includes("Networking")}
                   onChange={(e) => handleProfessionalChange("Networking", e.target.checked)}

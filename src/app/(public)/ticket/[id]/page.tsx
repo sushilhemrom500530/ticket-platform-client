@@ -5,11 +5,14 @@ import { QRCodeSVG } from "qrcode.react";
 import api from "@/src/services/api";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
+import { useAuthStore } from "@/src/store/authStore";
+import { Button, message } from "antd";
 
 export default function TicketPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const [ticket, setTicket] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const { user: currentUser } = useAuthStore();
 
   useEffect(() => {
     const fetchTicket = async () => {
@@ -82,8 +85,34 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
     qrCodeData: `${window.location.origin}/ticket/${ticket._id}`,
   };
 
+  console.log("currentUser", currentUser)
+
+  const handleCheckIn = async () => {
+    try {
+      await api.patch(`/event-tickets/check-in/${ticket.ticketNumber}`);
+      message.success("Ticket checked in successfully");
+      setTicket((prev: any) => ({ ...prev, entryStatus: "checked_in", isUsed: true }));
+    } catch (error: any) {
+      console.error("Failed to check in ticket", error);
+      message.error(error.response?.data?.message || "Failed to check in ticket");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 pb-10 pt-32 flex flex-col justify-center items-center p-4">
+      {
+        currentUser?.role === "admin" && (
+          <div className="flex items-center justify-end w-full lg:w-[794px] mb-6">
+            <Button
+              onClick={handleCheckIn}
+              type="primary"
+              disabled={ticket.isUsed}
+            >
+              {ticket.isUsed ? "Checked In" : "Check In"}
+            </Button>
+          </div>
+        )
+      }
       <style jsx global>{`
         @media print {
           .no-print { display: none !important; }
@@ -94,7 +123,7 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
       `}</style>
       <div
         id="ticket-container"
-        className="bg-white w-[794px] min-h-[1123px] mx-auto border-2 border-green-600 p-8 text-sm font-sans shadow-xl relative"
+        className="bg-white w-full lg:w-[794px] min-h-[1123px] mx-auto border-2 border-green-600 p-8 text-sm font-sans shadow-xl relative"
       >
         {/* Header Section */}
         <div className="flex justify-between items-start mb-6 border-b pb-4">

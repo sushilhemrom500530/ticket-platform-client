@@ -58,6 +58,22 @@ export default function ManageTicketsPage() {
       ),
     },
     {
+      title: "Check-in Status",
+      dataIndex: "entryStatus",
+      key: "entryStatus",
+      render: (entryStatus: string) => {
+        const isUsed = entryStatus !== "not_used";
+        return (
+          <Tag
+            color={isUsed ? "cyan" : "blue"}
+            className="rounded-full px-2"
+          >
+            {isUsed ? "CHECKED IN" : "NOT USED"}
+          </Tag>
+        );
+      },
+    },
+    {
       title: "Action",
       key: "action",
       render: (_: any, record: any) => (
