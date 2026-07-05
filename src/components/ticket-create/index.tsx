@@ -33,7 +33,7 @@ const EventModal: React.FC<IEventModalProps> = ({
                 onFinish={onFinish}
                 scrollToFirstError
             >
-                {/* ==================== SECTION 1: GENERAL EVENT INFO ==================== */}
+
                 <Card title="General Information" size="small" className="mb-4 bg-gray-50/50">
                     <Row gutter={[16, 0]}>
                         <Col xs={24}>
@@ -148,7 +148,7 @@ const EventModal: React.FC<IEventModalProps> = ({
                     </Row>
                 </Card>
 
-                {/* ==================== SECTION 2: COMPANY / ORGANIZERS ==================== */}
+
                 <Card title="Company / Organizers Details" size="small" className="mb-4 bg-gray-50/50">
                     <Form.List name="organizers" initialValue={[{}]}>
                         {(fields, { add, remove }) => (
@@ -237,7 +237,7 @@ const EventModal: React.FC<IEventModalProps> = ({
                     </Form.List>
                 </Card>
 
-                {/* ==================== SECTION 3: SPONSORS & ARTISTS ==================== */}
+
                 <Card title="Sponsors & Artists" size="small" className="mb-6 bg-gray-50/50">
                     <Form.List name="performers" initialValue={[{}]}>
                         {(fields, { add, remove }) => (

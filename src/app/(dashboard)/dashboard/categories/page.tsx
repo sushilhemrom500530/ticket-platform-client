@@ -1,14 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
 import api from "@/src/services/api";
-import { Table, Button, Modal, Form, Input, message, Popconfirm } from "antd";
-import { Plus, Trash } from "lucide-react";
+import { Table, Button, Modal, Form, Input, message } from "antd";
+import { Plus, Trash, Edit } from "lucide-react";
 
 export default function ManageCategoriesPage() {
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<any>(null);
   const [form] = Form.useForm();
+  const [updateForm] = Form.useForm();
 
   const fetchCategories = () => {
     setLoading(true);
@@ -23,13 +26,26 @@ export default function ManageCategoriesPage() {
   }, []);
 
   const handleDelete = async (id: string) => {
+    setLoading(true);
     try {
       await api.delete(`/categories/${id}`);
       message.success("Category deleted");
       fetchCategories();
     } catch (error) {
       message.error("Failed to delete category");
+      setLoading(false);
     }
+  };
+
+  const showDeleteConfirm = (id: string) => {
+    Modal.confirm({
+      title: "Are you sure you want to delete this category?",
+      content: "This action cannot be undone.",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk: () => handleDelete(id),
+    });
   };
 
   const onFinish = async (values: any) => {
@@ -41,6 +57,27 @@ export default function ManageCategoriesPage() {
       fetchCategories();
     } catch (error: any) {
       message.error(error.response?.data?.message || "Failed to save category");
+    }
+  };
+
+  const openUpdateModal = (record: any) => {
+    setEditingCategory(record);
+    updateForm.setFieldsValue({ name: record.name });
+    setIsUpdateModalVisible(true);
+  };
+
+  const onUpdateFinish = async (values: any) => {
+    setLoading(true);
+    try {
+      await api.patch(`/categories/update/${editingCategory._id}`, values);
+      message.success("Category updated");
+      setIsUpdateModalVisible(false);
+      updateForm.resetFields();
+      setEditingCategory(null);
+      fetchCategories();
+    } catch (error: any) {
+      message.error(error.response?.data?.message || "Failed to update category");
+      setLoading(false);
     }
   };
 
@@ -60,15 +97,18 @@ export default function ManageCategoriesPage() {
       title: "Actions",
       key: "actions",
       render: (_: any, record: any) => (
-        <Popconfirm
-          title="Delete category?"
-          onConfirm={() => handleDelete(record._id)}
-        >
+        <div className="flex gap-2">
           <Button
             danger
             icon={<Trash className="w-4 h-4" />}
+            onClick={() => showDeleteConfirm(record._id)}
           />
-        </Popconfirm>
+          <Button
+            type="primary"
+            icon={<Edit className="w-4 h-4" />}
+            onClick={() => openUpdateModal(record)}
+          />
+        </div>
       ),
     },
   ];
@@ -118,6 +158,36 @@ export default function ManageCategoriesPage() {
             htmlType="submit"
             className="w-full bg-blue-600">
             Create
+          </Button>
+        </Form>
+      </Modal>
+
+      <Modal
+        title="Update Category"
+        open={isUpdateModalVisible}
+        onCancel={() => {
+          setIsUpdateModalVisible(false);
+          setEditingCategory(null);
+        }}
+        footer={null}
+      >
+        <Form
+          form={updateForm}
+          layout="vertical"
+          onFinish={onUpdateFinish}
+        >
+          <Form.Item
+            name="name"
+            label="Category Name"
+            rules={[{ required: true }]}
+          >
+            <Input />
+          </Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="w-full bg-blue-600">
+            Update
           </Button>
         </Form>
       </Modal>
