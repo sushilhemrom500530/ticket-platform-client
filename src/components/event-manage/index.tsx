@@ -98,7 +98,13 @@ export default function EventManage({ eventId }: EventManageProps) {
 
     const columns = [
         {
-            title: "Attendee Name",
+            title: "Ticket No.",
+            dataIndex: "ticketNumber",
+            key: "ticketNumber",
+            render: (t: string) => <span className="font-mono text-gray-500">{t}</span>,
+        },
+        {
+            title: "User",
             dataIndex: ["user", "name"],
             key: "name",
             render: (text: string, record: any) => {
@@ -120,12 +126,7 @@ export default function EventManage({ eventId }: EventManageProps) {
                 );
             },
         },
-        {
-            title: "Ticket No.",
-            dataIndex: "ticketNumber",
-            key: "ticketNumber",
-            render: (t: string) => <span className="font-mono text-gray-500">{t}</span>,
-        },
+
         {
             title: "Quantity",
             dataIndex: "quantity",
@@ -140,7 +141,7 @@ export default function EventManage({ eventId }: EventManageProps) {
                 if (status === "paid") color = "green";
                 if (status === "cancelled") color = "red";
                 if (status === "expired") color = "orange";
-                return <Tag color={color}>{status?.toUpperCase()}</Tag>;
+                return <Tag color={color} className="!rounded-full">{status?.toUpperCase()}</Tag>;
             },
         },
         {
@@ -150,7 +151,7 @@ export default function EventManage({ eventId }: EventManageProps) {
             render: (status: string) => {
                 const isUsed = status === "checked_in";
                 return (
-                    <Tag color={isUsed ? "cyan" : "default"} className="rounded-full px-2 uppercase font-medium">
+                    <Tag color={isUsed ? "success" : "default"} className="!rounded-full px-2 uppercase font-medium">
                         {isUsed ? "Checked In" : "Not Used"}
                     </Tag>
                 );
@@ -161,20 +162,16 @@ export default function EventManage({ eventId }: EventManageProps) {
             key: "action",
             render: (_: any, record: any) => (
                 <div className="flex gap-2">
-                    <Link href={`/ticket/${record?._id}`}>
-                        <Button
-                            type="primary"
-                            icon={<Eye />}
-                            size="small"
-                        >
-                            View
-                        </Button>
-                    </Link>
+                    <Button href={`/ticket/${record?._id}`} className="!w-max"
+                        type="primary"
+                        icon={<Eye className="w-4 h-4" />}
+                    >
+                        View
+                    </Button>
                     <Button
                         type="primary"
-                        size="small"
                         disabled={record.isUsed}
-                        className={record.isUsed ? "bg-gray-400" : "bg-blue-600"}
+                        className={`${record.isUsed ? "bg-gray-400" : "bg-blue-600"} !w-max`}
                         onClick={() => handleQuickCheckIn(record.ticketNumber)}
                     >
                         {record.isUsed ? "Checked In" : "Manual Check-in"}
@@ -209,7 +206,7 @@ export default function EventManage({ eventId }: EventManageProps) {
     const meta = data?.meta || { page: 1, limit: 10, total: 0 };
 
     return (
-        <div className="p-6 max-w-7xl mx-auto">
+        <div className="p-6">
             <div className="mb-6 flex justify-between items-center">
                 <div>
                     <h1 className="text-3xl font-bold">{event?.title || "Event Details"}</h1>
@@ -323,22 +320,19 @@ export default function EventManage({ eventId }: EventManageProps) {
                         />
                     </Space>
                     <Space>
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-2">
-                            <form onSubmit={handleScanSubmit} className="flex flex-col gap-1 w-[260px]">
-                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Quick Scan (Ctrl+K)</span>
-                                <div className="flex gap-2">
-                                    <Input
-                                        ref={scanInputRef}
-                                        prefix={<QrCode className="w-4 h-4 text-gray-400" />}
-                                        placeholder="Scan Ticket Barcode..."
-                                        value={scanInput}
-                                        onChange={(e) => setScanInput(e.target.value)}
-                                        autoFocus
-                                    />
-                                    <Button type="primary" htmlType="submit">Check</Button>
-                                </div>
-                            </form>
-                        </div>
+                        <form onSubmit={handleScanSubmit} className="flex flex-col gap-1 w-[260px]">
+                            <div className="flex gap-2">
+                                <Input
+                                    ref={scanInputRef}
+                                    prefix={<QrCode className="w-4 h-4 text-gray-400" />}
+                                    placeholder="Scan Ticket Barcode..."
+                                    value={scanInput}
+                                    onChange={(e) => setScanInput(e.target.value)}
+                                    autoFocus
+                                />
+                                <Button type="primary" htmlType="submit">Check</Button>
+                            </div>
+                        </form>
                     </Space>
                 </div>
 

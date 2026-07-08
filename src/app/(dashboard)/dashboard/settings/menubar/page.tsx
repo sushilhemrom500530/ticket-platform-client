@@ -156,6 +156,14 @@ export default function MenubarSettingsPage() {
                     >
                         <Switch />
                     </Form.Item>
+
+                    <Form.Item
+                        name="isEvent"
+                        label="Is Event"
+                        valuePropName="checked"
+                    >
+                        <Switch />
+                    </Form.Item>
                 </Form>
             </Modal>
         </div>
