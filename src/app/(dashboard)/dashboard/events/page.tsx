@@ -223,8 +223,9 @@ export default function ManageEventsPage() {
       key: "actions",
       render: (_: any, record: any) => (
         <div className="flex gap-2">
-          <Link href={`/dashboard/events/${record._id}`}>
+          <Link href={`/dashboard/events/view/${record._id}`}>
             <Button
+              type="primary"
               icon={<Eye className="w-4 h-4" />}
             />
           </Link>

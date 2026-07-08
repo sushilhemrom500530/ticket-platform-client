@@ -83,22 +83,9 @@ export default function OtpVerificationPage() {
             return;
         }
 
-        if (!email) {
-            message.error("Email is required");
-            return;
-        }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailRegex.test(email)) {
-            message.error("Invalid email format");
-            return;
-        }
-
         try {
             setLoading(true);
             const res = await verifyOtp({
-                email,
                 otp: otpString
             });
 

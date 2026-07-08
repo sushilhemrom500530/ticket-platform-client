@@ -97,7 +97,6 @@ export default function EmailVerificationPage() {
             setLoading(true);
             const res = await verifyUserEmail({
                 otp: otpString,
-                token: token
             });
 
             if (res?.statusCode === 201 || res?.success || res?.statusCode === 200) {
